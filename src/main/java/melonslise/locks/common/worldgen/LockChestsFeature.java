@@ -1,36 +1,33 @@
 package melonslise.locks.common.worldgen;
 
-import java.util.Random;
-
 import com.mojang.serialization.Codec;
-
 import melonslise.locks.common.config.LocksConfig;
-import melonslise.locks.common.util.Cuboid6i;
-import melonslise.locks.common.util.ILockableProvider;
-import melonslise.locks.common.util.Lock;
-import melonslise.locks.common.util.Lockable;
-import melonslise.locks.common.util.Transform;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.properties.ChestType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
+import melonslise.locks.common.util.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
-public class LockChestsFeature extends Feature<NoFeatureConfig>
+	public class LockChestsFeature extends Feature<NoneFeatureConfiguration>
 {
-	public LockChestsFeature(Codec<NoFeatureConfig> codec)
+	public LockChestsFeature(Codec<NoneFeatureConfiguration> codec)
 	{
 		super(codec);
 	}
 
 	@Override
-	public boolean place(ISeedReader world, ChunkGenerator gen, Random rng, BlockPos pos, NoFeatureConfig cfg)
-	{
+	public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+		WorldGenLevel world = context.level();
+		RandomSource rng = context.random();
+		BlockPos pos = context.origin();
+
 		if(!LocksConfig.canGen(rng))
 			return false;
 		BlockState state = world.getBlockState(pos);

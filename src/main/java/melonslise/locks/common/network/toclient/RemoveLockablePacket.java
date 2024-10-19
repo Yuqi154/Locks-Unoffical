@@ -4,8 +4,8 @@ import java.util.function.Supplier;
 
 import melonslise.locks.common.init.LocksCapabilities;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
 
 public class RemoveLockablePacket
 {
@@ -16,12 +16,12 @@ public class RemoveLockablePacket
 		this.id = id;
 	}
 
-	public static RemoveLockablePacket decode(PacketBuffer buf)
+	public static RemoveLockablePacket decode(FriendlyByteBuf buf)
 	{
 		return new RemoveLockablePacket(buf.readInt());
 	}
 
-	public static void encode(RemoveLockablePacket pkt, PacketBuffer buf)
+	public static void encode(RemoveLockablePacket pkt, FriendlyByteBuf buf)
 	{
 		buf.writeInt(pkt.id);
 	}

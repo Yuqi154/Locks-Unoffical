@@ -8,6 +8,7 @@ import melonslise.locks.common.init.LocksNetwork;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 @Mod.EventBusSubscriber(modid = Locks.ID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -23,7 +24,7 @@ public final class LocksModEvents
 	}
 
 	@SubscribeEvent
-	public static void onConfigLoad(ModConfig.ModConfigEvent e)
+	public static void onConfigLoad(ModConfigEvent e)
 	{
 		if(e.getConfig().getSpec() == LocksConfig.SPEC)
 			LocksConfig.init();

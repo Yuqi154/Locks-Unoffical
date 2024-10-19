@@ -1,19 +1,18 @@
 package melonslise.locks.common.config;
 
-import java.util.List;
-import java.util.NavigableMap;
-import java.util.Random;
-import java.util.TreeMap;
-
 import com.google.common.collect.Lists;
-
 import melonslise.locks.common.util.LocksUtil;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.List;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 public final class LocksConfig
 {
@@ -67,17 +66,17 @@ public final class LocksConfig
 		}
 	}
 
-	public static boolean canGen(Random rng)
+	public static boolean canGen(RandomSource rng)
 	{
 		return LocksUtil.chance(rng, GENERATION_CHANCE.get());
 	}
 
-	public static boolean canEnchant(Random rng)
+	public static boolean canEnchant(RandomSource rng)
 	{
 		return LocksUtil.chance(rng, GENERATION_ENCHANT_CHANCE.get());
 	}
 
-	public static ItemStack getRandomLock(Random rng)
+	public static ItemStack getRandomLock(RandomSource rng)
 	{
 		ItemStack stack = new ItemStack(weightedGeneratedLocks.ceilingEntry(rng.nextInt(weightTotal) + 1).getValue());
 		return canEnchant(rng) ? EnchantmentHelper.enchantItem(rng, stack, 5 + rng.nextInt(30), false) : stack;

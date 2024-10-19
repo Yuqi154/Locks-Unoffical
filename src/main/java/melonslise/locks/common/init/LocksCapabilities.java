@@ -14,6 +14,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -39,19 +43,19 @@ public final class LocksCapabilities
 		CapabilityManager.INSTANCE.register(ISelection.class, new EmptyCapabilityStorage(), Selection::new);
 	}
 
-	public static void attachToWorld(AttachCapabilitiesEvent<World> e)
+	public static void attachToWorld(AttachCapabilitiesEvent<Level> e)
 	{
 		e.addCapability(LockableHandler.ID, new SerializableCapabilityProvider(LOCKABLE_HANDLER, new LockableHandler(e.getObject())));
 	}
 
-	public static void attachToChunk(AttachCapabilitiesEvent<Chunk> e)
+	public static void attachToChunk(AttachCapabilitiesEvent<LevelChunk> e)
 	{
 		e.addCapability(LockableStorage.ID, new SerializableCapabilityProvider(LOCKABLE_STORAGE, new LockableStorage(e.getObject())));
 	}
 
 	public static void attachToEntity(AttachCapabilitiesEvent<Entity> e)
 	{
-		if(e.getObject() instanceof PlayerEntity)
+		if(e.getObject() instanceof Player)
 			e.addCapability(Selection.ID, new CapabilityProvider(SELECTION, new Selection()));
 	}
 }

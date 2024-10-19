@@ -1,15 +1,15 @@
 package melonslise.locks.client.gui.sprite;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
-
-import com.mojang.blaze3d.matrix.MatrixStack;
-
+import com.mojang.blaze3d.vertex.PoseStack;
 import melonslise.locks.client.gui.sprite.action.IAction;
 import melonslise.locks.client.util.LocksClientUtil;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 @OnlyIn(Dist.CLIENT)
 public class Sprite
@@ -56,13 +56,13 @@ public class Sprite
 	}
 
 	// FIXME new quat obj every frame? JFC
-	public void draw(MatrixStack mtx, float partialTick)
+	public void draw(PoseStack mtx, float partialTick)
 	{
 		if(this.alpha <= 0f)
 			return;
 		mtx.pushPose();
 		mtx.translate(this.originX, this.originY, 0f);
-		mtx.mulPose(Vector3f.ZP.rotationDegrees(LocksClientUtil.lerp(this.oldRot, this.rot, partialTick)));
+		mtx.mulPose(new Quaternionf().rotateZ(LocksClientUtil.lerp(this.oldRot, this.rot, partialTick)));
 		mtx.translate(-this.originX, -this.originY, 0f);
 		this.tex.draw(mtx, LocksClientUtil.lerp(this.oldPosX, this.posX, partialTick), LocksClientUtil.lerp(this.oldPosY, this.posY, partialTick), LocksClientUtil.lerp(this.oldAlpha, this.alpha, partialTick));
 		mtx.popPose();

@@ -8,10 +8,10 @@ import melonslise.locks.common.capability.ILockableStorage;
 import melonslise.locks.common.init.LocksCapabilities;
 import melonslise.locks.common.util.Lockable;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraftforge.network.NetworkEvent;
 
 public class AddLockableToChunkPacket
 {
@@ -30,17 +30,17 @@ public class AddLockableToChunkPacket
 		this(lkb, pos.x, pos.z);
 	}
 
-	public AddLockableToChunkPacket(Lockable lkb, Chunk ch)
+	public AddLockableToChunkPacket(Lockable lkb, LevelChunk ch)
 	{
 		this(lkb, ch.getPos());
 	}
 
-	public static AddLockableToChunkPacket decode(PacketBuffer buf)
+	public static AddLockableToChunkPacket decode(FriendlyByteBuf buf)
 	{
 		return new AddLockableToChunkPacket(Lockable.fromBuf(buf), buf.readInt(), buf.readInt());
 	}
 
-	public static void encode(AddLockableToChunkPacket pkt, PacketBuffer buf)
+	public static void encode(AddLockableToChunkPacket pkt, FriendlyByteBuf buf)
 	{
 		Lockable.toBuf(buf, pkt.lockable);
 		buf.writeInt(pkt.x);

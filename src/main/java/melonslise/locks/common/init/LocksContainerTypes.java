@@ -3,22 +3,24 @@ package melonslise.locks.common.init;
 import melonslise.locks.Locks;
 import melonslise.locks.common.container.KeyRingContainer;
 import melonslise.locks.common.container.LockPickingContainer;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public final class LocksContainerTypes
 {
-	public static final DeferredRegister<ContainerType<?>> CONTAINER_TYPES = DeferredRegister.create(ForgeRegistries.CONTAINERS, Locks.ID);
+	public static final DeferredRegister<MenuType<?>>
+			CONTAINER_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, Locks.ID);
 
-	public static final RegistryObject<ContainerType<LockPickingContainer>>
-		LOCK_PICKING = add("lock_picking", new ContainerType(LockPickingContainer.FACTORY));
+	public static final RegistryObject<MenuType<LockPickingContainer>>
+		LOCK_PICKING = add("lock_picking", new MenuType<>(LockPickingContainer.FACTORY, FeatureFlags.DEFAULT_FLAGS));
 
-	public static final RegistryObject<ContainerType<KeyRingContainer>>
-		KEY_RING = add("key_ring", new ContainerType(KeyRingContainer.FACTORY));
+	public static final RegistryObject<MenuType<KeyRingContainer>>
+		KEY_RING = add("key_ring", new MenuType<>(KeyRingContainer.FACTORY, FeatureFlags.DEFAULT_FLAGS));
 
 	private LocksContainerTypes() {}
 
@@ -27,7 +29,7 @@ public final class LocksContainerTypes
 		CONTAINER_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
 	}
 
-	public static <T extends Container> RegistryObject<ContainerType<T>> add(String name, ContainerType<T> type)
+	public static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> add(String name, MenuType<T> type)
 	{
 		return CONTAINER_TYPES.register(name, () -> type);
 	}

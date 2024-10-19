@@ -1,14 +1,14 @@
 package melonslise.locks.common.capability;
 
-import java.util.Observer;
-
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import melonslise.locks.common.util.Lockable;
-import net.minecraft.nbt.IntNBT;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.IntTag;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public interface ILockableHandler extends INBTSerializable<IntNBT>, Observer
+import java.util.Observer;
+
+public interface ILockableHandler extends INBTSerializable<IntTag>, Observer
 {
 	int nextId();
 

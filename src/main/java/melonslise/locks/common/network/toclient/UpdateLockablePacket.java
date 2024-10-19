@@ -5,8 +5,8 @@ import java.util.function.Supplier;
 import melonslise.locks.common.init.LocksCapabilities;
 import melonslise.locks.common.util.Lockable;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
 
 public class UpdateLockablePacket
 {
@@ -25,12 +25,12 @@ public class UpdateLockablePacket
 		this(lkb.id, lkb.lock.isLocked());
 	}
 
-	public static UpdateLockablePacket decode(PacketBuffer buf)
+	public static UpdateLockablePacket decode(FriendlyByteBuf buf)
 	{
 		return new UpdateLockablePacket(buf.readInt(), buf.readBoolean());
 	}
 
-	public static void encode(UpdateLockablePacket pkt, PacketBuffer buf)
+	public static void encode(UpdateLockablePacket pkt, FriendlyByteBuf buf)
 	{
 		buf.writeInt(pkt.id);
 		buf.writeBoolean(pkt.locked);

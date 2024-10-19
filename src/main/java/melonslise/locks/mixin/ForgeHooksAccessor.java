@@ -11,7 +11,7 @@ import net.minecraftforge.common.ForgeHooks;
 public interface ForgeHooksAccessor
 {
 	@Accessor(remap = false)
-	public static ThreadLocal<Deque> getLootContext()
+	static ThreadLocal<Deque> getLootContext()
 	{
 		return null;
 	}

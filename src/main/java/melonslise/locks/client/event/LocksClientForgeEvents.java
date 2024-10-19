@@ -13,6 +13,7 @@ import melonslise.locks.common.init.LocksItemTags;
 import melonslise.locks.common.util.Lockable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -24,8 +25,10 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.level.levelgen.RandomSupport;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -35,6 +38,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
@@ -53,7 +57,7 @@ public final class LocksClientForgeEvents
 		Minecraft mc = Minecraft.getInstance();
 		if(e.phase != TickEvent.Phase.START || mc.level == null || mc.isPaused())
 			return;
-		mc.level.getCapability(LocksCapabilities.LOCKABLE_InteractionHandLER).orElse(null).getLoaded().values().forEach(lkb -> lkb.tick());
+		mc.level.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null).getLoaded().values().forEach(lkb -> lkb.tick());
 	}
 
 	@SubscribeEvent
@@ -62,7 +66,7 @@ public final class LocksClientForgeEvents
 		if (e.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) return;
 		Minecraft mc = Minecraft.getInstance();
 		PoseStack mtx = e.getPoseStack();
-		MultiBufferSource.Impl buf = mc.renderBuffers().bufferSource();
+		MultiBufferSource.BufferSource buf = mc.renderBuffers().bufferSource();
 
 		// use mixin to avoid models disappearing  in water and when fabulous graphics are on
 		// renderLocks(mtx, buf, LocksClientUtil.getFrustum(mtx, e.getProjectionMatrix()), e.getPartialTicks());
@@ -72,7 +76,7 @@ public final class LocksClientForgeEvents
 	public static boolean holdingPick(Player player)
 	{
 		for(InteractionHand InteractionHand : InteractionHand.values())
-			if(player.getItemInInteractionHand(InteractionHand).getItem().is(LocksItemTags.LOCK_PICKS))
+			if(player.getItemInHand(InteractionHand).is(LocksItemTags.LOCK_PICKS))
 				return true;
 		return false;
 	}
@@ -81,7 +85,8 @@ public final class LocksClientForgeEvents
 	public static void onRenderOverlay(RenderGuiOverlayEvent.Pre e)
 	{
 		Minecraft mc = Minecraft.getInstance();
-		if(e.getType() != RenderGuiOverlayEvent.ElementType.ALL || tooltipLockable == null)
+		// if(e.getType() != RenderGuiOverlayEvent.ElementType.ALL || tooltipLockable == null)
+		if(tooltipLockable == null)
 			return;
 		if(holdingPick(mc.player))
 		{
@@ -91,7 +96,7 @@ public final class LocksClientForgeEvents
 			{
 				mtx.pushPose();
 				mtx.translate(vec.x(), vec.y(), 0f);
-				renderHudTooltip(mtx, Lists.transform(tooltipLockable.stack.getTooltipLines(mc.player, mc.options.advancedItemTooltips ? TooltipFlag.TooltipFlags.ADVANCED : TooltipFlag.TooltipFlags.NORMAL), Component::getVisualOrderText), mc.font);
+				renderHudTooltip(mtx, Lists.transform(tooltipLockable.stack.getTooltipLines(mc.player, mc.options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL), Component::getVisualOrderText), mc.font);
 				mtx.popPose();
 			}
 		}
@@ -102,11 +107,11 @@ public final class LocksClientForgeEvents
 	{
 		Minecraft mc = Minecraft.getInstance();
 		Vec3 o = LocksClientUtil.getCamera().getPosition();
-		BlockPos.Mutable mut = new BlockPos.Mutable();
+		BlockPos.MutableBlockPos mut = new BlockPos.MutableBlockPos();
 
 		double dMin = 0d;
 
-		for(Lockable lkb : mc.level.getCapability(LocksCapabilities.LOCKABLE_InteractionHandLER).orElse(null).getLoaded().values())
+		for(Lockable lkb : mc.level.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null).getLoaded().values())
 		{
 			Lockable.State state = lkb.getLockState(mc.level);
 			if(state == null || !state.inRange(o) || !state.inView(ch))
@@ -128,21 +133,21 @@ public final class LocksClientForgeEvents
 			// For some reason translating by negative player position and then the point coords causes jittering in very big z and x coords. Why? Thus we use 1 translation instead
 			mtx.translate(state.pos.x - o.x, state.pos.y - o.y, state.pos.z - o.z);
 			// FIXME 3 FUCKING QUATS PER FRAME !!! WHAT THE FUUUUUUCK!!!!!!!!!!!
-			mtx.mulPose(Vector3f.YP.rotationDegrees(-state.tr.dir.toYRot() - 180f));
+			mtx.mulPose(new Quaternionf().rotateY(-state.tr.dir.toYRot() - 180f));
 			if(state.tr.face != AttachFace.WALL)
-				mtx.mulPose(Vector3f.XP.rotationDegrees(90f));
+				mtx.mulPose(new Quaternionf().rotateX(90f));
 			mtx.translate(0d, 0.1d, 0d);
-			mtx.mulPose(Vector3f.ZP.rotationDegrees(Mth.sin(LocksClientUtil.cubicBezier1d(1f, 1f, LocksClientUtil.lerp(lkb.maxSwingTicks - lkb.oldSwingTicks, lkb.maxSwingTicks - lkb.swingTicks, pt) / lkb.maxSwingTicks) * lkb.maxSwingTicks / 5f * 3.14f) * 10f));
+			mtx.mulPose(new Quaternionf().rotateZ(Mth.sin(LocksClientUtil.cubicBezier1d(1f, 1f, LocksClientUtil.lerp(lkb.maxSwingTicks - lkb.oldSwingTicks, lkb.maxSwingTicks - lkb.swingTicks, pt) / lkb.maxSwingTicks) * lkb.maxSwingTicks / 5f * 3.14f) * 10f));
 			mtx.translate(0d, -0.1d, 0d);
 			mtx.scale(0.5f, 0.5f, 0.5f);
 			int light = LevelRenderer.getLightColor(mc.level, mut.set(state.pos.x, state.pos.y, state.pos.z));
-			mc.getItemRenderer().renderStatic(lkb.stack, ItemTransforms.TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, mtx, buf);
+			mc.getItemRenderer().renderStatic(lkb.stack, ItemDisplayContext.FIXED, light, OverlayTexture.NO_OVERLAY, mtx, buf, mc.level, 0);
 			mtx.popPose();
 		}
 		buf.endBatch();
 	}
 
-	public static void renderSelection(PoseStack mtx, MultiBufferSource.Impl buf)
+	public static void renderSelection(PoseStack mtx, MultiBufferSource.BufferSource buf)
 	{
 		Minecraft mc = Minecraft.getInstance();
 		Vec3 o = LocksClientUtil.getCamera().getPosition();
@@ -182,7 +187,7 @@ public final class LocksClientForgeEvents
 		mtx.pushPose();
 
 		BufferBuilder buf = Tesselator.getInstance().getBuilder();
-		buf.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
+		buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 		LocksClientUtil.square(buf, mtx, 0f, 0f, 4f, 0.05f, 0f, 0.3f, 0.8f);
 		LocksClientUtil.line(buf, mtx, 1f, -1f, x / 3f + 0.6f, y / 2f, 2f, 0.05f, 0f, 0.3f, 0.8f);
 		LocksClientUtil.line(buf, mtx, x / 3f, y / 2f, x - 3f, y / 2f, 2f, 0.05f, 0f, 0.3f, 0.8f);
@@ -197,23 +202,25 @@ public final class LocksClientForgeEvents
 		LocksClientUtil.vGradient(buf, mtx, x - 3, y - 3, x + width + 3, y - 3 + 1, 0.3137255f, 0f, 1f, 0.3137255f, 0.3137255f, 0f, 1f, 0.3137255f);
 		LocksClientUtil.vGradient(buf, mtx, x - 3, y + height + 2, x + width + 3, y + height + 3, 0.15686275f, 0f, 0.49803922f, 0.3137255f, 0.15686275f, 0f, 0.49803922f, 0.3137255f);
 		RenderSystem.enableDepthTest();
-		RenderSystem.disableTexture();
+		RenderSystem.setShaderTexture(0, 0);
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
-		RenderSystem.shadeModel(7425);
+		// RenderSystem.shadeModel(7425);
+		RenderSystem.setShader(GameRenderer::getPositionColorShader);
 		buf.end();
-		BufferUploader.end(buf);
-		RenderSystem.shadeModel(7424);
+		BufferUploader.draw(buf.end());
+		// RenderSystem.shadeModel(7424);
+		RenderSystem.setShader(GameRenderer::getPositionColorShader);
 		RenderSystem.disableBlend();
-		RenderSystem.enableTexture();
-		MultiBufferSource.Impl buf1 = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+		RenderSystem.setShaderTexture(0, 7424);
+		MultiBufferSource.BufferSource buf1 = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
 
 		Matrix4f last = mtx.last().pose();
 		for (int a = 0; a < lines.size(); ++a)
 		{
 			FormattedCharSequence line = lines.get(a);
 			if (line != null)
-				font.drawInBatch(line, (float) x, (float) y, -1, true, last, buf1, false, 0, 15728880);
+				font.drawInBatch(line, (float) x, (float) y, -1, true, last, buf1, Font.DisplayMode.NORMAL, 0, 15728880);
 			if (a == 0)
 				y += 2;
 			y += 10;

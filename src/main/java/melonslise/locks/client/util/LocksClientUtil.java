@@ -85,12 +85,15 @@ public final class LocksClientUtil
 			float f1 = -(player.walkDist + f * partialTicks);
 			float f2 = Mth.lerp(partialTicks, player.oBob, player.bob);
 
-			Quaternionf rot1 = Vector3f.XP.rotationDegrees(Math.abs(Mth.cos(f1 * (float) Math.PI - 0.2f) * f2) * 5f);
-			Quaternionf rot2 = Vector3f.ZP.rotationDegrees(Mth.sin(f1 * (float) Math.PI) * f2 * 3f);
-			rot1.conj();
-			rot2.conj();
-			pos1.transform(rot1);
-			pos1.transform(rot2);
+			float angle1 = Math.abs(Mth.cos(f1 * (float) Math.PI - 0.2f) * f2) * 5f;
+			Quaternionf rot1 = new Quaternionf().rotateX(angle1);
+
+			float angle2 = Mth.sin(f1 * (float) Math.PI) * f2 * 3f;
+			Quaternionf rot2 = new Quaternionf().rotateZ(angle2);
+			rot1.conjugate();
+			rot2.conjugate();
+			pos1.rotate(rot1);
+			pos1.rotate(rot2);
 			pos1.add(Mth.sin(f1 * (float) Math.PI) * f2 * 0.5f, Math.abs(Mth.cos(f1 * (float) Math.PI) * f2), 0f);
 		}
 
@@ -122,14 +125,15 @@ public final class LocksClientUtil
 		float f1 = 1f / texHeight;
 
 		BufferBuilder buf = Tesselator.getInstance().getBuilder();
-		buf.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+		buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
 		buf.vertex(last, x, y + height, 0f).uv(u * f, (v + height) * f1).color(1f, 1f, 1f, alpha).endVertex();
 		buf.vertex(last, x + width, y + height, 0f).uv((u + width) * f, (v + height) * f1).color(1f, 1f, 1f, alpha).endVertex();
 		buf.vertex(last, x + width, y, 0f).uv((u + width) * f,  v * f1).color(1f, 1f, 1f, alpha).endVertex();
 		buf.vertex(last, x, y, 0f).uv(u * f, v * f1).color(1f, 1f, 1f, alpha).endVertex();
 		buf.end();
-		RenderSystem.enableAlphaTest();
-		BufferUploader.end(buf);
+		RenderSystem.enableBlend();
+		RenderSystem.defaultBlendFunc();
+		BufferUploader.draw(buf.end());
 	}
 
 	// https://stackoverflow.com/questions/7854043/drawing-rectangle-between-two-points-with-arbitrary-width

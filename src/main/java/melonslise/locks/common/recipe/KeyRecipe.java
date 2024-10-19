@@ -3,30 +3,32 @@ package melonslise.locks.common.recipe;
 import melonslise.locks.common.init.LocksItems;
 import melonslise.locks.common.init.LocksRecipeSerializers;
 import melonslise.locks.common.item.LockingItem;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.WrittenBookItem;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.SpecialRecipe;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.WrittenBookItem;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.CustomRecipe;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
-public class KeyRecipe extends SpecialRecipe
+public class KeyRecipe extends CustomRecipe
 {
-	public KeyRecipe(ResourceLocation id)
+	public KeyRecipe(ResourceLocation id, CraftingBookCategory pCategory)
 	{
-		super(id);
+		super(id, pCategory);
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer()
+	public RecipeSerializer<?> getSerializer()
 	{
 		return LocksRecipeSerializers.KEY.get();
 	}
 
 	@Override
-	public boolean matches(CraftingInventory inv, World world)
+	public boolean matches(CraftingContainer inv, Level world)
 	{
 		boolean hasLocking = false;
 		int blanks = 0;
@@ -51,7 +53,7 @@ public class KeyRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public ItemStack assemble(CraftingInventory inv)
+	public ItemStack assemble(CraftingContainer inv, RegistryAccess pRegistryAccess)
 	{
 		ItemStack locking = ItemStack.EMPTY;
 		int blanks = 0;
@@ -79,7 +81,7 @@ public class KeyRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv)
+	public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv)
 	{
 		NonNullList<ItemStack> list = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
 

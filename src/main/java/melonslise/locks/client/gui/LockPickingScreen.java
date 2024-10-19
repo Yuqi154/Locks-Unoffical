@@ -1,42 +1,40 @@
 package melonslise.locks.client.gui;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import melonslise.locks.Locks;
+import melonslise.locks.client.gui.sprite.SpringSprite;
+import melonslise.locks.client.gui.sprite.Sprite;
+import melonslise.locks.client.gui.sprite.TextureInfo;
+import melonslise.locks.client.gui.sprite.action.*;
+import melonslise.locks.common.container.LockPickingContainer;
+import melonslise.locks.common.init.LocksNetwork;
+import melonslise.locks.common.network.toserver.TryPinPacket;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
+
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiConsumer;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-
-import melonslise.locks.Locks;
-import melonslise.locks.client.gui.sprite.SpringSprite;
-import melonslise.locks.client.gui.sprite.Sprite;
-import melonslise.locks.client.gui.sprite.TextureInfo;
-import melonslise.locks.client.gui.sprite.action.AccelerateAction;
-import melonslise.locks.client.gui.sprite.action.FadeAction;
-import melonslise.locks.client.gui.sprite.action.IAction;
-import melonslise.locks.client.gui.sprite.action.MoveAction;
-import melonslise.locks.client.gui.sprite.action.WaitAction;
-import melonslise.locks.common.container.LockPickingContainer;
-import melonslise.locks.common.init.LocksNetwork;
-import melonslise.locks.common.network.toserver.TryPinPacket;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
 @OnlyIn(Dist.CLIENT)
-public class LockPickingScreen extends ContainerScreen<LockPickingContainer>
+public class LockPickingScreen extends AbstractContainerScreen<LockPickingContainer>
 {
-	public static final ITextComponent HINT = new TranslationTextComponent(Locks.ID + ".gui.lockpicking.open");
+	public static final Component HINT = Component.literal(Locks.ID + ".gui.lockpicking.open");
 
 	public static final TextureInfo
 		FRONT_WALL_TEX = new TextureInfo(6, 0, 4, 60, 48, 80),
@@ -69,13 +67,13 @@ public class LockPickingScreen extends ContainerScreen<LockPickingContainer>
 
 	public final int length;
 	public final boolean pins[];
-	public final Hand hand;
+	public final InteractionHand hand;
 
 	protected int currPin;
 
 	protected boolean frozen = true;
 
-	public LockPickingScreen(LockPickingContainer cont, PlayerInventory inv, ITextComponent title)
+	public LockPickingScreen(LockPickingContainer cont, Inventory inv, Component title)
 	{
 		super(cont, inv, title);
 		this.length = cont.lockable.lock.getLength();
@@ -104,7 +102,7 @@ public class LockPickingScreen extends ContainerScreen<LockPickingContainer>
 
 	public static ResourceLocation getTextureFor(ItemStack stack)
 	{
-		return new ResourceLocation(Locks.ID, "textures/gui/" + stack.getItem().getRegistryName().getPath() + ".png");
+		return new ResourceLocation(Locks.ID, "textures/gui/" + ForgeRegistries.ITEMS.getKey(stack.getItem()).getPath() + ".png");
 	}
 
 	public Sprite addSprite(Sprite sprite)
@@ -120,21 +118,21 @@ public class LockPickingScreen extends ContainerScreen<LockPickingContainer>
 	}
 
 	@Override
-	public void render(MatrixStack mtx, int mouseX, int mouseY, float partialTick)
+	public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick)
 	{
-		this.renderBackground(mtx);
-		super.render(mtx, mouseX, mouseY, partialTick);
+		this.renderBackground(pGuiGraphics);
+		super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
 	}
 
 	@Override
-	protected void renderBg(MatrixStack mtx, float partialTick, int mouseX, int mouseY)
+	protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY)
 	{
 		float pt = this.minecraft.getFrameTime(); // idk why, but partialTick looks laggy AF... Use getFrameTime instead!
 		int cornerX = (this.width - this.imageWidth) / 2;
 		int cornerY = (this.height - this.imageHeight) / 2;
 
-		this.minecraft.getTextureManager().bind(this.lockTex);
-
+		this.minecraft.getTextureManager().bindForSetup(this.lockTex);
+		PoseStack mtx = guiGraphics.pose();
 		mtx.pushPose();
 		mtx.translate(cornerX, cornerY, 0f);
 		mtx.scale(2f, 2f, 2f);
@@ -154,23 +152,23 @@ public class LockPickingScreen extends ContainerScreen<LockPickingContainer>
 		for(Sprite sprite : this.sprites)
 		{
 			if(sprite == this.lockPick)
-				this.minecraft.getTextureManager().bind(this.pickTex); // FIXME fucking terrible
+				this.minecraft.getTextureManager().bindForSetup(this.pickTex); // FIXME fucking terrible
 			sprite.draw(mtx, pt);
 		}
 		mtx.popPose();
 	}
 
 	@Override
-	protected void renderLabels(MatrixStack mtx, int mouseX, int mouseY)
+	protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY)
 	{
 		// Without shadow
-		this.font.draw(mtx, this.title, 0f, -this.font.lineHeight, 0xffffff);
+		guiGraphics.drawString(this.font, this.title, 0, -this.font.lineHeight, 0xffffff);
 		if(this.getMenu().isOpen())
-			this.font.draw(mtx, HINT, (this.imageWidth - this.font.width(HINT)) / 2f, this.imageHeight + 10f, 0xffffff);
+			guiGraphics.drawString(this.font, HINT, (this.imageWidth - this.font.width(HINT)) / 2, this.imageHeight + 10, 0xffffff);
 	}
 
 	@Override
-	public void tick()
+	public void containerTick()
 	{
 		super.tick();
 		for(Sprite sprite : this.sprites)
@@ -193,7 +191,7 @@ public class LockPickingScreen extends ContainerScreen<LockPickingContainer>
 
 	protected void boundLockPick()
 	{
-		this.lockPick.posX = 10 - LOCK_PICK_TEX.width + MathHelper.clamp(this.lockPick.posX - 10 + LOCK_PICK_TEX.width, 0, (this.length - 1) * (COLUMN_TEX.width + INNER_WALL_TEX.width));
+		this.lockPick.posX = 10 - LOCK_PICK_TEX.width + Mth.clamp(this.lockPick.posX - 10 + LOCK_PICK_TEX.width, 0, (this.length - 1) * (COLUMN_TEX.width + INNER_WALL_TEX.width));
 	}
 
 	@Override

@@ -4,8 +4,8 @@ import java.util.HashMap;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.state.properties.AttachFace;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.core.Direction;
 
 public enum Transform
 {

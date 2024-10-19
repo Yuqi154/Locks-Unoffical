@@ -1,7 +1,5 @@
 package melonslise.locks.common.item;
 
-import java.util.List;
-
 import melonslise.locks.Locks;
 import melonslise.locks.common.capability.ILockableHandler;
 import melonslise.locks.common.capability.ISelection;
@@ -12,29 +10,30 @@ import melonslise.locks.common.util.Cuboid6i;
 import melonslise.locks.common.util.Lock;
 import melonslise.locks.common.util.Lockable;
 import melonslise.locks.common.util.Transform;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.ChestType;
-import net.minecraft.state.properties.DoorHingeSide;
-import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.world.level.block.state.properties.DoorHingeSide;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.List;
 
 public class LockItem extends LockingItem
 {
@@ -67,7 +66,7 @@ public class LockItem extends LockingItem
 	// WARNING: EXPECTS LOCKITEM STACK
 	public static byte getOrSetLength(ItemStack stack)
 	{
-		CompoundNBT nbt = stack.getOrCreateTag();
+		CompoundTag nbt = stack.getOrCreateTag();
 		if(!nbt.contains(KEY_LENGTH))
 			nbt.putByte(KEY_LENGTH, (byte) ((LockItem) stack.getItem()).length);
 		return nbt.getByte(KEY_LENGTH);
@@ -80,18 +79,18 @@ public class LockItem extends LockingItem
 	}
 
 	@Override
-	public ActionResultType useOn(ItemUseContext ctx)
+	public InteractionResult useOn(UseOnContext ctx)
 	{
-		World world = ctx.getLevel();
+		Level world = ctx.getLevel();
 		BlockPos pos = ctx.getClickedPos();
 		if (!LocksServerConfig.canLock(world, pos) ||  ctx.getLevel().getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null).getInChunk(pos).values().stream().anyMatch(lkb -> lkb.bb.intersects(pos)))
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		return LocksServerConfig.EASY_LOCK.get() ? this.easyLock(ctx) : this.freeLock(ctx);
 	}
 
-	public ActionResultType freeLock(ItemUseContext ctx)
+	public InteractionResult freeLock(UseOnContext ctx)
 	{
-		PlayerEntity player = ctx.getPlayer();
+		Player player = ctx.getPlayer();
 		BlockPos pos = ctx.getClickedPos();
 		ISelection select = player.getCapability(LocksCapabilities.SELECTION).orElse(null);
 		BlockPos pos1 = select.get();
@@ -99,32 +98,32 @@ public class LockItem extends LockingItem
 			select.set(pos);
 		else
 		{
-			World world = ctx.getLevel();
+			Level world = ctx.getLevel();
 			select.set(null);
 			// FIXME Go through the add checks here as well
-			world.playSound(player, pos, LocksSoundEvents.LOCK_CLOSE.get(), SoundCategory.BLOCKS, 1f, 1f);
+			world.playSound(player, pos, LocksSoundEvents.LOCK_CLOSE.get(), SoundSource.BLOCKS, 1f, 1f);
 			if (world.isClientSide)
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			ItemStack stack = ctx.getItemInHand();
 			ItemStack lockStack = stack.copy();
 			lockStack.setCount(1);
 			ILockableHandler handler = world.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
 			if (!handler.add(new Lockable(new Cuboid6i(pos1, pos), Lock.from(stack), Transform.fromDirection(ctx.getClickedFace(), player.getDirection().getOpposite()), lockStack, world)))
-				return ActionResultType.PASS;
+				return InteractionResult.PASS;
 			if (!player.isCreative())
 				stack.shrink(1);
 		}
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
-	public ActionResultType easyLock(ItemUseContext ctx)
+	public InteractionResult easyLock(UseOnContext ctx)
 	{
-		PlayerEntity player = ctx.getPlayer();
-		World world = ctx.getLevel();
+		Player player = ctx.getPlayer();
+		Level world = ctx.getLevel();
 		BlockPos pos = ctx.getClickedPos();
-		world.playSound(player, pos, LocksSoundEvents.LOCK_CLOSE.get(), SoundCategory.BLOCKS, 1f, 1f);
+		world.playSound(player, pos, LocksSoundEvents.LOCK_CLOSE.get(), SoundSource.BLOCKS, 1f, 1f);
 		if(world.isClientSide)
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		BlockState state = world.getBlockState(pos);
 		BlockPos pos1 = pos;
 		if(state.hasProperty(BlockStateProperties.CHEST_TYPE) && state.getValue(BlockStateProperties.CHEST_TYPE) != ChestType.SINGLE)
@@ -145,20 +144,20 @@ public class LockItem extends LockingItem
 		lockStack.setCount(1);
 		ILockableHandler handler = world.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
 		if (!handler.add(new Lockable(new Cuboid6i(pos, pos1), Lock.from(stack), Transform.fromDirection(ctx.getClickedFace(), player.getDirection().getOpposite()), lockStack, world)))
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		if (!player.isCreative())
 			stack.shrink(1);
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand)
+	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand)
 	{
 		ItemStack stack = player.getItemInHand(hand);
 		if(!isOpen(stack))
 			return super.use(world, player, hand);
 		setOpen(stack, false);
-		world.playSound(player, player.getX(), player.getY(), player.getZ(), LocksSoundEvents.PIN_MATCH.get(), SoundCategory.PLAYERS, 1f, 1f);
+		world.playSound(player, player.getX(), player.getY(), player.getZ(), LocksSoundEvents.PIN_MATCH.get(), SoundSource.PLAYERS, 1f, 1f);
 		return super.use(world, player, hand);
 	}
 
@@ -176,9 +175,9 @@ public class LockItem extends LockingItem
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void appendHoverText(ItemStack stack, World world, List<ITextComponent> lines, ITooltipFlag flag)
+	public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag flag)
 	{
 		super.appendHoverText(stack, world, lines, flag);
-		lines.add(new TranslationTextComponent(Locks.ID + ".tooltip.length", ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(stack.hasTag() && stack.getTag().contains(KEY_LENGTH) ? stack.getTag().getByte(KEY_LENGTH) : this.length)).withStyle(TextFormatting.DARK_GREEN));
+		lines.add(Component.translatable(Locks.ID + ".tooltip.length", ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(stack.hasTag() && stack.getTag().contains(KEY_LENGTH) ? stack.getTag().getByte(KEY_LENGTH) : this.length)).withStyle(ChatFormatting.DARK_GREEN));
 	}
 }

@@ -1,13 +1,13 @@
 package melonslise.locks.common.network.toclient;
 
-import java.util.function.Supplier;
-
 import melonslise.locks.common.container.LockPickingContainer;
 import melonslise.locks.common.init.LocksContainerTypes;
 import net.minecraft.client.Minecraft;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraftforge.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 public class TryPinResultPacket
 {
@@ -19,12 +19,12 @@ public class TryPinResultPacket
 		this.reset = reset;
 	}
 
-	public static TryPinResultPacket decode(PacketBuffer buf)
+	public static TryPinResultPacket decode(FriendlyByteBuf buf)
 	{
 		return new TryPinResultPacket(buf.readBoolean(), buf.readBoolean());
 	}
 
-	public static void encode(TryPinResultPacket pkt, PacketBuffer buf)
+	public static void encode(TryPinResultPacket pkt, FriendlyByteBuf buf)
 	{
 		buf.writeBoolean(pkt.correct);
 		buf.writeBoolean(pkt.reset);
@@ -38,7 +38,7 @@ public class TryPinResultPacket
 			@Override
 			public void run()
 			{
-				Container container = Minecraft.getInstance().player.containerMenu;
+				AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
 				if(container.getType() == LocksContainerTypes.LOCK_PICKING.get())
 					((LockPickingContainer) container).handlePin(pkt.correct, pkt.reset);
 			}

@@ -5,8 +5,10 @@ import java.util.regex.Pattern;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class LocksServerConfig
@@ -51,9 +53,10 @@ public class LocksServerConfig
 		lockableBlocks = LOCKABLE_BLOCKS.get().stream().map(s -> Pattern.compile(s)).toArray(Pattern[]::new);
 	}
 
-	public static boolean canLock(World world, BlockPos pos)
+	public static boolean canLock(Level world, BlockPos pos)
 	{
-		String name = world.getBlockState(pos).getBlock().getRegistryName().toString();
+		Block block = world.getBlockState(pos).getBlock();
+		String name = BuiltInRegistries.BLOCK.getKey(block).toString();
 		for(Pattern p : lockableBlocks)
 			if(p.matcher(name).matches())
 				return true;
