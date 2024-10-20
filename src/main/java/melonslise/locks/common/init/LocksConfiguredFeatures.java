@@ -8,10 +8,10 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
 
 public final class LocksConfiguredFeatures
 {
+	/*
 	public static final ConfiguredFeature<?, ?> CONFIGURED_LOCK_CHESTS = add("lock_chests", LocksFeatures.LOCK_CHESTS.get().configured(FeatureConfiguration.NONE).decorated(LocksConfiguredPlacements.CONFIGURED_CHEST));
 
 	private LocksConfiguredFeatures() {}
-
 	public static void addTo(BiomeLoadingEvent e)
 	{
 		e.getGeneration().addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION, LocksConfiguredFeatures.CONFIGURED_LOCK_CHESTS);
@@ -21,4 +21,5 @@ public final class LocksConfiguredFeatures
 	{
 		return Registry.register(BuiltInRegistries.CONFIGURED_FEATURE, name, cf);
 	}
+	 */
 }

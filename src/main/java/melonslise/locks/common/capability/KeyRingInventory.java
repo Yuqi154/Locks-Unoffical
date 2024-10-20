@@ -7,6 +7,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
@@ -29,7 +30,7 @@ public class KeyRingInventory implements IItemHandlerModifiable
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int slot)
+	public @NotNull ItemStack getStackInSlot(int slot)
 	{
 		this.validateSlotIndex(slot);
 		ListTag list = this.stack.getOrCreateTag().getList("Items", Tag.TAG_COMPOUND);

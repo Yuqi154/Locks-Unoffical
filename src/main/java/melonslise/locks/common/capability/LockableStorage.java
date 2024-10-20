@@ -9,11 +9,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
 /*
  * Internal storage for lockables with almost no handling logic
  * Also stores lockables which are shared by multiple chunks. Duplicate shared lockables are handled by checking if they have already been loaded before
  */
+@AutoRegisterCapability
 public class LockableStorage implements ILockableStorage
 {
 	public static final ResourceLocation ID = new ResourceLocation(Locks.ID, "lockable_storage");

@@ -36,7 +36,7 @@ public final class LocksUtil
 {
 	public static ResourceManager resourceManager;
 
-	public static Constructor lootTableContextConstructor;
+	public static Constructor<?> lootTableContextConstructor;
 
 	static
 	{

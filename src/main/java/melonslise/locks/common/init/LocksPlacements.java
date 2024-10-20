@@ -2,20 +2,20 @@ package melonslise.locks.common.init;
 
 import melonslise.locks.Locks;
 import melonslise.locks.common.worldgen.ChestPlacement;
-import net.minecraft.world.gen.placement.IPlacementConfig;
-import net.minecraft.world.gen.placement.NoPlacementConfig;
-import net.minecraft.world.gen.placement.Placement;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public final class LocksPlacements
 {
-	public static final DeferredRegister<Placement<?>> PLACEMENTS = DeferredRegister.create(ForgeRegistries.DECORATORS, Locks.ID);
+	public static final DeferredRegister<Feature<?>> PLACEMENTS = DeferredRegister.create(ForgeRegistries.FEATURES, Locks.ID);
 
-	public static final RegistryObject<Placement<NoPlacementConfig>>
-		CHEST = add("chest", new ChestPlacement(NoPlacementConfig.CODEC));
+	public static final RegistryObject<Feature<NoneFeatureConfiguration>>
+		CHEST = add("chest", new ChestPlacement(NoneFeatureConfiguration.CODEC));
 
 	private LocksPlacements() {}
 
@@ -24,7 +24,7 @@ public final class LocksPlacements
 		PLACEMENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
 	}
 
-	public static <T extends IPlacementConfig> RegistryObject<Placement<T>> add(String name, Placement<T> pl)
+	public static <T extends FeatureConfiguration> RegistryObject<Feature<T>> add(String name, Feature<T> pl)
 	{
 		return PLACEMENTS.register(name, () -> pl);
 	}

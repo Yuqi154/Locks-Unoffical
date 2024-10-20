@@ -19,7 +19,7 @@ public final class LocksModEvents
 	@SubscribeEvent
 	public static void onSetup(FMLCommonSetupEvent e)
 	{
-		LocksCapabilities.register();
+		// LocksCapabilities.register();
 		LocksNetwork.register();
 	}
 

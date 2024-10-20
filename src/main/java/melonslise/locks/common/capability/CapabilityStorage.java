@@ -5,8 +5,9 @@ import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class CapabilityStorage<A extends INBTSerializable> implements IStorage<A>
+public class CapabilityStorage<A extends INBTSerializable>
 {
+	/*
 	@Override
 	public Tag writeNBT(Capability<A> cap, A inst, Direction side)
 	{
@@ -18,4 +19,5 @@ public class CapabilityStorage<A extends INBTSerializable> implements IStorage<A
 	{
 		inst.deserializeNBT(nbt);
 	}
+	 */
 }

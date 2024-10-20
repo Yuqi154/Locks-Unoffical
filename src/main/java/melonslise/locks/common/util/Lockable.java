@@ -102,7 +102,7 @@ public class Lockable extends Observable implements Observer
 
 	public static CompoundTag toNbt(Lockable lkb)
 	{
-		CompoundTag nbt = new CompoundNBT();
+		CompoundTag nbt = new CompoundTag();
 		nbt.put(KEY_BB, Cuboid6i.toNbt(lkb.bb));
 		nbt.put(KEY_LOCK, Lock.toNbt(lkb.lock));
 		nbt.putByte(KEY_TRANSFORM, (byte) lkb.tr.ordinal());
@@ -163,7 +163,7 @@ public class Lockable extends Observable implements Observer
 		State state = this.cache.get(states);
 		if(state != null)
 			return state;
-		ArrayList<AxisAlignedBB> boxes = new ArrayList<>(4);
+		ArrayList<AABB> boxes = new ArrayList<>(4);
 		for(BlockPos pos : this.bb.getContainedPos())
 		{
 			VoxelShape shape = world.getBlockState(pos).getShape(world, pos);
@@ -172,7 +172,7 @@ public class Lockable extends Observable implements Observer
 			AABB bb = shape.bounds();
 			bb = bb.move(pos);
 			AABB union = bb;
-			Iterator<AxisAlignedBB> it = boxes.iterator();
+			Iterator<AABB> it = boxes.iterator();
 			while(it.hasNext())
 			{
 				AABB bb1 = it.next();

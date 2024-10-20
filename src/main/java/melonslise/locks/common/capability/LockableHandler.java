@@ -16,6 +16,7 @@ import net.minecraft.nbt.IntTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Manages and handles logic for all LOADED lockables by accessing internal ILockableStorage objects.
  * This means that there is no way of getting a list of ALL lockables in a world like before
  */
+@AutoRegisterCapability
 public class LockableHandler implements ILockableHandler
 {
 	public static final ResourceLocation ID = new ResourceLocation(Locks.ID, "lockable_handler");

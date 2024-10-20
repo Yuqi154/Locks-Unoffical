@@ -4,7 +4,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class SerializableCapabilityProvider<A> extends CapabilityProvider<A> implements INBTSerializable
+public class SerializableCapabilityProvider<T extends Tag, A extends INBTSerializable<T>> extends CapabilityProvider<A> implements INBTSerializable<T>
 {
 	public SerializableCapabilityProvider(Capability<A> cap, A inst)
 	{
@@ -12,14 +12,15 @@ public class SerializableCapabilityProvider<A> extends CapabilityProvider<A> imp
 	}
 
 	@Override
-	public Tag serializeNBT()
+	public T serializeNBT()
 	{
-		return this.cap.writeNBT(this.inst, null);
+
+		return this.inst.serializeNBT();
 	}
 
 	@Override
-	public void deserializeNBT(Tag nbt)
+	public void deserializeNBT(T nbt)
 	{
-		this.cap.readNBT(this.inst, null, nbt);
+		this.inst.deserializeNBT(nbt);
 	}
 }

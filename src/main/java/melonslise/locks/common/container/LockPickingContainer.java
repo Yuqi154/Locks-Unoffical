@@ -67,9 +67,9 @@ public class LockPickingContainer extends AbstractContainerMenu
 		Lockable.State state = lkb.getLockState(player.level());
 		this.pos = state == null ? lkb.bb.center() : state.pos;
 
-		this.shocking = EnchantmentHelper.getItemEnchantmentLevel(LocksEnchantments.SHOCKING.get(), this.lockable.stack);
-		this.sturdy = EnchantmentHelper.getItemEnchantmentLevel(LocksEnchantments.STURDY.get(), this.lockable.stack);
-		this.complexity = EnchantmentHelper.getItemEnchantmentLevel(LocksEnchantments.COMPLEXITY.get(), this.lockable.stack);
+		this.shocking = EnchantmentHelper.getTagEnchantmentLevel(LocksEnchantments.SHOCKING.get(), this.lockable.stack);
+		this.sturdy = EnchantmentHelper.getTagEnchantmentLevel(LocksEnchantments.STURDY.get(), this.lockable.stack);
+		this.complexity = EnchantmentHelper.getTagEnchantmentLevel(LocksEnchantments.COMPLEXITY.get(), this.lockable.stack);
 
 		// Syncs the player inventory
 

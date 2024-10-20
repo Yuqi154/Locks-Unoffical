@@ -6,21 +6,20 @@ import melonslise.locks.common.capability.ILockableHandler;
 import melonslise.locks.common.capability.ISelection;
 import melonslise.locks.common.config.LocksClientConfig;
 import melonslise.locks.common.config.LocksServerConfig;
-import melonslise.locks.common.init.*;
+import melonslise.locks.common.init.LocksCapabilities;
+import melonslise.locks.common.init.LocksItemTags;
+import melonslise.locks.common.init.LocksItems;
+import melonslise.locks.common.init.LocksSoundEvents;
 import melonslise.locks.common.item.KeyRingItem;
 import melonslise.locks.common.item.LockingItem;
 import melonslise.locks.common.util.Lockable;
 import melonslise.locks.common.util.LocksPredicates;
 import melonslise.locks.common.util.LocksUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -41,9 +40,7 @@ import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.ChunkEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -78,11 +75,13 @@ public final class LocksForgeEvents
 		LocksCapabilities.attachToEntity(e);
 	}
 
+	/*
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onBiomeLoad(BiomeLoadingEvent e)
 	{
 		LocksConfiguredFeatures.addTo(e);
 	}
+	*/
 
 	@SubscribeEvent
 	public static void onLootTableLoad(LootTableLoadEvent e)
@@ -93,8 +92,7 @@ public final class LocksForgeEvents
 			return;
 		// And only if there is a corresponding inject table...
 		ResourceLocation injectLoc = new ResourceLocation(Locks.ID, "loot_tables/inject/" + name.getPath() + ".json");
-		if(!LocksUtil.resourceManager.getResource(injectLoc).isPresent())
-			return;
+		if(LocksUtil.resourceManager.getResource(injectLoc).isEmpty()) return;
 		try
 		{
 			LocksUtil.mergeEntries(e.getTable(), LocksUtil.lootTableFrom(injectLoc));
