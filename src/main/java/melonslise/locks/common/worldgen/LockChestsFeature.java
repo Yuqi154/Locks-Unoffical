@@ -15,7 +15,7 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
-	public class LockChestsFeature extends Feature<NoneFeatureConfiguration>
+public class LockChestsFeature extends Feature<NoneFeatureConfiguration>
 {
 	public LockChestsFeature(Codec<NoneFeatureConfiguration> codec)
 	{
@@ -28,8 +28,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 		RandomSource rng = context.random();
 		BlockPos pos = context.origin();
 
-		if(!LocksConfig.canGen(rng))
-			return false;
+		if(!LocksConfig.canGen(rng)) return false;
 		BlockState state = world.getBlockState(pos);
 		BlockPos pos1 = state.getValue(ChestBlock.TYPE) == ChestType.SINGLE ? pos : pos.relative(ChestBlock.getConnectedDirection(state));
 		ItemStack stack = LocksConfig.getRandomLock(rng);

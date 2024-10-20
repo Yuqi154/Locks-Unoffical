@@ -1,23 +1,24 @@
 package melonslise.locks.mixin;
 
-import com.google.gson.JsonElement;
 import melonslise.locks.common.util.LocksUtil;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.level.storage.loot.LootDataType;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.level.storage.loot.LootDataManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
-@Mixin(LootDataType.class)
+@Mixin(LootDataManager.class)
 public class LootTableManagerMixin
 {
-	@Inject(at = @At("HEAD"), method = "deserialize", remap = false)
-	private void apply(ResourceLocation p_279253_, JsonElement p_279330_, ResourceManager resourceManager, CallbackInfoReturnable<Optional<?>> cir)
+	@Inject(at = @At("HEAD"), method = "reload")
+	private void setResourceManager(PreparableReloadListener.PreparationBarrier pPreparationBarrier, ResourceManager pResourceManager, ProfilerFiller pPreparationsProfiler, ProfilerFiller pReloadProfiler, Executor pBackgroundExecutor, Executor pGameExecutor, CallbackInfoReturnable<CompletableFuture<Void>> cir)
 	{
-		LocksUtil.resourceManager = resourceManager;
+		LocksUtil.resourceManager = pResourceManager;
 	}
 }

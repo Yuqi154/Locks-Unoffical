@@ -204,7 +204,6 @@ public final class LocksClientForgeEvents
 		RenderSystem.defaultBlendFunc();
 		// RenderSystem.shadeModel(7425);
 		RenderSystem.setShader(GameRenderer::getPositionColorShader);
-		buf.end();
 		BufferUploader.draw(buf.end());
 		// RenderSystem.shadeModel(7424);
 		RenderSystem.setShader(GameRenderer::getPositionColorShader);
