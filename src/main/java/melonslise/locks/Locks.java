@@ -1,18 +1,12 @@
 package melonslise.locks;
 
+import melonslise.locks.common.init.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import melonslise.locks.common.config.LocksClientConfig;
 import melonslise.locks.common.config.LocksConfig;
 import melonslise.locks.common.config.LocksServerConfig;
-import melonslise.locks.common.init.LocksContainerTypes;
-import melonslise.locks.common.init.LocksEnchantments;
-import melonslise.locks.common.init.LocksFeatures;
-import melonslise.locks.common.init.LocksItems;
-import melonslise.locks.common.init.LocksPlacements;
-import melonslise.locks.common.init.LocksRecipeSerializers;
-import melonslise.locks.common.init.LocksSoundEvents;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig.Type;
@@ -37,5 +31,6 @@ public final class Locks
 		LocksFeatures.register();
 		LocksContainerTypes.register();
 		LocksRecipeSerializers.register();
+		LocksPlacementModifiers.register();
 	}
 }

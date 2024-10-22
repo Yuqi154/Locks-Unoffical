@@ -231,8 +231,10 @@ public class LockPickingScreen extends AbstractContainerScreen<LockPickingContai
             this.upperPins[this.currPin].execute(MoveAction.to(this.upperPins[this.currPin], this.upperPins[this.currPin].posX, 29, 2));
         } else
             this.upperPins[this.currPin].execute(MoveAction.at(0f, 6f).time(2));
-        if (reset)
+        if (reset) {
+            this.resetSpeed();
             this.reset();
+        }
     }
 
     public void reset() {
@@ -251,5 +253,13 @@ public class LockPickingScreen extends AbstractContainerScreen<LockPickingContai
     public void resetPick() {
         this.pickTex = getTextureFor(Minecraft.getInstance().player.getItemInHand(this.hand));
         this.lockPick.position(-22 - LOCK_PICK_TEX.width, this.lockPick.posY).alpha(1f).execute(AccelerateAction.to(32f, 0f, 4, false).then(unfreezeCb));
+    }
+
+    public void resetSpeed() {
+        for (Sprite sprite : this.sprites) {
+            sprite.speedX = 0;
+            sprite.speedY = 0;
+            sprite.rotSpeed = 0;
+        }
     }
 }

@@ -122,8 +122,7 @@ public class LockItem extends LockingItem
 		Level world = ctx.getLevel();
 		BlockPos pos = ctx.getClickedPos();
 		world.playSound(player, pos, LocksSoundEvents.LOCK_CLOSE.get(), SoundSource.BLOCKS, 1f, 1f);
-		if(world.isClientSide)
-			return InteractionResult.SUCCESS;
+		if(world.isClientSide) return InteractionResult.SUCCESS;
 		BlockState state = world.getBlockState(pos);
 		BlockPos pos1 = pos;
 		if(state.hasProperty(BlockStateProperties.CHEST_TYPE) && state.getValue(BlockStateProperties.CHEST_TYPE) != ChestType.SINGLE)

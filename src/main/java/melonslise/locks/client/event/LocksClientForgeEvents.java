@@ -16,9 +16,11 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -32,6 +34,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -60,14 +63,17 @@ public final class LocksClientForgeEvents
 	@SubscribeEvent
 	public static void onRenderWorld(RenderLevelStageEvent e)
 	{
-		if (e.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) return;
+		/*
+		//if (e.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) return;
+
 		Minecraft mc = Minecraft.getInstance();
 		PoseStack mtx = e.getPoseStack();
-		MultiBufferSource.BufferSource buf = mc.renderBuffers().bufferSource();
-
+		MultiBufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+		bufferSource.hashCode();
 		// use mixin to avoid models disappearing  in water and when fabulous graphics are on
 		// renderLocks(mtx, buf, LocksClientUtil.getFrustum(mtx, e.getProjectionMatrix()), e.getPartialTicks());
-		renderSelection(mtx, buf);
+		renderSelection(mtx, bufferSource);
+		 */
 	}
 
 	public static boolean holdingPick(Player player)
@@ -129,12 +135,15 @@ public final class LocksClientForgeEvents
 			mtx.pushPose();
 			// For some reason translating by negative player position and then the point coords causes jittering in very big z and x coords. Why? Thus we use 1 translation instead
 			mtx.translate(state.pos.x - o.x, state.pos.y - o.y, state.pos.z - o.z);
+			//mtx.mulPose(new Quaternionf().rotateY(-state.tr.dir.toYRot() - 90));
 			// FIXME 3 FUCKING QUATS PER FRAME !!! WHAT THE FUUUUUUCK!!!!!!!!!!!
-			mtx.mulPose(new Quaternionf().rotateY(-state.tr.dir.toYRot() - 180f));
-			if(state.tr.face != AttachFace.WALL)
-				mtx.mulPose(new Quaternionf().rotateX(90f));
+			if(state.tr.face == AttachFace.CEILING) mtx.mulPose(new Quaternionf().rotateX(90f));
+			if(state.tr.face == AttachFace.FLOOR) mtx.mulPose(new Quaternionf().rotateX(45f));
+			if(state.tr.dir == Direction.WEST || state.tr.dir == Direction.EAST){
+				mtx.mulPose(new Quaternionf().rotateY(1.6f));
+			}
 			mtx.translate(0d, 0.1d, 0d);
-			mtx.mulPose(new Quaternionf().rotateZ(Mth.sin(LocksClientUtil.cubicBezier1d(1f, 1f, LocksClientUtil.lerp(lkb.maxSwingTicks - lkb.oldSwingTicks, lkb.maxSwingTicks - lkb.swingTicks, pt) / lkb.maxSwingTicks) * lkb.maxSwingTicks / 5f * 3.14f) * 10f));
+			mtx.mulPose(new Quaternionf().rotateZ(Mth.sin(LocksClientUtil.cubicBezier1d(1f, 1f, LocksClientUtil.lerp(lkb.maxSwingTicks - lkb.oldSwingTicks, lkb.maxSwingTicks - lkb.swingTicks, pt) / lkb.maxSwingTicks) * lkb.maxSwingTicks / 5f * 3.14f) * 0.4f));
 			mtx.translate(0d, -0.1d, 0d);
 			mtx.scale(0.5f, 0.5f, 0.5f);
 			int light = LevelRenderer.getLightColor(mc.level, mut.set(state.pos.x, state.pos.y, state.pos.z));
@@ -144,7 +153,7 @@ public final class LocksClientForgeEvents
 		buf.endBatch();
 	}
 
-	public static void renderSelection(PoseStack mtx, MultiBufferSource.BufferSource buf)
+	public static void renderSelection(PoseStack mtx, MultiBufferSource buf)
 	{
 		Minecraft mc = Minecraft.getInstance();
 		Vec3 o = LocksClientUtil.getCamera().getPosition();
@@ -159,7 +168,6 @@ public final class LocksClientForgeEvents
 		// Same as above
 		LevelRenderer.renderLineBox(mtx, buf.getBuffer(LocksRenderTypes.OVERLAY_LINES), Math.min(pos.getX(), pos1.getX()) - o.x, Math.min(pos.getY(), pos1.getY()) - o.y, Math.min(pos.getZ(), pos1.getZ()) - o.z, Math.max(pos.getX(), pos1.getX()) + 1d - o.x, Math.max(pos.getY(), pos1.getY()) + 1d - o.y, Math.max(pos.getZ(), pos1.getZ()) + 1d - o.z, allow ? 0f : 1f, allow ? 1f : 0f, 0f, 0.5f);
 		RenderSystem.disableDepthTest();
-		buf.endBatch();
 	}
 
 	// Taken from Screen and modified to draw and fancy line and square and removed color recalculation

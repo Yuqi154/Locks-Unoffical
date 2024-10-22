@@ -12,8 +12,9 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 import java.util.Random;
 import java.util.stream.Stream;
 
-public class ChestPlacement extends Feature<NoneFeatureConfiguration>
+public class ChestPlacement
 {
+	/*
 	public ChestPlacement(Codec<NoneFeatureConfiguration> codec)
 	{
 		super(codec);
@@ -23,7 +24,6 @@ public class ChestPlacement extends Feature<NoneFeatureConfiguration>
 	public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> pContext) {
 		return false;
 	}
-	/*
 	@Override
 	public Stream<BlockPos> getPositions(WorldDecoratingHelper helper, Random rng, NoneFeatureConfiguration cfg, BlockPos pos)
 	{

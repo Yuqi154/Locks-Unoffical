@@ -33,7 +33,7 @@ public class KeyRingScreen extends AbstractContainerScreen<KeyRingContainer>
 	protected void renderBg(GuiGraphics mtx, float partialTick, int mouseX, int mouseY)
 	{
 		int rows = this.getMenu().rows;
-		this.minecraft.getTextureManager().bindForSetup(TEXTURE);
+		//this.minecraft.getTextureManager().bindForSetup(TEXTURE);
 		int cornerX = (this.width - this.imageWidth) / 2;
 		int cornerY = (this.height - this.imageHeight) / 2;
 		mtx.blit(TEXTURE, cornerX, cornerY, 0, 0, this.imageWidth, rows * 18 + 17);

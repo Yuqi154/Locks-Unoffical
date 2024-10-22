@@ -130,8 +130,7 @@ public class LockPickingContainer extends AbstractContainerMenu
 					this.player.level().playSound(null, this.player.position().x, this.player.position().y, this.player.position().z, LocksSoundEvents.SHOCK.get(), SoundSource.BLOCKS, 1f, 1f);
 				}
 			}
-			else
-				this.player.level().playSound(null, this.pos.x, this.pos.y, this.pos.z, LocksSoundEvents.PIN_FAIL.get(), SoundSource.BLOCKS, 1f, 1f);
+			else this.player.level().playSound(null, this.pos.x, this.pos.y, this.pos.z, LocksSoundEvents.PIN_FAIL.get(), SoundSource.BLOCKS, 1f, 1f);
 		}
 		LocksNetwork.MAIN.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) this.player), new TryPinResultPacket(correct, reset));
 	}
@@ -141,11 +140,11 @@ public class LockPickingContainer extends AbstractContainerMenu
 	{
 		//处理销钉交互
 		Screen screen = Minecraft.getInstance().screen;
-		if(screen instanceof LockPickingScreen) ((LockPickingScreen) screen).handlePin(correct, reset);
-		if(correct)
-			++this.currIndex;
-		if(reset)
-			this.reset();
+		if(screen instanceof LockPickingScreen lockPickingScreen) {
+			lockPickingScreen.handlePin(correct, reset);
+			if(correct) ++this.currIndex;
+			if(reset) this.reset();
+		}
 	}
 
 	protected boolean tryBreakPick(Player player, int pin)
