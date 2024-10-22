@@ -141,7 +141,7 @@ public class LockPickingContainer extends AbstractContainerMenu
 	{
 		//处理销钉交互
 		Screen screen = Minecraft.getInstance().screen;
-		//if(screen instanceof LockPickingScreen) ((LockPickingScreen) screen).handlePin(correct, reset);
+		if(screen instanceof LockPickingScreen) ((LockPickingScreen) screen).handlePin(correct, reset);
 		if(correct)
 			++this.currIndex;
 		if(reset)
