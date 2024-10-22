@@ -6,6 +6,7 @@ import melonslise.locks.client.gui.sprite.Sprite;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+//控制精灵的行为
 @OnlyIn(Dist.CLIENT)
 public interface IAction<S extends Sprite>
 {

@@ -6,11 +6,11 @@ import melonslise.locks.client.util.LocksClientUtil;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
 
+// 处理游戏中的精灵图像的显示和动画
 @OnlyIn(Dist.CLIENT)
 public class Sprite
 {

@@ -94,17 +94,20 @@ public class LockPickingContainer extends AbstractContainerMenu
 
 	public boolean isOpen()
 	{
+		//是否已完全打开
 		return this.currIndex == this.lockable.lock.getLength();
 	}
 
 	protected void reset()
 	{
+		//重置进度
 		this.currIndex = 0;
 	}
 
 	// SERVER ONLY
 	public void tryPin(int currPin)
 	{
+		//尝试开启一个销钉（服务端）
 		if(this.isOpen())
 			return;
 		boolean correct = false;
@@ -136,9 +139,9 @@ public class LockPickingContainer extends AbstractContainerMenu
 	@OnlyIn(Dist.CLIENT)
 	public void handlePin(boolean correct, boolean reset)
 	{
+		//处理销钉交互
 		Screen screen = Minecraft.getInstance().screen;
-		if(screen instanceof LockPickingScreen)
-			((LockPickingScreen) screen).handlePin(correct, reset);
+		//if(screen instanceof LockPickingScreen) ((LockPickingScreen) screen).handlePin(correct, reset);
 		if(correct)
 			++this.currIndex;
 		if(reset)
@@ -147,6 +150,7 @@ public class LockPickingContainer extends AbstractContainerMenu
 
 	protected boolean tryBreakPick(Player player, int pin)
 	{
+		//是否断开工具
 		ItemStack pickStack = player.getItemInHand(this.hand);
 		float sturdyModifier = this.sturdy == 0 ? 1f : 0.75f + this.sturdy * 0.5f;
 		float ch = LockPickItem.getOrSetStrength(pickStack) / sturdyModifier;
@@ -181,12 +185,14 @@ public class LockPickingContainer extends AbstractContainerMenu
 
 	protected float getBreakChanceMultiplier(int pin)
 	{
+		//概率
 		return Math.abs(this.lockable.lock.getPin(this.currIndex) - pin) == 1 ? 0.33f : 1f;
 	}
 
 	@Override
 	public ItemStack quickMoveStack(Player player, int index)
 	{
+		//禁止交互
         return ItemStack.EMPTY;
 	}
 
@@ -205,6 +211,7 @@ public class LockPickingContainer extends AbstractContainerMenu
 		return new LockPickingContainer(id, inv.player, buf.readEnum(InteractionHand.class), inv.player.level().getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null).getLoaded().get(buf.readInt()));
 	};
 
+	//Network
 	public static class Writer implements Consumer<FriendlyByteBuf>
 	{
 		public final InteractionHand hand;

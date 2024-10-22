@@ -5,6 +5,7 @@ import melonslise.locks.client.util.LocksClientUtil;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+//存储纹理
 @OnlyIn(Dist.CLIENT)
 public class TextureInfo
 {

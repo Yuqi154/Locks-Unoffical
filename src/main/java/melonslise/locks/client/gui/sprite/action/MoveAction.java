@@ -4,6 +4,7 @@ import melonslise.locks.client.gui.sprite.Sprite;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+//定义精灵的移动
 @OnlyIn(Dist.CLIENT)
 public class MoveAction<S extends Sprite> extends TimedAction <S>
 {

@@ -130,10 +130,10 @@ public final class LocksClientUtil
 		buf.vertex(last, x + width, y + height, 0f).uv((u + width) * f, (v + height) * f1).color(1f, 1f, 1f, alpha).endVertex();
 		buf.vertex(last, x + width, y, 0f).uv((u + width) * f,  v * f1).color(1f, 1f, 1f, alpha).endVertex();
 		buf.vertex(last, x, y, 0f).uv(u * f, v * f1).color(1f, 1f, 1f, alpha).endVertex();
-		//buf.end();
+		buf.end();
 		//RenderSystem.enableBlend();
 		//RenderSystem.defaultBlendFunc();
-		BufferUploader.draw(buf.end());
+		//BufferUploader.draw(buf.end());
 	}
 
 	// https://stackoverflow.com/questions/7854043/drawing-rectangle-between-two-points-with-arbitrary-width

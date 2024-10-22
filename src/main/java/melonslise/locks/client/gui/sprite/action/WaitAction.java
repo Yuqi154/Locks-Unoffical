@@ -4,6 +4,7 @@ import melonslise.locks.client.gui.sprite.Sprite;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+//暂停动作
 @OnlyIn(Dist.CLIENT)
 public class WaitAction<S extends Sprite> extends TimedAction<S>
 {
