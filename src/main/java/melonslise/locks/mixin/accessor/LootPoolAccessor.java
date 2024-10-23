@@ -1,4 +1,4 @@
-package melonslise.locks.mixin;
+package melonslise.locks.mixin.accessor;
 
 import java.util.List;
 

@@ -65,13 +65,17 @@ public class LockableHandler implements ILockableHandler
 	{
 		if(lkb.bb.volume() > LocksServerConfig.MAX_LOCKABLE_VOLUME.get())
 			return false;
-		List<ILockableStorage> sts = lkb.bb.<ILockableStorage>containedChunksTo((x, z) ->
+		List<ILockableStorage> sts = lkb.bb.containedChunksTo((x, z) ->
 		{
-			if(!this.world.hasChunk(x, z))
-				return null;
-			ILockableStorage st = this.world.getChunk(x, z).getCapability(LocksCapabilities.LOCKABLE_STORAGE).orElse(null);
-			return st.get().values().stream().anyMatch(lkb1 -> lkb1.bb.intersects(lkb.bb)) ? null : st;
-		}, true);
+			try {
+				LevelChunk levelChunk = this.world.getChunk(x, z);
+				ILockableStorage st = levelChunk.getCapability(LocksCapabilities.LOCKABLE_STORAGE).orElseThrow(NullPointerException::new);
+				return st.get().values().stream().anyMatch(lkb1 -> lkb1.bb.intersects(lkb.bb)) ? null : st;
+			} catch (Exception e){
+				Locks.LOGGER.warn("Chunk not gen");
+			}
+            return null;
+        }, true);
 		if(sts == null)
 			return false;
 

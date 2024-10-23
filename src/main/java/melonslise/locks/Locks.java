@@ -27,10 +27,7 @@ public final class Locks
 		LocksItems.register();
 		LocksEnchantments.register();
 		LocksSoundEvents.register();
-		LocksPlacements.register();
-		LocksFeatures.register();
 		LocksContainerTypes.register();
 		LocksRecipeSerializers.register();
-		LocksPlacementModifiers.register();
 	}
 }

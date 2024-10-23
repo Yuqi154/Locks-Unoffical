@@ -88,19 +88,13 @@ public final class LocksForgeEvents
 	{
 		// Only modify if it was a vanilla chest loot table
 		ResourceLocation name = e.getName();
-		if(!name.getNamespace().equals("minecraft") || !name.getPath().startsWith("chests"))
+		if (!name.getNamespace().equals("minecraft") || !name.getPath().startsWith("chests"))
 			return;
 		// And only if there is a corresponding inject table...
 		ResourceLocation injectLoc = new ResourceLocation(Locks.ID, "loot_tables/inject/" + name.getPath() + ".json");
-		if(LocksUtil.resourceManager.getResource(injectLoc).isEmpty()) return;
-		try
-		{
-			LocksUtil.mergeEntries(e.getTable(), LocksUtil.lootTableFrom(injectLoc));
-		}
-		catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | IOException ex)
-		{
-			ex.printStackTrace();
-		}
+		if (LocksUtil.resourceManager.getResource(injectLoc).isEmpty())
+			return;
+		// todo (kota): bring back
 
 	}
 
@@ -207,7 +201,7 @@ public final class LocksForgeEvents
 		if(e.phase != Phase.START)
 			return;
 		ISelection select = e.player.getCapability(LocksCapabilities.SELECTION).orElse(null);
-		if (select.get() == null)
+		if (select == null || select.get() == null)
 			return;
 		for (ItemStack stack : e.player.getHandSlots())
 			if(stack.is(LocksItemTags.LOCKS))

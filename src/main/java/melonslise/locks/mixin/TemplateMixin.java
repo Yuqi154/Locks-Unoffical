@@ -38,6 +38,7 @@ public class TemplateMixin
 	@Inject(at = @At("HEAD"), method = "fillFromWorld")
 	private void fillFromWorld(Level world, BlockPos start, Vec3i size, boolean takeEntities, @Nullable Block toIgnore, CallbackInfo ci)
 	{
+		/*
 		if (size.getX() >= 1 && size.getY() >= 1 && size.getZ() >= 1)
 		{
 			this.lockableInfos.clear();
@@ -51,12 +52,14 @@ public class TemplateMixin
 					this.lockableInfos.add(new LockableInfo(newBB, lkb.lock, lkb.tr, lkb.stack, lkb.id));
 				});
 		}
+		 */
 	}
 
 	// Second return
 	@Inject(at = @At(value = "RETURN", ordinal = 1), method = "placeInWorld")
 	private void placeInWorld(ServerLevelAccessor world, BlockPos start, BlockPos size, StructurePlaceSettings settings, RandomSource rng, int i, CallbackInfoReturnable<Boolean> cir)
 	{
+		/*
 		Level level;
 		try
 		{
@@ -78,6 +81,7 @@ public class TemplateMixin
 			Transform tr = Transform.fromDirectionAndFace(settings.getRotation().rotate(settings.getMirror().getRotation(lkb.tr.dir).rotate(lkb.tr.dir)), lkb.tr.face, Direction.NORTH);
 			handler.add(new Lockable(bb, lock, tr, stack, level));
 		}
+		 */
 	}
 
 	@Unique
@@ -86,18 +90,22 @@ public class TemplateMixin
 	@Inject(at = @At("HEAD"), method = "save")
 	private void save(CompoundTag nbt, CallbackInfoReturnable<CompoundTag> cir)
 	{
+		/*
 		ListTag list = new ListTag();
 		for(LockableInfo lkb : this.lockableInfos)
 			list.add(LockableInfo.toNbt(lkb));
 		nbt.put(KEY_LOCKABLES, list);
+		 */
 	}
 
 	@Inject(at = @At("HEAD"), method = "load")
 	private void read(HolderGetter<Block> pBlockGetter,	 CompoundTag nbt, CallbackInfo ci)
 	{
+		/*
 		this.lockableInfos.clear();
 		ListTag list = nbt.getList(KEY_LOCKABLES, Tag.TAG_COMPOUND);
 		for(int a = 0, b = list.size(); a < b; ++a)
 			this.lockableInfos.add(LockableInfo.fromNbt(list.getCompound(a)));
+		 */
 	}
 }
