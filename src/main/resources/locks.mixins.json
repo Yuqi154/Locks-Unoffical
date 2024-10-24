@@ -17,14 +17,12 @@
     "PistonBlockMixin",
     "PistonBlockStructureHelperMixin",
     "ServerWorldMixin",
-    "TemplateMixin",
     "WorldMixin",
     "accessor.ForgeHooksAccessor",
     "accessor.LootPoolAccessor",
     "accessor.LootTableAccessor",
-    "swapLock.ChunkGeneratorMixin",
-    "swapLock.FeatureMixin",
-    "swapLock.StructurePieceMixin"
+    "swapLock.StructurePieceMixin",
+    "swapLock.StructureTemplateMixin",
   ],
   "client": [
     "client.WorldRendererMixin"

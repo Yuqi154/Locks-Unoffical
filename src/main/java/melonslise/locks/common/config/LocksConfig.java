@@ -83,7 +83,7 @@ public final class LocksConfig {
         }
     }
 
-    public static boolean canGen(RandomSource rng, WorldGenLevel world, BlockPos pos) {
+    public static boolean canGen(RandomSource rng, Level world, BlockPos pos) {
         boolean random = LocksUtil.chance(rng, GENERATION_CHANCE.get());
         Block block = world.getBlockState(pos).getBlock();
         String name = BuiltInRegistries.BLOCK.getKey(block).toString();

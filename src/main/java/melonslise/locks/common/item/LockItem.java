@@ -125,8 +125,9 @@ public class LockItem extends LockingItem
 		if(world.isClientSide) return InteractionResult.SUCCESS;
 		BlockState state = world.getBlockState(pos);
 		BlockPos pos1 = pos;
-		if(state.hasProperty(BlockStateProperties.CHEST_TYPE) && state.getValue(BlockStateProperties.CHEST_TYPE) != ChestType.SINGLE)
+		if(state.hasProperty(BlockStateProperties.CHEST_TYPE) && state.getValue(BlockStateProperties.CHEST_TYPE) != ChestType.SINGLE) {
 			pos1 = pos.relative(ChestBlock.getConnectedDirection(state));
+		}
 		else if(state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF))
 		{
 			pos1 = state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER ? pos.above() : pos.below();
