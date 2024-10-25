@@ -101,9 +101,8 @@ public class StructureTemplateMixin {
         for (int a = 0, b = list.size(); a < b; ++a)
             this.lockableInfos.add(LockableInfo.fromNbt(list.getCompound(a)));
     }
-
     @Inject(method = "placeInWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/ServerLevelAccessor;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", ordinal = 1, shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
-    public void lockBlock(ServerLevelAccessor pServerLevel, BlockPos pOffset, BlockPos pPos,
+    public void lockBlock(ServerLevelAccessor levelAccessor, BlockPos pOffset, BlockPos pPos,
                           StructurePlaceSettings pSettings, RandomSource pRandom, int pFlags,
                           CallbackInfoReturnable<Boolean> cir,
                           List<StructureTemplate.StructureBlockInfo> list, BoundingBox boundingbox, List<BlockPos> list1, List<BlockPos> list2, List<Pair<BlockPos, CompoundTag>> list3,
@@ -111,9 +110,11 @@ public class StructureTemplateMixin {
                           Iterator<BlockPos> var18, StructureTemplate.StructureBlockInfo structuretemplate$structureblockinfo,
                           BlockPos blockPos, FluidState fluidstate, BlockState blockstate
     ) {
-        ServerLevel level = pServerLevel.getLevel();
-        if (pServerLevel.hasChunk(blockPos.getX() >> 4, blockPos.getZ() >> 4) && LocksConfig.canGen(pRandom, level, blockPos)) {
-            //LocksUtil.lockWhenGen(level, blockPos, pRandom);
+        if (levelAccessor.hasChunk(blockPos.getX() >> 4, blockPos.getZ() >> 4)){
+            Block block = levelAccessor.getBlockState(blockPos).getBlock();
+            if (LocksConfig.canGen(pRandom, block)) {
+                LocksUtil.lockWhenGen(levelAccessor, blockPos, RandomSource.create());
+            }
         }
     }
 
@@ -128,8 +129,11 @@ public class StructureTemplateMixin {
                           Iterator<BlockPos> var20, Pair<BlockPos, CompoundTag> pair,
                           BlockPos blockPos, BlockState blockstate2, BlockState blockstate3
     ) {
-        if (levelAccessor.hasChunk(blockPos.getX() >> 4, blockPos.getZ() >> 4) && LocksConfig.canGen(pRandom, levelAccessor.getLevel(), blockPos)) {
-            //LocksUtil.lockWhenGen(levelAccessor.getLevel(), blockPos, pRandom);
+        if (levelAccessor.hasChunk(blockPos.getX() >> 4, blockPos.getZ() >> 4)){
+            Block block = levelAccessor.getBlockState(blockPos).getBlock();
+            if (LocksConfig.canGen(pRandom, block)) {
+                LocksUtil.lockWhenGen(levelAccessor, blockPos, pRandom);
+            }
         }
     }
 }

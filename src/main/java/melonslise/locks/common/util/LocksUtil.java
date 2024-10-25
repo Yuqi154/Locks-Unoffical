@@ -18,6 +18,8 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -157,40 +159,46 @@ public final class LocksUtil {
         return intersecting(world, pos).anyMatch(LocksPredicates.LOCKED);
     }
 
-    public static void lockWhenGen(ServerLevel level, BlockPos pos, RandomSource randomSource) {
-        BlockState state = level.getBlockState(pos);
-        BlockPos pos1 = pos;
-        Direction dir = level.getBlockState(pos).getValue(HorizontalDirectionalBlock.FACING);
-        if (state.hasProperty(BlockStateProperties.CHEST_TYPE)) {
-            switch (state.getValue(BlockStateProperties.CHEST_TYPE)) {
-                case LEFT -> pos1 = pos.relative(ChestBlock.getConnectedDirection(state));
-                case RIGHT -> {
-                    return;
-                }
-            }
-        }
-        if (state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)) {
-            if (state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER) return;
-            pos1 = pos.below();
-            if (state.hasProperty(BlockStateProperties.DOOR_HINGE)) {
-                if(state.hasProperty(BlockStateProperties.DOOR_HINGE) && state.hasProperty(BlockStateProperties.HORIZONTAL_FACING))
-                {
-                    BlockPos pos2 = pos1.relative(state.getValue(BlockStateProperties.DOOR_HINGE) == DoorHingeSide.LEFT ? dir.getClockWise() : dir.getCounterClockWise());
-                    if(level.getBlockState(pos2).is(state.getBlock())) {
-                        if (state.getValue(BlockStateProperties.DOOR_HINGE) == DoorHingeSide.LEFT) {
-                            return;
-                        }
-                        pos1 = pos2;
+    public static void lockWhenGen(ServerLevelAccessor levelAccessor, BlockPos blockPos, RandomSource randomSource) {
+        Block block = levelAccessor.getBlockState(blockPos).getBlock();
+        if (LocksConfig.canGen(randomSource, block)) {
+            ServerLevel level = levelAccessor.getLevel();
+            BlockState state = levelAccessor.getBlockState(blockPos);
+            BlockPos pos1 = blockPos;
+            Direction dir = levelAccessor.getBlockState(blockPos).getValue(HorizontalDirectionalBlock.FACING);
+            if (state.hasProperty(BlockStateProperties.CHEST_TYPE)) {
+                switch (state.getValue(BlockStateProperties.CHEST_TYPE)) {
+                    case LEFT -> pos1 = blockPos.relative(ChestBlock.getConnectedDirection(state));
+                    case RIGHT -> {
+                        return;
                     }
                 }
-                dir = dir.getOpposite();
             }
+            if (state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)) {
+                if (state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER) return;
+                pos1 = blockPos.below();
+                if (state.hasProperty(BlockStateProperties.DOOR_HINGE)) {
+                    if (state.hasProperty(BlockStateProperties.DOOR_HINGE) && state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+                        BlockPos pos2 = pos1.relative(state.getValue(BlockStateProperties.DOOR_HINGE) == DoorHingeSide.LEFT ? dir.getClockWise() : dir.getCounterClockWise());
+                        if (levelAccessor.getBlockState(pos2).is(state.getBlock())) {
+                            if (state.getValue(BlockStateProperties.DOOR_HINGE) == DoorHingeSide.LEFT) {
+                                return;
+                            }
+                            pos1 = pos2;
+                        }
+                    }
+                    dir = dir.getOpposite();
+                }
+            }
+            Cuboid6i bb = new Cuboid6i(blockPos, pos1);
+            ItemStack stack = LocksConfig.getRandomLock(randomSource);
+            Lock lock = Lock.from(stack);
+            Transform tr = Transform.fromDirection(dir, dir);
+            Lockable lkb = new Lockable(bb, lock, tr, stack, level);
+            lkb.bb.getContainedChunks((x, z) -> {
+                ((ILockableProvider) levelAccessor.getChunk(x, z)).getLockables().add(lkb);
+                return true;
+            });
         }
-        ILockableHandler handler = level.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
-        Cuboid6i bb = new Cuboid6i(pos, pos1);
-        ItemStack stack = LocksConfig.getRandomLock(randomSource);
-        Lock lock = Lock.from(stack);
-        Transform tr = Transform.fromDirection(dir, dir);
-        handler.add(new Lockable(bb, lock, tr, stack, level));
     }
 }
