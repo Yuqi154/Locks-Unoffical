@@ -44,8 +44,6 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -211,20 +209,20 @@ public final class LocksForgeEvents
 
 	public static boolean canBreakLockable(Player player, BlockPos pos)
 	{
-		return !LocksServerConfig.PROTECT_LOCKABLES.get() || player.isCreative() || !LocksUtil.locked(player.level(), pos);
+		return LocksServerConfig.PROTECT_LOCKABLES.get() &&
+				!player.isCreative() &&
+				LocksUtil.lockedAndRelated(player.level(), pos);
 	}
 
 	@SubscribeEvent
 	public static void onBlockBreaking(PlayerEvent.BreakSpeed e)
 	{
-		if(!canBreakLockable(e.getEntity(), e.getPosition().get()))
-			e.setCanceled(true);
+        e.setCanceled(canBreakLockable(e.getEntity(), e.getPosition().get()));
 	}
 
 	@SubscribeEvent
 	public static void onBlockBreak(BlockEvent.BreakEvent e)
 	{
-		if(!canBreakLockable(e.getPlayer(), e.getPos()))
-			e.setCanceled(true);
+        e.setCanceled(canBreakLockable(e.getPlayer(), e.getPos()));
 	}
 }

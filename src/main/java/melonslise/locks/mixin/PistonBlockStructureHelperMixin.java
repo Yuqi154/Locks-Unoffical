@@ -2,6 +2,7 @@ package melonslise.locks.mixin;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,7 +23,7 @@ public class PistonBlockStructureHelperMixin
 	@Inject(at = @At("HEAD"), method = "resolve()Z", cancellable = true)
 	private void resolve(CallbackInfoReturnable<Boolean> cir)
 	{
-		if(LocksUtil.locked(this.level, this.startPos))
+		if(LocksUtil.lockedAndRelated(this.level, this.startPos))
 			cir.setReturnValue(false);
 	}
 }

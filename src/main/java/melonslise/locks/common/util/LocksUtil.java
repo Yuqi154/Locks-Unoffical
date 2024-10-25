@@ -155,10 +155,18 @@ public final class LocksUtil {
         );
     }
 
+    public static boolean lockedAndRelated(Level world, BlockPos pos) {
+        BlockPos above = pos.above();
+        Block aboveBlock = world.getBlockState(above).getBlock();
+        boolean checkAbove = LocksUtil.locked(world, above) && aboveBlock instanceof DoorBlock;
+        return locked(world, pos) || checkAbove;
+    }
+
     public static boolean locked(Level world, BlockPos pos) {
         return intersecting(world, pos).anyMatch(LocksPredicates.LOCKED);
     }
 
+    // TODO: 方块遮挡判断
     public static void lockWhenGen(ServerLevelAccessor levelAccessor, BlockPos blockPos, RandomSource randomSource) {
         Block block = levelAccessor.getBlockState(blockPos).getBlock();
         if (LocksConfig.canGen(randomSource, block)) {
