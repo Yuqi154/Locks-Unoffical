@@ -19,6 +19,7 @@ public class LocksServerConfig {
     public static final ForgeConfigSpec.BooleanValue ALLOW_REMOVING_LOCKS;
     public static final ForgeConfigSpec.BooleanValue PROTECT_LOCKABLES;
     public static final ForgeConfigSpec.BooleanValue EASY_LOCK;
+    public static final ForgeConfigSpec.BooleanValue STRONG_PREVENTION;
 
     public static Pattern[] lockableBlocks;
 
@@ -45,7 +46,10 @@ public class LocksServerConfig {
                 .comment("Lock blocks with just one click! It's magic! (Cancel will probably fail spectacularly with custom doors, custom double chests, etc)")
                 .comment("只需点击一下即可锁定块！这太神奇了！ （取消可能会使自定义门、自定义双箱等出现严重错误）")
                 .define("Easy Lock", true);
-
+        STRONG_PREVENTION = cfg
+                .comment("Use stronger checks to prevent blocks on locks from being broken, but its compatibility is unknown")
+                .comment("使用更强的检查来防止上锁方块被破坏，兼容性未知")
+                .define("Stronger Prevention", false);
         SPEC = cfg.build();
     }
 
