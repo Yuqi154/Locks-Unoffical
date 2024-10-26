@@ -10,6 +10,7 @@
     "ChunkManagerMixin",
     "ChunkMixin",
     "ChunkPrimerMixin",
+    "DoorMixin",
     "ExplosionContextMixin",
     "HopperTileEntityMixin",
     "LockableTileEntityMixin",
@@ -22,7 +23,7 @@
     "accessor.LootPoolAccessor",
     "accessor.LootTableAccessor",
     "swapLock.StructurePieceMixin",
-    "swapLock.StructureTemplateMixin",
+    "swapLock.StructureTemplateMixin"
   ],
   "client": [
     "client.WorldRendererMixin"

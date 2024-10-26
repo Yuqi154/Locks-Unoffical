@@ -42,11 +42,11 @@ public final class LocksConfig {
         GENERATION_CHANCE = cfg
                 .comment("Chance to generate a random lock on every new chest during world generation. Set to 0 to disable")
 				.comment("在世界生成过程中，每个新箱子生成一个随机锁的概率。设置为0以禁用此功能。")
-                .defineInRange("Generation Chance", 0.85d, 0d, 1d);
+                .defineInRange("Generation Chance", 0.5d, 0d, 1d);
         GENERATION_ENCHANT_CHANCE = cfg
                 .comment("Chance to randomly enchant a generated lock during world generation. Set to 0 to disable")
 				.comment("在世界生成过程中，随机附魔生成的锁的概率。设置为0以禁用此功能。")
-                .defineInRange("Generation Enchant Chance", 0.4d, 0d, 1d);
+                .defineInRange("Generation Enchant Chance", 0.1d, 0d, 1d);
         GEN_LOCKABLE_BLOCKS = cfg
                 .comment("Blocks that can be locked during the world generation")
                 .comment("当世界生成时锁定的方块")
@@ -58,7 +58,7 @@ public final class LocksConfig {
         GENERATED_LOCK_WEIGHTS = cfg
                 .comment("WARNING: THE AMOUNT OF NUMBERS SHOULD BE EQUAL TO THE AMOUNT OF GENERATED LOCK ITEMS!!!", "The relative probability that the corresponding lock item will be generated on a chest. Higher number = higher chance to generate")
 				.comment("警告：数字的数量应与生成的锁数量相等！！！", "对应锁物品生成在箱子上的相对概率。数字越大，生成的机会越高。")
-                .defineList("Generated Lock Chances", Lists.newArrayList(3, 3, 2, 2, 1), e -> e instanceof Integer);
+                .defineList("Generated Lock Chances", Lists.newArrayList(5, 4, 2, 3, 1), e -> e instanceof Integer);
         RANDOMIZE_LOADED_LOCKS = cfg
                 .comment("Randomize lock IDs and combinations when loading them from a structure file. Randomization works just like during world generation")
 				.comment("从结构文件加载锁ID和组合时进行随机化。随机化的方式与世界生成时相同。")
