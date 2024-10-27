@@ -182,7 +182,7 @@ public final class LocksUtil {
             } else if(state.hasProperty(HORIZONTAL_FACING)){
                 dir = state.getValue(HORIZONTAL_FACING);
             } else {
-                dir = Direction.UP;
+                dir = Direction.NORTH;
             }
 
             if (state.hasProperty(CHEST_TYPE)) {
