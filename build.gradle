@@ -84,6 +84,8 @@ repositories {
 
 dependencies {
 	minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+	runtimeOnly("curse.maven:lootr-361276:5636598")
+	compileOnly("curse.maven:lootr-361276:5636598")
 	annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
