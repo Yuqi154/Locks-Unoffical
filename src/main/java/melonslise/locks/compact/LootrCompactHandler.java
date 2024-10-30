@@ -1,5 +1,6 @@
 package melonslise.locks.compact;
 
+import melonslise.locks.Locks;
 import melonslise.locks.common.capability.ILockableHandler;
 import melonslise.locks.common.init.LocksCapabilities;
 import melonslise.locks.common.util.Lockable;
@@ -25,6 +26,18 @@ public class LootrCompactHandler {
             return;
         }
         if(newState.is(ModBlocks.CHEST.get())){
+            return;
+        }
+        if(oldState.is(Blocks.TRAPPED_CHEST)){
+            return;
+        }
+        if(newState.is(ModBlocks.TRAPPED_CHEST.get())){
+            return;
+        }
+        if(oldState.is(Blocks.BARREL)){
+            return;
+        }
+        if(newState.is(ModBlocks.BARREL.get())){
             return;
         }
 
