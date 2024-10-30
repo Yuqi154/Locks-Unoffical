@@ -22,22 +22,10 @@ import java.util.stream.Collectors;
 public class LootrCompactHandler {
     public static void handleBlockUpdate(ServerLevel world, ILockableHandler handler, BlockPos pos, BlockState oldState, BlockState newState) {
 
-        if(oldState.is(Blocks.CHEST)){
+        if(oldState.is(Blocks.CHEST)||oldState.is(Blocks.TRAPPED_CHEST)||oldState.is(Blocks.BARREL)){
             return;
         }
-        if(newState.is(ModBlocks.CHEST.get())){
-            return;
-        }
-        if(oldState.is(Blocks.TRAPPED_CHEST)){
-            return;
-        }
-        if(newState.is(ModBlocks.TRAPPED_CHEST.get())){
-            return;
-        }
-        if(oldState.is(Blocks.BARREL)){
-            return;
-        }
-        if(newState.is(ModBlocks.BARREL.get())){
+        if(newState.is(ModBlocks.CHEST.get())||newState.is(ModBlocks.TRAPPED_CHEST.get())||newState.is(ModBlocks.BARREL.get())){
             return;
         }
 
