@@ -1,5 +1,6 @@
 package melonslise.locks.compact;
 
+import melonslise.locks.Locks;
 import melonslise.locks.common.capability.ILockableHandler;
 import melonslise.locks.common.init.LocksCapabilities;
 import melonslise.locks.common.util.Lockable;
@@ -27,10 +28,22 @@ public class LootrCompactHandler {
         if(newState.is(ModBlocks.CHEST.get())){
             return;
         }
+        if(oldState.is(Blocks.TRAPPED_CHEST)){
+            return;
+        }
+        if(newState.is(ModBlocks.TRAPPED_CHEST.get())){
+            return;
+        }
+        if(oldState.is(Blocks.BARREL)){
+            return;
+        }
+        if(newState.is(ModBlocks.BARREL.get())){
+            return;
+        }
 
         handler.getInChunk(pos).values().stream().filter(lkb -> lkb.bb.intersects(pos)).collect(Collectors.toList()).forEach(lkb ->
         {
-            world.playSound(null, pos, SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 0.8f, 0.8f + world.random.nextFloat() * 0.4f);
+            world.playSound(null, pos, SoundEvents.IRON_DOOR_OPEN, SoundSource.BLOCKS, 0.8f, 0.8f + world.random.nextFloat() * 0.4f);
             world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, lkb.stack));
             handler.remove(lkb.id);
         });
