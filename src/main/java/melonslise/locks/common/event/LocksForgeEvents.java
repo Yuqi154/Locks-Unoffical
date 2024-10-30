@@ -2,11 +2,8 @@ package melonslise.locks.common.event;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import melonslise.locks.Locks;
-import melonslise.locks.common.capability.ILockableHandler;
-import melonslise.locks.common.capability.ISelection;
 import melonslise.locks.common.config.LocksClientConfig;
 import melonslise.locks.common.config.LocksServerConfig;
-import melonslise.locks.common.init.LocksCapabilities;
 import melonslise.locks.common.init.LocksItemTags;
 import melonslise.locks.common.init.LocksItems;
 import melonslise.locks.common.init.LocksSoundEvents;
@@ -104,18 +101,18 @@ public final class LocksForgeEvents
 		Int2ObjectMap<List<VillagerTrades.ItemListing>> levels = e.getTrades();
 		List<VillagerTrades.ItemListing> trades;
 		trades = levels.get(1);
-		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.WOOD_LOCK_PICK.get()), 1, 2, 16, 2, 0.05f));
-		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.WOOD_LOCK_MECHANISM.get()), 2, 1, 12, 1, 0.2f));
+		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.WOOD_LOCK_PICK), 1, 2, 16, 2, 0.05f));
+		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.WOOD_LOCK_MECHANISM), 2, 1, 12, 1, 0.2f));
 		trades = levels.get(2);
-		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.IRON_LOCK_PICK.get()), 2, 2, 16, 5, 0.05f));
+		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.IRON_LOCK_PICK), 2, 2, 16, 5, 0.05f));
 		trades = levels.get(3);
-		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.GOLD_LOCK_PICK.get()), 6, 2, 12, 20, 0.05f));
-		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.IRON_LOCK_MECHANISM.get()), 5, 1, 8, 10, 0.2f));
+		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.GOLD_LOCK_PICK), 6, 2, 12, 20, 0.05f));
+		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.IRON_LOCK_MECHANISM), 5, 1, 8, 10, 0.2f));
 		trades = levels.get(4);
-		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.STEEL_LOCK_PICK.get()), 4, 2, 16, 20, 0.05f));
+		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.STEEL_LOCK_PICK), 4, 2, 16, 20, 0.05f));
 		trades = levels.get(5);
-		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.DIAMOND_LOCK_PICK.get()), 8, 2, 12, 30, 0.05f));
-		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.STEEL_LOCK_MECHANISM.get()), 8, 1, 8, 30, 0.2f));
+		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.DIAMOND_LOCK_PICK), 8, 2, 12, 30, 0.05f));
+		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.STEEL_LOCK_MECHANISM), 8, 1, 8, 30, 0.2f));
 	}
 
 	@SubscribeEvent
@@ -123,12 +120,12 @@ public final class LocksForgeEvents
 	{
 		List<VillagerTrades.ItemListing> trades;
 		trades = e.getGenericTrades();
-		trades.add(new VillagerTrades.ItemsForEmeralds(LocksItems.GOLD_LOCK_PICK.get(), 5, 2, 6, 1));
-		trades.add(new VillagerTrades.ItemsForEmeralds(LocksItems.STEEL_LOCK_PICK.get(), 3, 2, 8, 1));
-		trades.add(new VillagerTrades.EnchantedItemForEmeralds(LocksItems.STEEL_LOCK.get(), 16, 4, 1));
+		trades.add(new VillagerTrades.ItemsForEmeralds(LocksItems.GOLD_LOCK_PICK, 5, 2, 6, 1));
+		trades.add(new VillagerTrades.ItemsForEmeralds(LocksItems.STEEL_LOCK_PICK, 3, 2, 8, 1));
+		trades.add(new VillagerTrades.EnchantedItemForEmeralds(LocksItems.STEEL_LOCK, 16, 4, 1));
 		trades = e.getRareTrades();
-		trades.add(new VillagerTrades.ItemsForEmeralds(LocksItems.STEEL_LOCK_MECHANISM.get(), 6, 1, 4, 1));
-		trades.add(new VillagerTrades.EnchantedItemForEmeralds(LocksItems.DIAMOND_LOCK.get(), 28, 4, 1));
+		trades.add(new VillagerTrades.ItemsForEmeralds(LocksItems.STEEL_LOCK_MECHANISM, 6, 1, 4, 1));
+		trades.add(new VillagerTrades.EnchantedItemForEmeralds(LocksItems.DIAMOND_LOCK, 28, 4, 1));
 	}
 
 	@SubscribeEvent
@@ -136,7 +133,7 @@ public final class LocksForgeEvents
 	{
 		LevelChunk ch = (LevelChunk) e.getChunk();
 		ILockableHandler handler = ch.getLevel().getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
-		ch.getCapability(LocksCapabilities.LOCKABLE_STORAGE).orElse(null).get().values().forEach(lkb ->
+		ch.getCapability(LocksCapabilities.LOCKABLE_STORAGE).orElse(null).values().forEach(lkb ->
 		{
 			handler.getLoaded().remove(lkb.id);
 			lkb.deleteObserver(handler);
@@ -168,21 +165,21 @@ public final class LocksForgeEvents
 		Optional<Lockable> locked = Arrays.stream(intersect).filter(LocksPredicates.LOCKED).findFirst();
 		if(locked.isPresent())
 		{
-			Lockable lkb = locked.get();
+			Lockable lkb = locked;
 			e.setUseBlock(Event.Result.DENY);
 			Item item = stack.getItem();
 			// FIXME erase this ugly ass hard coded shit from the face of the earth and make a proper way to do this (maybe mixin to where the right click event is fired from)
-			if(!stack.is(LocksItemTags.LOCK_PICKS) && item != LocksItems.MASTER_KEY.get() && (!stack.is(LocksItemTags.KEYS) || LockingItem.getOrSetId(stack) != lkb.lock.id) && (item != LocksItems.KEY_RING.get() || !KeyRingItem.containsId(stack, lkb.lock.id)))
+			if(!stack.is(LocksItemTags.LOCK_PICKS) && item != LocksItems.MASTER_KEY && (!stack.is(LocksItemTags.KEYS) || LockingItem.getOrSetId(stack) != lkb.lock.id) && (item != LocksItems.KEY_RING || !KeyRingItem.containsId(stack, lkb.lock.id)))
 			{
 				lkb.swing(20);
-				world.playSound(player, pos, LocksSoundEvents.LOCK_RATTLE.get(), SoundSource.BLOCKS, 1f, 1f);
+				world.playSound(player, pos, LocksSoundEvents.LOCK_RATTLE, SoundSource.BLOCKS, 1f, 1f);
 			}
 			player.swing(InteractionHand.MAIN_HAND);
-			if(world.isClientSide && LocksClientConfig.DEAF_MODE.get())
+			if(world.isClientSide && LocksClientConfig.DEAF_MODE)
 				player.displayClientMessage(LOCKED_MESSAGE, true);
 			return;
 		}
-		if(LocksServerConfig.ALLOW_REMOVING_LOCKS.get() && player.isShiftKeyDown() && stack.isEmpty())
+		if(LocksServerConfig.ALLOW_REMOVING_LOCKS && player.isShiftKeyDown() && stack.isEmpty())
 		{
 			Lockable[] match = Arrays.stream(intersect).filter(LocksPredicates.NOT_LOCKED).toArray(Lockable[]::new);
 			if(match.length == 0)
@@ -205,7 +202,7 @@ public final class LocksForgeEvents
 		if(e.phase != Phase.START)
 			return;
 		ISelection select = e.player.getCapability(LocksCapabilities.SELECTION).orElse(null);
-		if (select == null || select.get() == null)
+		if (select == null || select == null)
 			return;
 		for (ItemStack stack : e.player.getHandSlots())
 			if(stack.is(LocksItemTags.LOCKS))
@@ -215,7 +212,7 @@ public final class LocksForgeEvents
 
 	public static boolean canBreakLockable(Player player, BlockPos pos)
 	{
-		return LocksServerConfig.PROTECT_LOCKABLES.get() &&
+		return LocksServerConfig.PROTECT_LOCKABLES &&
 				!player.isCreative() &&
 				LocksUtil.lockedAndRelated(player.level(), pos);
 	}
@@ -223,7 +220,7 @@ public final class LocksForgeEvents
 	@SubscribeEvent
 	public static void onBlockBreaking(PlayerEvent.BreakSpeed e)
 	{
-        e.setCanceled(canBreakLockable(e.getEntity(), e.getPosition().get()));
+        e.setCanceled(canBreakLockable(e.getEntity(), e.getPosition()));
 	}
 
 	@SubscribeEvent

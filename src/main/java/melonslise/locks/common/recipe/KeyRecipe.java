@@ -44,7 +44,7 @@ public class KeyRecipe extends CustomRecipe
 					return false;
 				hasLocking = true;
 			}
-			else if(stack.getItem() == LocksItems.KEY_BLANK.get())
+			else if(stack.getItem() == LocksItems.KEY_BLANK)
 				++blanks;
 			else
 				return false;
@@ -69,14 +69,14 @@ public class KeyRecipe extends CustomRecipe
 					return ItemStack.EMPTY;
 				locking = stack;
 			}
-			else if(stack.getItem() == LocksItems.KEY_BLANK.get())
+			else if(stack.getItem() == LocksItems.KEY_BLANK)
 				++blanks;
 			else
 				return ItemStack.EMPTY;
 		}
 
 		if(!locking.isEmpty() && blanks >= 1)
-			return LockingItem.copyId(locking, new ItemStack(LocksItems.KEY.get()));
+			return LockingItem.copyId(locking, new ItemStack(LocksItems.KEY));
 		return ItemStack.EMPTY;
 	}
 

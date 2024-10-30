@@ -1,6 +1,5 @@
 package melonslise.locks.common.util;
 
-import melonslise.locks.common.init.LocksCapabilities;
 import melonslise.locks.common.item.LockItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;

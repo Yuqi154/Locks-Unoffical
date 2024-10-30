@@ -6,49 +6,28 @@ import melonslise.locks.common.item.KeyRingItem;
 import melonslise.locks.common.item.LockItem;
 import melonslise.locks.common.item.LockPickItem;
 import melonslise.locks.common.item.MasterKeyItem;
+import melonslise.locks.common.util.Lock;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.RegistryObject;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public final class LocksItems {
-    public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Locks.ID);
 
-    public static final RegistryObject<CreativeModeTab> TAB = TABS.register(Locks.ID,
-            () -> CreativeModeTab
-                    .builder()
-                    .icon(() -> new ItemStack(LocksItems.IRON_LOCK.get()))
-                    .title(Component.translatable("itemGroup.locks"))
-                    .displayItems((parameters, output) -> {
-                        for (RegistryObject<Enchantment> enchantmentRegistryObject : LocksEnchantments.ENCHANTMENTS.getEntries()) {
-                            Enchantment enchantment = enchantmentRegistryObject.get();
-                            ItemStack enchantedBook = new ItemStack(Items.ENCHANTED_BOOK);
-                            enchantedBook.enchant(enchantment, enchantment.getMaxLevel());
-                            output.accept(enchantedBook);
-                        }
-                        for (RegistryObject<Item> itemRegistryObject : LocksItems.ITEMS.getEntries()) {
-                            output.accept(itemRegistryObject.get());
-                        }
-                    })
-                    .build()
-    );
+    public static List<Item> items = new ArrayList<>();
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Locks.ID);
-
-    public static final RegistryObject<Item>
+    public static final Item
             SPRING = add("spring", () -> new Item(new Item.Properties())),
             WOOD_LOCK_MECHANISM = add("wood_lock_mechanism", () -> new Item(new Item.Properties())),
             IRON_LOCK_MECHANISM = add("iron_lock_mechanism", () -> new Item(new Item.Properties())),
@@ -68,15 +47,29 @@ public final class LocksItems {
             GOLD_LOCK_PICK = add("gold_lock_pick", () -> new LockPickItem(0.25f, new Item.Properties())),
             DIAMOND_LOCK_PICK = add("diamond_lock_pick", () -> new LockPickItem(0.85f, new Item.Properties()));
 
-    private LocksItems() {
-    }
-
     public static void register() {
-        ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        TABS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    public static RegistryObject<Item> add(String name, Supplier<Item> itemSupplier) {
-        return ITEMS.register(name, itemSupplier);
+    public static Item add(String resourceLocation, Supplier<Item> itemSupplier) {
+        Item register = Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(Locks.ID, resourceLocation), itemSupplier.get());
+        items.add(register);
+        return register;
     }
+
+    public static final CreativeModeTab TABS = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Locks.ID, CreativeModeTab
+            .builder(CreativeModeTab.Row.TOP, 9)
+            .icon(() -> new ItemStack(LocksItems.IRON_LOCK))
+            .title(Component.translatable("itemGroup.locks"))
+            .displayItems((parameters, output) -> {
+                for (Enchantment enchantmentRegistryObject : LocksEnchantments.ENCHANTMENTS.getEntries()) {
+                    Enchantment enchantment = enchantmentRegistryObject;
+                    ItemStack enchantedBook = new ItemStack(Items.ENCHANTED_BOOK);
+                    enchantedBook.enchant(enchantment, enchantment.getMaxLevel());
+                    output.accept(enchantedBook);
+                }
+                for (Item itemRegistryObject : items) {
+                    output.accept(itemRegistryObject);
+                }
+            })
+            .build());
 }

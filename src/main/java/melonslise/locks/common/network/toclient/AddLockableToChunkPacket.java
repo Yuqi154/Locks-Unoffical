@@ -3,9 +3,6 @@ package melonslise.locks.common.network.toclient;
 import java.util.function.Supplier;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import melonslise.locks.common.capability.ILockableHandler;
-import melonslise.locks.common.capability.ILockableStorage;
-import melonslise.locks.common.init.LocksCapabilities;
 import melonslise.locks.common.util.Lockable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;

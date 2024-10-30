@@ -13,7 +13,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.NavigableMap;
@@ -79,7 +78,7 @@ public final class LocksConfig {
         List<? extends Integer> weights = GENERATED_LOCK_WEIGHTS.get();
         for (int a = 0; a < locks.size(); ++a) {
             weightTotal += weights.get(a);
-            weightedGeneratedLocks.put(weightTotal, ForgeRegistries.ITEMS.getValue(new ResourceLocation(locks.get(a))));
+            weightedGeneratedLocks.put(weightTotal, BuiltInRegistries.ITEM.get(new ResourceLocation(locks.get(a))));
         }
     }
 

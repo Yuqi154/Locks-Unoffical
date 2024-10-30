@@ -2,8 +2,6 @@ package melonslise.locks.compact.mixin;
 
 
 import com.beansgalaxy.backpacks.events.CommonForgeEvents;
-import melonslise.locks.common.capability.ILockableHandler;
-import melonslise.locks.common.init.LocksCapabilities;
 import melonslise.locks.common.util.Lockable;
 import melonslise.locks.common.util.LocksPredicates;
 import melonslise.locks.compact.LootrCompactHandler;

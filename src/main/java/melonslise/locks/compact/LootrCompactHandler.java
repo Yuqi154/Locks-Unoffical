@@ -1,8 +1,5 @@
 package melonslise.locks.compact;
 
-import melonslise.locks.Locks;
-import melonslise.locks.common.capability.ILockableHandler;
-import melonslise.locks.common.init.LocksCapabilities;
 import melonslise.locks.common.util.Lockable;
 import melonslise.locks.common.util.LocksPredicates;
 import net.minecraft.core.BlockPos;

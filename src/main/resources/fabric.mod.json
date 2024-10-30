@@ -1,0 +1,45 @@
+{
+	"schemaVersion": 1,
+	"id": "mystias_izakaya",
+	"version": "${version}",
+	"name": "Mystia's Izakaya",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"HiedaCamellia!"
+	],
+	"contact": {
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/mystias-izakaya",
+		"sources": "https://github.com/HiedaCamellia/MystiasIzakaya"
+	},
+	"license": "GPL-3.0",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"melonslise.locks.Locks"
+		],
+		"client": [
+			"melonslise.locks.LocksClient"
+		],
+		"cardinal-components": [
+			"melonslise.locks.common.init.LocksComponents"
+		]
+	},
+	"mixins": [
+      "locks.mixins.json",
+		"locks.mixins.compact.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14.21",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"jei": ">15.17.0.0"
+	},
+	"custom": {
+		"cardinal-components": [
+			"mystias_izakaya:player_data"
+		]
+	}
+}

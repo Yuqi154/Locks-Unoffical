@@ -1,15 +1,10 @@
 package melonslise.locks.mixin;
 
-import melonslise.locks.common.capability.ILockableHandler;
-import melonslise.locks.common.capability.ILockableStorage;
-import melonslise.locks.common.init.LocksCapabilities;
 import melonslise.locks.common.init.LocksNetwork;
 import melonslise.locks.common.network.toclient.AddLockableToChunkPacket;
 import melonslise.locks.common.util.ILockableProvider;
 import melonslise.locks.common.util.Lockable;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.ProtoChunk;
 import net.minecraftforge.network.PacketDistributor;
