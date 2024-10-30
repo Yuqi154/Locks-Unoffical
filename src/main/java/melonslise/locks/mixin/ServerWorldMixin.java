@@ -33,15 +33,6 @@ public class ServerWorldMixin
 		if(ModList.get().isLoaded("lootr")){
 			LootrCompactHandler.handleBlockUpdate(world, handler, pos, oldState, newState);
 		}else {
-			if(newState.is(Blocks.CHEST)||newState.is(Blocks.TRAPPED_CHEST)||newState.is(Blocks.BARREL)){
-				List<Lockable> collect = handler.getInChunk(pos).values().stream().filter(lkb -> lkb.bb.intersects(pos)).collect(Collectors.toList());
-				if(collect.size()>1){
-					for(Lockable lkb:collect.subList(1,collect.size())){
-						handler.remove(lkb.id);
-					}
-				}
-				return;
-			}
 			// create buffer list because otherwise we will be deleting elements while iterating (BAD!!)
 			handler.getInChunk(pos).values().stream().filter(lkb -> lkb.bb.intersects(pos)).collect(Collectors.toList()).forEach(lkb ->
 			{
