@@ -182,7 +182,7 @@ public final class LocksForgeEvents
 			if(match.length == 0)
 				return;
 			e.setUseBlock(Event.Result.DENY);
-			world.playSound(player, pos, SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 0.8f, 0.8f + world.random.nextFloat() * 0.4f);
+			world.playSound(player, pos, SoundEvents.IRON_DOOR_OPEN, SoundSource.BLOCKS, 0.8f, 0.8f + world.random.nextFloat() * 0.4f);
 			player.swing(InteractionHand.MAIN_HAND);
 			if(!world.isClientSide)
 				for(Lockable lkb : match)
