@@ -71,7 +71,8 @@ minecraft {
 mixin {
     add sourceSets.main, "${mod_id}.refmap.json"
 
-    config "${mod_id}.mixins.json"
+	config "${mod_id}.mixins.json"
+	config "${mod_id}.mixins.compact.json"
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
@@ -84,8 +85,8 @@ repositories {
 
 dependencies {
 	minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-	runtimeOnly fg.deobf("curse.maven:lootr-361276:5636598")
-	compileOnly fg.deobf("curse.maven:lootr-361276:5636598")
+	implementation fg.deobf("curse.maven:lootr-361276:5636598")
+	compileOnly fg.deobf("curse.maven:beans-backpacks-946775:5368249")
 	annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 

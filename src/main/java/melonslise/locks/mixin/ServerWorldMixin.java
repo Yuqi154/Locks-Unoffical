@@ -1,7 +1,7 @@
 package melonslise.locks.mixin;
 
 import melonslise.locks.common.capability.ILockableHandler;
-import melonslise.locks.common.compact.LootrBlockUpdateHandler;
+import melonslise.locks.compact.LootrCompactHandler;
 import melonslise.locks.common.init.LocksCapabilities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -28,7 +28,7 @@ public class ServerWorldMixin
 		ServerLevel world = (ServerLevel) (Object) this;
 		ILockableHandler handler = world.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
 		if(ModList.get().isLoaded("lootr")){
-			LootrBlockUpdateHandler.handleBlockUpdate(world, handler, pos, oldState, newState);
+			LootrCompactHandler.handleBlockUpdate(world, handler, pos, oldState, newState);
 		}else {
 			// create buffer list because otherwise we will be deleting elements while iterating (BAD!!)
 			handler.getInChunk(pos).values().stream().filter(lkb -> lkb.bb.intersects(pos)).collect(Collectors.toList()).forEach(lkb ->
