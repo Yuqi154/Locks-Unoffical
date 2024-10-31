@@ -1,6 +1,7 @@
 package melonslise.locks.common.item;
 
 import melonslise.locks.Locks;
+import melonslise.locks.common.components.interfaces.ISelection;
 import melonslise.locks.common.config.LocksServerConfig;
 import melonslise.locks.common.init.LocksSoundEvents;
 import melonslise.locks.common.util.Cuboid6i;

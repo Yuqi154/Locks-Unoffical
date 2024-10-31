@@ -5,6 +5,7 @@ import melonslise.locks.client.gui.LockPickingScreen;
 import melonslise.locks.common.init.*;
 import melonslise.locks.common.item.LockPickItem;
 import melonslise.locks.common.network.toclient.TryPinResultPacket;
+import melonslise.locks.common.util.IContainerFactory;
 import melonslise.locks.common.util.Lockable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -24,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.Vec3;
 
+import net.minecraft.world.inventory.MenuType;
 import java.util.function.Consumer;
 
 public class LockPickingContainer extends AbstractContainerMenu
@@ -205,8 +207,9 @@ public class LockPickingContainer extends AbstractContainerMenu
 
 	public static final IContainerFactory<LockPickingContainer> FACTORY = (id, inv, buf) ->
 	{
-		return new LockPickingContainer(id, inv.player, buf.readEnum(InteractionHand.class), inv.player.level().getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null).getLoaded().get(buf.readInt()));
+		return new LockPickingContainer(id, inv.player, buf.readEnum(InteractionHand.class), LocksComponents.LOCKABLE_HANDLER.get(inv.player.level()).getLoaded().get(buf.readInt()));
 	};
+
 
 	//Network
 	public static class Writer implements Consumer<FriendlyByteBuf>

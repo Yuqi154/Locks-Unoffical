@@ -1,14 +1,21 @@
 package melonslise.locks.common.enchantment;
 
 import melonslise.locks.common.init.LocksEnchantments;
+import melonslise.locks.common.item.LockItem;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 
 public class ComplexityEnchantment extends Enchantment
 {
 	public ComplexityEnchantment()
 	{
-		super(Rarity.VERY_RARE, LocksEnchantments.LOCK_TYPE, new EquipmentSlot[] { EquipmentSlot.MAINHAND });
+		super(Rarity.VERY_RARE, null, new EquipmentSlot[] { EquipmentSlot.MAINHAND });
+	}
+
+	@Override
+	public boolean canEnchant(ItemStack itemStack) {
+		return itemStack.getItem() instanceof LockItem;
 	}
 
 	@Override

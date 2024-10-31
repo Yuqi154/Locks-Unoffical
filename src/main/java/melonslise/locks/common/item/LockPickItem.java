@@ -6,6 +6,8 @@ import melonslise.locks.common.init.LocksEnchantments;
 import melonslise.locks.common.util.Lockable;
 import melonslise.locks.common.util.LocksPredicates;
 import melonslise.locks.common.util.LocksUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -20,9 +22,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkHooks;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,7 +56,7 @@ public class LockPickItem extends Item
 
 	public static boolean canPick(ItemStack stack, Lockable lkb)
 	{
-		return canPick(stack, EnchantmentHelper.getItemEnchantmentLevel(LocksEnchantments.COMPLEXITY.get(), lkb.stack));
+		return canPick(stack, EnchantmentHelper.getItemEnchantmentLevel(LocksEnchantments.COMPLEXITY, lkb.stack));
 	}
 
 	@Override
@@ -79,11 +78,13 @@ public class LockPickItem extends Item
 		if(world.isClientSide)
 			return InteractionResult.SUCCESS;
 		InteractionHand hand = ctx.getHand();
-		NetworkHooks.openScreen((ServerPlayer) player, new LockPickingContainer.Provider(hand, lkb), new LockPickingContainer.Writer(hand, lkb));
+		if(player instanceof ServerPlayer)
+			player.openMenu(new LockPickingContainer.Provider(hand, lkb));
+		//NetworkHooks.openScreen((ServerPlayer) player, new LockPickingContainer.Provider(hand, lkb), new LockPickingContainer.Writer(hand, lkb));
 		return InteractionResult.SUCCESS;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag flag)
 	{

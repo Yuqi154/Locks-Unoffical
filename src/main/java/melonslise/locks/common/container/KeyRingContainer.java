@@ -3,6 +3,7 @@ package melonslise.locks.common.container;
 import melonslise.locks.common.components.interfaces.IItemHandler;
 import melonslise.locks.common.init.LocksContainerTypes;
 import melonslise.locks.common.init.LocksSoundEvents;
+import melonslise.locks.common.util.IContainerFactory;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;

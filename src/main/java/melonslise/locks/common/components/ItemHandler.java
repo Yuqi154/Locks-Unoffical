@@ -1,5 +1,6 @@
 package melonslise.locks.common.components;
 
+import dev.onyxstudios.cca.api.v3.component.TransientComponent;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.item.ItemComponent;
 import melonslise.locks.common.components.interfaces.IItemHandler;
@@ -18,8 +19,8 @@ public class ItemHandler implements IItemHandler {
 
     public NonNullList<ItemStack> items;
 
-    public ItemHandler(NonNullList<ItemStack> items) {
-        this.items = items;
+    public ItemHandler() {
+        super();
     }
 
     @Override
@@ -101,5 +102,10 @@ public class ItemHandler implements IItemHandler {
     @Override
     public int getSlots() {
         return this.items.size();
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return this.items.get(slot);
     }
 }

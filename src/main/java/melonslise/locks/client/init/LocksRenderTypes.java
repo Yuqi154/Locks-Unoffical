@@ -3,15 +3,14 @@ package melonslise.locks.client.init;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import melonslise.locks.Locks;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import org.lwjgl.opengl.GL11;
 
 import java.util.OptionalDouble;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public final class LocksRenderTypes extends RenderType
 {
 	// FIXME this still has depth for some reason. As suggested we could try to create a custom DepthTestState which clears GL_DEPTH_BUFFER_BIT on setup, but thats not possible without AT or reflect...

@@ -11,6 +11,7 @@
     "ChunkMixin",
     "ChunkPrimerMixin",
     "DoorMixin",
+    "EnchantmentCategoryMixin",
     "ExplosionContextMixin",
     "HopperTileEntityMixin",
     "LockableTileEntityMixin",
