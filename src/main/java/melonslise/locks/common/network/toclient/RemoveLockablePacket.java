@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 public class RemoveLockablePacket {
     public static final ResourceLocation ID = new ResourceLocation(Locks.ID, "remove_lockable");
@@ -20,7 +21,7 @@ public class RemoveLockablePacket {
     }
 
     public static FriendlyByteBuf encode(RemoveLockablePacket pkt) {
-        FriendlyByteBuf empty = PacketByteBufs.empty();
+        FriendlyByteBuf empty = PacketByteBufs.create();
         empty.writeInt(pkt.id);
         return empty;
     }
@@ -32,9 +33,13 @@ public class RemoveLockablePacket {
                 if(client.level==null){
                     return;
                 }
-                LocksComponents.LOCKABLE_HANDLER.get(client.level).remove(packet.id);
+                execute(packet, client.level);
             });
         });
+    }
+
+    public static void execute(RemoveLockablePacket pkt, Level level){
+        LocksComponents.LOCKABLE_HANDLER.get(level).remove(pkt.id);
     }
 
 }

@@ -119,21 +119,21 @@ public final class LocksEvents
 
 	public static boolean canBreakLockable(Level world,Player player, BlockPos pos)
 	{
-		return LocksServerConfig.PROTECT_LOCKABLES.get() &&
+		return (LocksServerConfig.PROTECT_LOCKABLES.get() &&
 				!player.isCreative() &&
-				LocksUtil.lockedAndRelated(world, pos);
+				LocksUtil.lockedAndRelated(world, pos));
 	}
 
 	public static boolean onBlockBreaking(Level world, Player player, BlockPos pos, BlockState state,@Nullable BlockEntity entity)
 	{
-        return canBreakLockable(world,player, pos);
+        return !canBreakLockable(world,player, pos);
 	}
 
 	public static void onBlockBreak(Level world, Player player, BlockPos pos, BlockState state,@Nullable BlockEntity entity)
 	{
-		if(!canBreakLockable(world,player, pos)) {
-			world.setBlockAndUpdate(pos, state);
-		}
+//		if(!canBreakLockable(world,player, pos)) {
+//			world.setBlockAndUpdate(pos, state);
+//		}
 	}
 
 	public static void register()

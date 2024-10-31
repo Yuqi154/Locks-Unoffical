@@ -18,6 +18,9 @@ public class ClientTickMixin {
 
     @Inject(method = "tick()V", at = @At("TAIL"))
     private void onTick(CallbackInfo ci) {
+        if(level==null){
+            return;
+        }
         LocksComponents.LOCKABLE_HANDLER.get(level).getLoaded().values().forEach(Lockable::tick);
     }
 }

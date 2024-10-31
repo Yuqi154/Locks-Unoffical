@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 
 public class AddLockableToChunkPacket {
@@ -37,7 +38,7 @@ public class AddLockableToChunkPacket {
     }
 
     public static FriendlyByteBuf encode(AddLockableToChunkPacket pkt) {
-        FriendlyByteBuf buf = PacketByteBufs.empty();
+        FriendlyByteBuf buf = PacketByteBufs.create();
         Lockable.toBuf(buf, pkt.lockable);
         buf.writeInt(pkt.x);
         buf.writeInt(pkt.z);
@@ -51,17 +52,22 @@ public class AddLockableToChunkPacket {
 				if(client.level==null){
 					return;
 				}
-                ILockableStorage st = LocksComponents.LOCKABLE_STORAGE.get(client.level.getChunk(pkt.x, pkt.z));
-                ILockableHandler handler = LocksComponents.LOCKABLE_HANDLER.get(client.level);
-                Int2ObjectMap<Lockable> lkbs = handler.getLoaded();
-                Lockable lkb = lkbs.get(pkt.lockable.id);
-                if (lkb == lkbs.defaultReturnValue()) {
-                    lkb = pkt.lockable;
-                    lkb.addObserver(handler);
-                    lkbs.put(lkb.id, lkb);
-                }
-                st.add(lkb);
+                execute(pkt, client.level);
             });
         });
+    }
+
+    public static void execute(AddLockableToChunkPacket pkt, Level level){
+
+        ILockableStorage st = LocksComponents.LOCKABLE_STORAGE.get(level.getChunk(pkt.x, pkt.z));
+        ILockableHandler handler = LocksComponents.LOCKABLE_HANDLER.get(level);
+        Int2ObjectMap<Lockable> lkbs = handler.getLoaded();
+        Lockable lkb = lkbs.get(pkt.lockable.id);
+        if (lkb == lkbs.defaultReturnValue()) {
+            lkb = pkt.lockable;
+            lkb.addObserver(handler);
+            lkbs.put(lkb.id, lkb);
+        }
+        st.add(lkb);
     }
 }

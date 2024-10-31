@@ -33,9 +33,10 @@ public class ChunkMixin
 			st.add(lkb);
 			handler.getLoaded().put(lkb.id, lkb);
 			lkb.addObserver(handler);
-			world.getServer().getPlayerList().players.forEach(player -> {
-				ServerPlayNetworking.send(player,AddLockableToChunkPacket.ID, AddLockableToChunkPacket.encode(new AddLockableToChunkPacket(lkb, ch)));
-			});
+			AddLockableToChunkPacket.execute(new AddLockableToChunkPacket(lkb, ch), world);
+//			world.getServer().getPlayerList().players.forEach(player -> {
+//				ServerPlayNetworking.send(player,AddLockableToChunkPacket.ID, AddLockableToChunkPacket.encode(new AddLockableToChunkPacket(lkb, ch)));
+//			});
 		}
 	}
 }

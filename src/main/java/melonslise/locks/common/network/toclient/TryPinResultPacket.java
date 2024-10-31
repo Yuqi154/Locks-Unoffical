@@ -28,7 +28,7 @@ public class TryPinResultPacket
 
 	public static FriendlyByteBuf encode(TryPinResultPacket pkt)
 	{
-		FriendlyByteBuf buf = PacketByteBufs.empty();
+		FriendlyByteBuf buf = PacketByteBufs.create();
 		buf.writeBoolean(pkt.correct);
 		buf.writeBoolean(pkt.reset);
 		return buf;

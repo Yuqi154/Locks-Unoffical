@@ -80,6 +80,9 @@ public final class LocksConfig {
     }
 
     public static boolean canGen(RandomSource rng, Block block) {
+        if(lockableGenBlocks==null){
+            init();
+        }
         boolean random = LocksUtil.chance(rng, GENERATION_CHANCE.get());
         String name = BuiltInRegistries.BLOCK.getKey(block).toString();
         for (Pattern p : lockableGenBlocks) {

@@ -12,6 +12,11 @@ public class Selection implements ISelection{
 
     public BlockPos pos;
 
+    public Selection(BlockPos pos)
+    {
+        this.pos = pos;
+    }
+
     @Override
     public BlockPos get()
     {
@@ -31,6 +36,9 @@ public class Selection implements ISelection{
 
     @Override
     public void writeToNbt(CompoundTag compoundTag) {
+        if(this.pos == null) {
+            pos = new BlockPos(0, 0, 0);
+        }
         compoundTag.putInt("pos_x", this.pos.getX());
         compoundTag.putInt("pos_y", this.pos.getY());
         compoundTag.putInt("pos_z", this.pos.getZ());

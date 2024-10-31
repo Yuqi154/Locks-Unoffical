@@ -19,7 +19,9 @@ public class ChunkManagerMixin
 	@Inject(at = @At("TAIL"), method = "playerLoadedChunk")
 	private void playerLoadedChunk(ServerPlayer player, MutableObject<ClientboundLevelChunkWithLightPacket> pkts, LevelChunk ch, CallbackInfo ci)
 	{
+//		LocksComponents.LOCKABLE_STORAGE.get(ch).get().values()
+//			.forEach(lkb -> ServerPlayNetworking.send(player,AddLockableToChunkPacket.ID, AddLockableToChunkPacket.encode(new AddLockableToChunkPacket(lkb, ch))));
 		LocksComponents.LOCKABLE_STORAGE.get(ch).get().values()
-			.forEach(lkb -> ServerPlayNetworking.send(player,AddLockableToChunkPacket.ID, AddLockableToChunkPacket.encode(new AddLockableToChunkPacket(lkb, ch))));
+				.forEach(lkb -> AddLockableToChunkPacket.execute(new AddLockableToChunkPacket(lkb, ch), player.level()));
 	}
 }

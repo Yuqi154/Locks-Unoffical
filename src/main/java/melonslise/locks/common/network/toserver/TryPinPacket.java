@@ -26,7 +26,7 @@ public class TryPinPacket
 
 	public static FriendlyByteBuf encode(TryPinPacket pkt)
 	{
-		FriendlyByteBuf buf = PacketByteBufs.empty();
+		FriendlyByteBuf buf = PacketByteBufs.create();
 		buf.writeByte(pkt.pin);
 		return buf;
 	}

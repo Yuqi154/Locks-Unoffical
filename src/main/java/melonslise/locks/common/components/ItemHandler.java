@@ -16,6 +16,7 @@ public class ItemHandler implements IItemHandler {
 
     public ItemHandler() {
         super();
+        items = NonNullList.withSize(0, ItemStack.EMPTY);
     }
 
     @Override

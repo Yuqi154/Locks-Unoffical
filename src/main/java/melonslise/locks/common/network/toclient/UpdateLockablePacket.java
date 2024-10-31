@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 public class UpdateLockablePacket {
     public static final ResourceLocation ID = new ResourceLocation(Locks.ID, "update_lockable");
@@ -28,7 +29,7 @@ public class UpdateLockablePacket {
     }
 
     public static FriendlyByteBuf encode(UpdateLockablePacket pkt) {
-        FriendlyByteBuf buf = PacketByteBufs.empty();
+        FriendlyByteBuf buf = PacketByteBufs.create();
         buf.writeInt(pkt.id);
         buf.writeBoolean(pkt.locked);
         return buf;
@@ -41,9 +42,13 @@ public class UpdateLockablePacket {
                 if(client.level==null){
                     return;
                 }
-                LocksComponents.LOCKABLE_HANDLER.get(client.level).getLoaded().get(pkt.id).lock.setLocked(pkt.locked);
+                execute(pkt, client.level);
             });
         });
+    }
+
+    public static void execute(UpdateLockablePacket pkt, Level level){
+        LocksComponents.LOCKABLE_HANDLER.get(level).getLoaded().get(pkt.id).lock.setLocked(pkt.locked);
     }
 
 }

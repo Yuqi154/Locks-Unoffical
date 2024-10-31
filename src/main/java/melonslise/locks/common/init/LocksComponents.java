@@ -44,7 +44,7 @@ public class LocksComponents implements EntityComponentInitializer, WorldCompone
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry entityComponentFactoryRegistry) {
-        entityComponentFactoryRegistry.registerForPlayers(SELECTION, (player) -> new Selection(), RespawnCopyStrategy.ALWAYS_COPY);
+        entityComponentFactoryRegistry.registerForPlayers(SELECTION, (player) -> new Selection(player.getOnPos()), RespawnCopyStrategy.ALWAYS_COPY);
     }
 
     @Override
@@ -55,5 +55,6 @@ public class LocksComponents implements EntityComponentInitializer, WorldCompone
     @Override
     public void registerItemComponentFactories(ItemComponentFactoryRegistry itemComponentFactoryRegistry) {
         itemComponentFactoryRegistry.registerTransient(item -> item instanceof LockItem,ITEM_HANDLER, (stack) -> new ItemHandler());
+        itemComponentFactoryRegistry.registerTransient(LocksItems.KEY_RING,ITEM_HANDLER, (stack) -> new ItemHandler());
     }
 }

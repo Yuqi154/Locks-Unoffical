@@ -58,7 +58,7 @@ public class LockableStorage implements ILockableStorage
 		ListTag lockables = nbt.getList("Lockables",0);
 		ILockableHandler handler;
 		if(this.chunk instanceof LevelChunk levelChunk){
-			handler =LocksComponents.LOCKABLE_HANDLER.get(levelChunk);
+			handler =LocksComponents.LOCKABLE_HANDLER.get(levelChunk.getLevel());
 		}else {
 			BlockPos blockPos = this.chunk.getBlockEntitiesPos().stream().findFirst().get();
 			handler = LocksComponents.LOCKABLE_HANDLER.get(Objects.requireNonNull(Objects.requireNonNull(this.chunk.getBlockEntity(blockPos)).getLevel()).getChunkAt(blockPos));

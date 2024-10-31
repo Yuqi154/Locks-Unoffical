@@ -145,7 +145,9 @@ public class LockItem extends LockingItem
 		ItemStack lockStack = stack.copy();
 		lockStack.setCount(1);
 		ILockableHandler handler = LocksComponents.LOCKABLE_HANDLER.get(world);
-		if (!handler.add(new Lockable(new Cuboid6i(pos, pos1), Lock.from(stack), Transform.fromDirection(ctx.getClickedFace(), player.getDirection().getOpposite()), lockStack, world)))
+		Lockable lockable = new Lockable(new Cuboid6i(pos, pos1), Lock.from(stack), Transform.fromDirection(ctx.getClickedFace(), player.getDirection().getOpposite()), lockStack, world);
+		//Locks.LOGGER.info(lockable.bb.toString(), lockable.lock.id);
+		if (!handler.add(lockable))
 			return InteractionResult.PASS;
 		if (!player.isCreative())
 			stack.shrink(1);

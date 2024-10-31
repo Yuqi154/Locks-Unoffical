@@ -60,6 +60,9 @@ public class LocksServerConfig {
     }
 
     public static boolean canLock(Level world, BlockPos pos) {
+        if(lockableBlocks==null){
+            init();
+        }
         Block block = world.getBlockState(pos).getBlock();
         String name = BuiltInRegistries.BLOCK.getKey(block).toString();
         for (Pattern p : lockableBlocks) {
