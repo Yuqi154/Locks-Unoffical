@@ -1,7 +1,7 @@
 package melonslise.locks.mixin.swapLock;
 
 import melonslise.locks.common.config.LocksConfig;
-import melonslise.locks.common.util.*;
+import melonslise.locks.common.util.LocksUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;

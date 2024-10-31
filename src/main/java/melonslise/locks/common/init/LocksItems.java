@@ -1,23 +1,14 @@
 package melonslise.locks.common.init;
 
 import melonslise.locks.Locks;
-import melonslise.locks.common.item.KeyItem;
-import melonslise.locks.common.item.KeyRingItem;
-import melonslise.locks.common.item.LockItem;
-import melonslise.locks.common.item.LockPickItem;
-import melonslise.locks.common.item.MasterKeyItem;
-import melonslise.locks.common.util.Lock;
+import melonslise.locks.common.item.*;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
 import java.util.ArrayList;
 import java.util.List;

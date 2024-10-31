@@ -1,7 +1,6 @@
 package melonslise.locks.mixin;
 
 import melonslise.locks.common.init.LocksComponents;
-import melonslise.locks.common.init.LocksNetwork;
 import melonslise.locks.common.network.toclient.AddLockableToChunkPacket;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket;

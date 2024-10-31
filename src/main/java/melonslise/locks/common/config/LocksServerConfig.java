@@ -1,15 +1,14 @@
 package melonslise.locks.common.config;
 
-import java.util.List;
-import java.util.regex.Pattern;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.ForgeConfigSpec;
+
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class LocksServerConfig {
     public static final ForgeConfigSpec SPEC;

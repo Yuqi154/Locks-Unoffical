@@ -2,7 +2,6 @@ package melonslise.locks.mixin;
 
 import melonslise.locks.common.components.interfaces.ILockableHandler;
 import melonslise.locks.common.init.LocksComponents;
-import melonslise.locks.compact.LootrCompactHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;

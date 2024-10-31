@@ -17,24 +17,22 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.*;
-import static net.minecraft.world.level.block.state.properties.DoorHingeSide.*;
-import static net.minecraft.world.level.block.state.properties.DoubleBlockHalf.*;
+import static net.minecraft.world.level.block.state.properties.DoorHingeSide.LEFT;
+import static net.minecraft.world.level.block.state.properties.DoubleBlockHalf.LOWER;
 
 public final class LocksUtil {
     public static ResourceManager resourceManager;

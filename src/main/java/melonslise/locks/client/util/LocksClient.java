@@ -27,7 +27,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
-import org.spongepowered.asm.mixin.Unique;
 
 import java.util.List;
 

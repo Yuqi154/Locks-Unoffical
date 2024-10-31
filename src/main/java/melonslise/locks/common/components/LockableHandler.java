@@ -7,8 +7,6 @@ import melonslise.locks.common.components.interfaces.ILockableHandler;
 import melonslise.locks.common.components.interfaces.ILockableStorage;
 import melonslise.locks.common.config.LocksServerConfig;
 import melonslise.locks.common.init.LocksComponents;
-import melonslise.locks.common.init.LocksNetwork;
-import melonslise.locks.common.init.LocksPacketDistributors;
 import melonslise.locks.common.network.toclient.AddLockablePacket;
 import melonslise.locks.common.network.toclient.RemoveLockablePacket;
 import melonslise.locks.common.network.toclient.UpdateLockablePacket;
@@ -17,12 +15,10 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.dedicated.DedicatedPlayerList;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Observable;
 import java.util.concurrent.atomic.AtomicInteger;
 

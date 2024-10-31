@@ -2,7 +2,9 @@ package melonslise.locks.mixin.swapLock;
 
 import com.mojang.datafixers.util.Pair;
 import melonslise.locks.Locks;
+import melonslise.locks.common.components.interfaces.ILockableHandler;
 import melonslise.locks.common.config.LocksConfig;
+import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,11 +18,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.material.FluidState;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,7 +33,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -42,7 +45,7 @@ public class StructureTemplateMixin {
     private void fillFromWorld(Level world, BlockPos start, Vec3i size, boolean takeEntities, @Nullable Block toIgnore, CallbackInfo ci) {
         if (size.getX() >= 1 && size.getY() >= 1 && size.getZ() >= 1) {
             this.lockableInfos.clear();
-            ILockableHandler handler = world.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
+            ILockableHandler handler = LocksComponents.LOCKABLE_HANDLER.get(world);
             Cuboid6i bb = new Cuboid6i(start, start.offset(size.getX() - 1, size.getY() - 1, size.getZ() - 1));
             handler.getLoaded().values().stream()
                     .filter(lkb -> lkb.bb.intersects(bb))
@@ -64,7 +67,7 @@ public class StructureTemplateMixin {
             Locks.LOGGER.warn(world + "#getLevel threw an error! Skipping lockable placement for this template ");
             return;
         }
-        ILockableHandler handler = level.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
+        ILockableHandler handler = LocksComponents.LOCKABLE_HANDLER.get(level);
         for (LockableInfo lkb : this.lockableInfos) {
             BlockPos pos1 = LocksUtil.transform(lkb.bb.x1, lkb.bb.y1, lkb.bb.z1, settings);
             BlockPos pos2 = LocksUtil.transform(lkb.bb.x2, lkb.bb.y2, lkb.bb.z2, settings);
@@ -95,14 +98,11 @@ public class StructureTemplateMixin {
             this.lockableInfos.add(LockableInfo.fromNbt(list.getCompound(a)));
     }
     @Inject(method = "placeInWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/ServerLevelAccessor;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", ordinal = 1, shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
-    public void lockBlock(ServerLevelAccessor levelAccessor, BlockPos pOffset, BlockPos pPos,
-                          StructurePlaceSettings pSettings, RandomSource pRandom, int pFlags,
-                          CallbackInfoReturnable<Boolean> cir,
-                          List<StructureTemplate.StructureBlockInfo> list, BoundingBox boundingbox, List<BlockPos> list1, List<BlockPos> list2, List<Pair<BlockPos, CompoundTag>> list3,
-                          int i, int j, int k, int l, int i1, int j1,
-                          Iterator<BlockPos> var18, StructureTemplate.StructureBlockInfo structuretemplate$structureblockinfo,
-                          BlockPos blockPos, FluidState fluidstate, BlockState blockstate
-    ) {
+    public void lockBlock(ServerLevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2, StructurePlaceSettings structurePlaceSettings,
+                          RandomSource pRandom, int i, CallbackInfoReturnable<Boolean> cir, List list, BoundingBox boundingBox,
+                          List list2, List list3, List list4, int j, int k, int l, int m, int n, int o, List list5, Iterator var19,
+                          StructureTemplate.StructureBlockInfo structureBlockInfo, BlockPos blockPos3, FluidState fluidState,
+                          BlockState blockState, BlockEntity blockEntity) {
         if (levelAccessor.hasChunk(blockPos.getX() >> 4, blockPos.getZ() >> 4)){
             Block block = levelAccessor.getBlockState(blockPos).getBlock();
             if (LocksConfig.canGen(pRandom, block)) {
@@ -112,16 +112,11 @@ public class StructureTemplateMixin {
     }
 
     @Inject(method = "placeInWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/ServerLevelAccessor;blockUpdated(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/Block;)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
-    public void lockShape(ServerLevelAccessor levelAccessor, BlockPos pOffset, BlockPos pPos,
-                          StructurePlaceSettings pSettings, RandomSource pRandom, int pFlags,
-                          CallbackInfoReturnable<Boolean> cir,
-                          List<StructureTemplate.StructureBlockInfo> list, BoundingBox boundingbox, List<BlockPos> list1, List<BlockPos> list2, List<Pair<BlockPos, CompoundTag>> list3,
-                          int i, int j, int k, int l, int i1, int j1,
-                          boolean flag,
-                          Direction[] adirection,
-                          Iterator<BlockPos> var20, Pair<BlockPos, CompoundTag> pair,
-                          BlockPos blockPos, BlockState blockstate2, BlockState blockstate3
-    ) {
+    public void lockShape(ServerLevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2,
+                          StructurePlaceSettings structurePlaceSettings, RandomSource pRandom, int i,
+                          CallbackInfoReturnable<Boolean> cir, BoundingBox boundingBox, List list4, int j, int k, int l, int m,
+                          int n, int o, Iterator var21, Pair pair2, BlockPos blockPos7, BlockState blockState2, BlockState blockState3
+                          ) {
         if (levelAccessor.hasChunk(blockPos.getX() >> 4, blockPos.getZ() >> 4)){
             Block block = levelAccessor.getBlockState(blockPos).getBlock();
             if (LocksConfig.canGen(pRandom, block)) {

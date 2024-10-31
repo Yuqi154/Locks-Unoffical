@@ -2,24 +2,17 @@ package melonslise.locks.mixin;
 
 import melonslise.locks.common.util.LocksUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FluidState;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.Optional;
 import java.util.Set;
 
 @Mixin(Explosion.class)

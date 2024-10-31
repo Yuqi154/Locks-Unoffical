@@ -1,13 +1,13 @@
 package melonslise.locks.common.util;
 
-import java.util.Observable;
-import java.util.Random;
-
 import melonslise.locks.common.item.LockItem;
 import melonslise.locks.common.item.LockingItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.Observable;
+import java.util.Random;
 
 public class Lock extends Observable
 {

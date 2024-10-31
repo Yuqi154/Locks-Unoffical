@@ -1,15 +1,10 @@
 package melonslise.locks.common.components;
 
-import dev.onyxstudios.cca.api.v3.component.TransientComponent;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import dev.onyxstudios.cca.api.v3.item.ItemComponent;
 import melonslise.locks.common.components.interfaces.IItemHandler;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Iterator;

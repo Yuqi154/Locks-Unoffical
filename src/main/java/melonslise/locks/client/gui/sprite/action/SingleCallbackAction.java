@@ -1,10 +1,10 @@
 package melonslise.locks.client.gui.sprite.action;
 
-import java.util.function.BiConsumer;
-
 import melonslise.locks.client.gui.sprite.Sprite;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+
+import java.util.function.BiConsumer;
 
 @Environment(EnvType.CLIENT)
 public abstract class SingleCallbackAction<S extends Sprite> implements IAction<S>

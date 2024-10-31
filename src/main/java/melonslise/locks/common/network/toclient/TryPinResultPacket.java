@@ -2,7 +2,6 @@ package melonslise.locks.common.network.toclient;
 
 import melonslise.locks.Locks;
 import melonslise.locks.common.container.LockPickingContainer;
-import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.init.LocksContainerTypes;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -10,8 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-
-import java.util.function.Supplier;
 
 public class TryPinResultPacket
 {

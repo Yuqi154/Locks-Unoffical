@@ -1,7 +1,5 @@
 package melonslise.locks.client.gui.sprite;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import melonslise.locks.client.util.LocksClientUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;

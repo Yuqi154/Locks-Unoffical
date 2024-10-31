@@ -9,14 +9,13 @@ import melonslise.locks.client.gui.sprite.Sprite;
 import melonslise.locks.client.gui.sprite.TextureInfo;
 import melonslise.locks.client.gui.sprite.action.*;
 import melonslise.locks.common.container.LockPickingContainer;
-import melonslise.locks.common.init.LocksNetwork;
 import melonslise.locks.common.network.toserver.TryPinPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -220,7 +219,7 @@ public class LockPickingScreen extends AbstractContainerScreen<LockPickingContai
         if (this.pins[pin])
             return false;
         this.currPin = pin;
-        LocksNetwork.MAIN.sendToServer(new TryPinPacket((byte) pin));
+        ClientPlayNetworking.send(TryPinPacket.ID,TryPinPacket.encode(new TryPinPacket((byte) pin)));
         return true;
     }
 

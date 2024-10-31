@@ -1,7 +1,5 @@
 package melonslise.locks.common.item;
 
-import melonslise.locks.common.capability.CapabilityProvider;
-import melonslise.locks.common.capability.KeyRingInventory;
 import melonslise.locks.common.components.interfaces.IItemHandler;
 import melonslise.locks.common.container.KeyRingContainer;
 import melonslise.locks.common.init.LocksComponents;
@@ -9,7 +7,6 @@ import melonslise.locks.common.init.LocksSoundEvents;
 import melonslise.locks.common.util.Lockable;
 import melonslise.locks.common.util.LocksUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;

@@ -26,7 +26,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraft.world.inventory.MenuType;
 import java.util.function.Consumer;
 
 public class LockPickingContainer extends AbstractContainerMenu

@@ -1,6 +1,5 @@
 package melonslise.locks.common.enchantment;
 
-import melonslise.locks.common.init.LocksEnchantments;
 import melonslise.locks.common.item.LockItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
