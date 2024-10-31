@@ -47,8 +47,10 @@ public class KeyRingItem extends Item
 	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand)
 	{
 		ItemStack stack = player.getItemInHand(hand);
-		if(!player.level().isClientSide)
-			NetworkHooks.openScreen((ServerPlayer) player, new KeyRingContainer.Provider(stack), new KeyRingContainer.Writer(hand));
+		if(player instanceof ServerPlayer serverPlayer){
+			serverPlayer.openMenu(new KeyRingContainer.Provider(stack));
+		}
+//			NetworkHooks.openScreen((ServerPlayer) player, new KeyRingContainer.Provider(stack), new KeyRingContainer.Writer(hand));
 		return new InteractionResultHolder<>(InteractionResult.PASS, stack);
 	}
 

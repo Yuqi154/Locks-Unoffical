@@ -1,6 +1,7 @@
 package melonslise.locks.common.container;
 
 import melonslise.locks.common.components.interfaces.IItemHandler;
+import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.init.LocksContainerTypes;
 import melonslise.locks.common.init.LocksSoundEvents;
 import melonslise.locks.common.util.IContainerFactory;
@@ -55,7 +56,7 @@ public class KeyRingContainer extends AbstractContainerMenu
 	{
 		super(LocksContainerTypes.KEY_RING, id);
 		this.stack = stack;
-		this.inv = stack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+		this.inv = LocksComponents.ITEM_HANDLER.get(stack);
 
 		this.rows = inv.getSlots() / 9;
 		for(int row = 0; row < rows; ++row)

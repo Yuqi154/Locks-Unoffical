@@ -3,6 +3,7 @@ package melonslise.locks.mixin;
 import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.init.LocksNetwork;
 import melonslise.locks.common.network.toclient.AddLockableToChunkPacket;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,6 +21,6 @@ public class ChunkManagerMixin
 	private void playerLoadedChunk(ServerPlayer player, MutableObject<ClientboundLevelChunkWithLightPacket> pkts, LevelChunk ch, CallbackInfo ci)
 	{
 		LocksComponents.LOCKABLE_STORAGE.get(ch).get().values()
-			.forEach(lkb -> LocksNetwork.MAIN.send(PacketDistributor.TRACKING_CHUNK.with(() -> ch), new AddLockableToChunkPacket(lkb, ch)));
+			.forEach(lkb -> ServerPlayNetworking.send(player,AddLockableToChunkPacket.ID, AddLockableToChunkPacket.encode(new AddLockableToChunkPacket(lkb, ch))));
 	}
 }

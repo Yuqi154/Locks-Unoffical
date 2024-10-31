@@ -1,41 +1,37 @@
 package melonslise.locks.common.network.toclient;
 
-import java.util.function.Supplier;
-
-import net.minecraft.client.Minecraft;
+import melonslise.locks.Locks;
+import melonslise.locks.common.init.LocksComponents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.resources.ResourceLocation;
 
-public class RemoveLockablePacket
-{
-	private final int id;
+public class RemoveLockablePacket {
+    public static final ResourceLocation ID = new ResourceLocation(Locks.ID, "remove_lockable");
+    private final int id;
 
-	public RemoveLockablePacket(int id)
-	{
-		this.id = id;
-	}
+    public RemoveLockablePacket(int id) {
+        this.id = id;
+    }
 
-	public static RemoveLockablePacket decode(FriendlyByteBuf buf)
-	{
-		return new RemoveLockablePacket(buf.readInt());
-	}
+    public static RemoveLockablePacket decode(FriendlyByteBuf buf) {
+        return new RemoveLockablePacket(buf.readInt());
+    }
 
-	public static void encode(RemoveLockablePacket pkt, FriendlyByteBuf buf)
-	{
-		buf.writeInt(pkt.id);
-	}
+    public static FriendlyByteBuf encode(RemoveLockablePacket pkt) {
+        FriendlyByteBuf empty = PacketByteBufs.empty();
+        empty.writeInt(pkt.id);
+        return empty;
+    }
 
-	public static void handle(RemoveLockablePacket pkt, Supplier<NetworkEvent.Context> ctx)
-	{
-		// Use runnable, lambda causes issues with class loading
-		ctx.get().enqueueWork(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				Minecraft.getInstance().level.getCapability(LocksCapabilities.LOCKABLE_HANDLER).ifPresent(handler -> handler.remove(pkt.id));
-			}
-		});
-		ctx.get().setPacketHandled(true);
-	}
+    public static void register() {
+        ClientPlayNetworking.registerGlobalReceiver(ID, (client, handler, buf, responseSender) -> {
+            client.execute(() -> {
+                RemoveLockablePacket packet = decode(buf);
+                LocksComponents.LOCKABLE_HANDLER.get(client.level).remove(packet.id);
+            });
+        });
+    }
+
 }

@@ -1,42 +1,39 @@
 package melonslise.locks.common.network.toclient;
 
-import java.util.function.Supplier;
-
+import melonslise.locks.Locks;
+import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.util.Lockable;
-import net.minecraft.client.Minecraft;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.resources.ResourceLocation;
 
-public class AddLockablePacket
-{
-	private final Lockable lockable;
+public class AddLockablePacket {
+    public static final ResourceLocation ID = new ResourceLocation(Locks.ID, "add_lockable");
 
-	public AddLockablePacket(Lockable lkb)
-	{
-		this.lockable = lkb;
-	}
+    private final Lockable lockable;
 
-	public static AddLockablePacket decode(FriendlyByteBuf buf)
-	{
-		return new AddLockablePacket(Lockable.fromBuf(buf));
-	}
+    public AddLockablePacket(Lockable lkb) {
+        this.lockable = lkb;
+    }
 
-	public static void encode(AddLockablePacket pkt, FriendlyByteBuf buf)
-	{
-		Lockable.toBuf(buf, pkt.lockable);
-	}
+    public static AddLockablePacket decode(FriendlyByteBuf buf) {
+        return new AddLockablePacket(Lockable.fromBuf(buf));
+    }
 
-	public static void handle(AddLockablePacket pkt, Supplier<NetworkEvent.Context> ctx)
-	{
-		// Use runnable, lambda causes issues with class loading
-		ctx.get().enqueueWork(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				Minecraft.getInstance().level.getCapability(LocksCapabilities.LOCKABLE_HANDLER).ifPresent(handler -> handler.add(pkt.lockable));
-			}
-		});
-		ctx.get().setPacketHandled(true);
-	}
+    public static FriendlyByteBuf encode(AddLockablePacket pkt) {
+        FriendlyByteBuf empty = PacketByteBufs.empty();
+        Lockable.toBuf(empty, pkt.lockable);
+        return empty;
+    }
+
+    public static void register() {
+        ClientPlayNetworking.registerGlobalReceiver(ID, (client, handler, buf, responseSender) -> {
+            client.execute(() -> {
+                AddLockablePacket packet = decode(buf);
+                LocksComponents.LOCKABLE_HANDLER.get(client.level).add(packet.lockable);
+            });
+        });
+    }
+
 }

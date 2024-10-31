@@ -5,12 +5,13 @@ import melonslise.locks.common.components.interfaces.ILockableStorage;
 import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.init.LocksNetwork;
 import melonslise.locks.common.network.toclient.AddLockableToChunkPacket;
+import melonslise.locks.common.network.toclient.RemoveLockablePacket;
 import melonslise.locks.common.util.ILockableProvider;
 import melonslise.locks.common.util.Lockable;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.ProtoChunk;
-import net.minecraftforge.network.PacketDistributor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -34,7 +35,9 @@ public class ChunkMixin
 			st.add(lkb);
 			handler.getLoaded().put(lkb.id, lkb);
 			lkb.addObserver(handler);
-			LocksNetwork.MAIN.send(PacketDistributor.TRACKING_CHUNK.with(() -> ch), new AddLockableToChunkPacket(lkb, ch));
+			world.getServer().getPlayerList().players.forEach(player -> {
+				ServerPlayNetworking.send(player,AddLockableToChunkPacket.ID, AddLockableToChunkPacket.encode(new AddLockableToChunkPacket(lkb, ch)));
+			});
 		}
 	}
 }

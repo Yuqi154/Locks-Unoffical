@@ -13,9 +13,11 @@ import melonslise.locks.common.network.toclient.AddLockablePacket;
 import melonslise.locks.common.network.toclient.RemoveLockablePacket;
 import melonslise.locks.common.network.toclient.UpdateLockablePacket;
 import melonslise.locks.common.util.Lockable;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.dedicated.DedicatedPlayerList;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 
@@ -85,7 +87,11 @@ public class LockableHandler implements ILockableHandler {
         if(this.world.isClientSide)
             lkb.swing(10);
         else
-            LocksNetwork.MAIN.send(LocksPacketDistributors.TRACKING_AREA.with(() -> sts.stream().map(st -> ((LockableStorage) st).chunk)), new AddLockablePacket(lkb));
+        {
+            world.getServer().getPlayerList().players.forEach(player -> {
+                ServerPlayNetworking.send(player, AddLockablePacket.ID, AddLockablePacket.encode(new AddLockablePacket(lkb)));
+            });
+        }
         return true;
     }
 
@@ -106,7 +112,9 @@ public class LockableHandler implements ILockableHandler {
         // Do client/server extras
         if(this.world.isClientSide)
             return true;
-        LocksNetwork.MAIN.send(LocksPacketDistributors.TRACKING_AREA.with(() -> chs.stream()), new RemoveLockablePacket(id));
+        world.getServer().getPlayerList().players.forEach(player -> {
+            ServerPlayNetworking.send(player, RemoveLockablePacket.ID, RemoveLockablePacket.encode(new RemoveLockablePacket(lkb.id)));
+        });
         return true;
     }
     @Override
@@ -115,7 +123,9 @@ public class LockableHandler implements ILockableHandler {
         if(this.world.isClientSide || !(o instanceof Lockable))
             return;
         Lockable lockable = (Lockable) o;
-        LocksNetwork.MAIN.send(LocksPacketDistributors.TRACKING_AREA.with(() -> lockable.bb.containedChunksTo((x, z) -> this.world.hasChunk(x, z) ? this.world.getChunk(x, z) : null, false).stream().filter(Objects::nonNull)), new UpdateLockablePacket(lockable));
+        world.getServer().getPlayerList().players.forEach(player -> {
+            ServerPlayNetworking.send(player, UpdateLockablePacket.ID, UpdateLockablePacket.encode(new UpdateLockablePacket(lockable)));
+        });
     }
 
     @Override

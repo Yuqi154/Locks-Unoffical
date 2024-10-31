@@ -9,6 +9,7 @@ import melonslise.locks.common.util.IContainerFactory;
 import melonslise.locks.common.util.Lockable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.FriendlyByteBuf;
@@ -132,7 +133,7 @@ public class LockPickingContainer extends AbstractContainerMenu
 			}
 			else this.player.level().playSound(null, this.pos.x, this.pos.y, this.pos.z, LocksSoundEvents.PIN_FAIL, SoundSource.BLOCKS, 1f, 1f);
 		}
-		LocksNetwork.MAIN.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) this.player), new TryPinResultPacket(correct, reset));
+		ServerPlayNetworking.send((ServerPlayer) this.player,TryPinResultPacket.ID,TryPinResultPacket.encode(new TryPinResultPacket(correct, reset)));
 	}
 
 	@Environment(EnvType.CLIENT)

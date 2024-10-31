@@ -1,16 +1,21 @@
 package melonslise.locks.common.network.toclient;
 
+import melonslise.locks.Locks;
 import melonslise.locks.common.container.LockPickingContainer;
+import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.init.LocksContainerTypes;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class TryPinResultPacket
 {
+	public static final ResourceLocation ID = new ResourceLocation(Locks.ID, "try_pin_result");
 	private final boolean correct, reset;
 
 	public TryPinResultPacket(boolean correct, boolean reset)
@@ -24,25 +29,23 @@ public class TryPinResultPacket
 		return new TryPinResultPacket(buf.readBoolean(), buf.readBoolean());
 	}
 
-	public static void encode(TryPinResultPacket pkt, FriendlyByteBuf buf)
+	public static FriendlyByteBuf encode(TryPinResultPacket pkt)
 	{
+		FriendlyByteBuf buf = PacketByteBufs.empty();
 		buf.writeBoolean(pkt.correct);
 		buf.writeBoolean(pkt.reset);
+		return buf;
 	}
 
-	public static void handle(TryPinResultPacket pkt, Supplier<NetworkEvent.Context> ctx)
-	{
-		// Use runnable, lambda causes issues with class loading
-		ctx.get().enqueueWork(new Runnable()
-		{
-			@Override
-			public void run()
-			{
+	public static void register() {
+		ClientPlayNetworking.registerGlobalReceiver(ID, (client, handler, buf, responseSender) -> {
+			client.execute(() -> {
+				TryPinResultPacket pkt = decode(buf);
 				AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
 				if(container.getType() == LocksContainerTypes.LOCK_PICKING)
 					((LockPickingContainer) container).handlePin(pkt.correct, pkt.reset);
-			}
+			});
 		});
-		ctx.get().setPacketHandled(true);
 	}
+
 }

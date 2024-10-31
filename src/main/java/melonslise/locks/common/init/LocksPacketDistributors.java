@@ -2,8 +2,6 @@ package melonslise.locks.common.init;
 
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.PacketDistributor;
 
 import java.util.stream.Stream;
 
