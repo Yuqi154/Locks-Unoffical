@@ -48,6 +48,9 @@ public class AddLockableToChunkPacket {
         ClientPlayNetworking.registerGlobalReceiver(ID, (client, phandler, buf, responseSender) -> {
             client.execute(() -> {
                 AddLockableToChunkPacket pkt = decode(buf);
+				if(client.level==null){
+					return;
+				}
                 ILockableStorage st = LocksComponents.LOCKABLE_STORAGE.get(client.level.getChunk(pkt.x, pkt.z));
                 ILockableHandler handler = LocksComponents.LOCKABLE_HANDLER.get(client.level);
                 Int2ObjectMap<Lockable> lkbs = handler.getLoaded();

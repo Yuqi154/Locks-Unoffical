@@ -14,6 +14,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
 
+import java.util.Objects;
+
 /*
  * Internal storage for lockables with almost no handling logic
  * Also stores lockables which are shared by multiple chunks. Duplicate shared lockables are handled by checking if they have already been loaded before
@@ -59,7 +61,7 @@ public class LockableStorage implements ILockableStorage
 			handler =LocksComponents.LOCKABLE_HANDLER.get(levelChunk);
 		}else {
 			BlockPos blockPos = this.chunk.getBlockEntitiesPos().stream().findFirst().get();
-			handler = LocksComponents.LOCKABLE_HANDLER.get(this.chunk.getBlockEntity(blockPos).getLevel().getChunkAt(blockPos));
+			handler = LocksComponents.LOCKABLE_HANDLER.get(Objects.requireNonNull(Objects.requireNonNull(this.chunk.getBlockEntity(blockPos)).getLevel()).getChunkAt(blockPos));
 		}
 		Int2ObjectMap<Lockable> lkbs = handler.getLoaded();
 		for(int a = 0; a < lockables.size(); ++a)

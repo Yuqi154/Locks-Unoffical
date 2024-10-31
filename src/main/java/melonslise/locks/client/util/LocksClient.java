@@ -41,6 +41,7 @@ public class LocksClient {
 
         double dMin = 0d;
 
+        assert mc.level != null;
         for (Lockable lkb : LocksComponents.LOCKABLE_HANDLER.get(mc.level).getLoaded().values()) {
             Lockable.State state = lkb.getLockState(mc.level);
             if (state == null || !state.inRange(o) || !state.inView(ch))
@@ -92,6 +93,7 @@ public class LocksClient {
     public static void renderSelection(PoseStack mtx, MultiBufferSource buf) {
         Minecraft mc = Minecraft.getInstance();
         Vec3 o = LocksClientUtil.getCamera().getPosition();
+        assert mc.player != null;
         ISelection select = LocksComponents.SELECTION.get(mc.player);
         if (select == null)
             return;

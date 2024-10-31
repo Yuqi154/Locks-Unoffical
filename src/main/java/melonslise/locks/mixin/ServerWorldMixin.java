@@ -26,7 +26,7 @@ public class ServerWorldMixin
 		ServerLevel world = (ServerLevel) (Object) this;
 		ILockableHandler handler = LocksComponents.LOCKABLE_HANDLER.get(world);
 		// create buffer list because otherwise we will be deleting elements while iterating (BAD!!)
-		handler.getInChunk(pos).values().stream().filter(lkb -> lkb.bb.intersects(pos)).collect(Collectors.toList()).forEach(lkb ->
+		handler.getInChunk(pos).values().stream().filter(lkb -> lkb.bb.intersects(pos)).toList().forEach(lkb ->
 		{
 			world.playSound(null, pos, SoundEvents.IRON_DOOR_OPEN, SoundSource.BLOCKS, 0.8f, 0.8f + world.random.nextFloat() * 0.4f);
 			world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, lkb.stack));

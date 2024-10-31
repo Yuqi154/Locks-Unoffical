@@ -92,7 +92,9 @@ public class LockItem extends LockingItem
 	{
 		Player player = ctx.getPlayer();
 		BlockPos pos = ctx.getClickedPos();
-		ISelection select = LocksComponents.SELECTION.get(player);
+		if(player ==null)
+			return InteractionResult.PASS;
+        ISelection select = LocksComponents.SELECTION.get(player);
 		BlockPos pos1 = select.get();
 		if (pos1 == null)
 			select.set(pos);

@@ -31,6 +31,9 @@ public class AddLockablePacket {
         ClientPlayNetworking.registerGlobalReceiver(ID, (client, handler, buf, responseSender) -> {
             client.execute(() -> {
                 AddLockablePacket packet = decode(buf);
+                if(client.level==null){
+                    return;
+                }
                 LocksComponents.LOCKABLE_HANDLER.get(client.level).add(packet.lockable);
             });
         });
