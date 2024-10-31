@@ -15,6 +15,7 @@
     "LootTableManagerMixin",
     "PistonBlockMixin",
     "PistonBlockStructureHelperMixin",
+    "PlayerTickMixin",
     "ServerWorldMixin",
     "WorldMixin",
     "accessor.LootPoolAccessor",
@@ -23,6 +24,7 @@
     "swapLock.StructureTemplateMixin"
   ],
   "client": [
+    "ChunkCacheMixin",
     "client.ClientTickMixin",
     "client.GuiMixin",
     "client.WorldRendererMixin"

@@ -1,9 +1,10 @@
 package melonslise.locks.common.event;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import melonslise.locks.Locks;
+import melonslise.locks.common.components.interfaces.ILockableHandler;
 import melonslise.locks.common.config.LocksClientConfig;
 import melonslise.locks.common.config.LocksServerConfig;
+import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.init.LocksItemTags;
 import melonslise.locks.common.init.LocksItems;
 import melonslise.locks.common.init.LocksSoundEvents;
@@ -12,43 +13,50 @@ import melonslise.locks.common.item.LockingItem;
 import melonslise.locks.common.util.Lockable;
 import melonslise.locks.common.util.LocksPredicates;
 import melonslise.locks.common.util.LocksUtil;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
+import net.fabricmc.fabric.api.loot.v2.LootTableSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.npc.VillagerProfession;
-import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootDataManager;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 
-public final class LocksForgeEvents
+public final class LocksEvents
 {
 	public static final Component LOCKED_MESSAGE = Component.translatable(Locks.ID + ".status.locked");
 
-	private LocksForgeEvents() {}
+	private LocksEvents() {}
 
 
-	@SubscribeEvent
-	public static void onLootTableLoad(LootTableLoadEvent e)
+
+	public static void onLootTableLoad(ResourceManager resourceManager, LootDataManager lootManager, ResourceLocation id, LootTable.Builder tableBuilder, LootTableSource source)
 	{
 		// Only modify if it was a vanilla chest loot table
-		ResourceLocation name = e.getName();
-		if (!name.getNamespace().equals("minecraft") || !name.getPath().startsWith("chests"))
+
+        if (!id.getNamespace().equals("minecraft") || !id.getPath().startsWith("chests"))
 			return;
 		// And only if there is a corresponding inject table...
-		ResourceLocation injectLoc = new ResourceLocation(Locks.ID, "loot_tables/inject/" + name.getPath() + ".json");
+		ResourceLocation injectLoc = new ResourceLocation(Locks.ID, "loot_tables/inject/" + id.getPath() + ".json");
 		if (LocksUtil.resourceManager.getResource(injectLoc).isEmpty())
 			return;
 		// todo (kota): bring back
@@ -56,45 +64,28 @@ public final class LocksForgeEvents
 	}
 
 
-	@SubscribeEvent
-	public static void onChunkUnload(ChunkEvent.Unload e)
+	public static InteractionResult onRightClick(Player player, Level world, InteractionHand hand, BlockHitResult result)
 	{
-		LevelChunk ch = (LevelChunk) e.getChunk();
-		ILockableHandler handler = ch.getLevel().getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
-		ch.getCapability(LocksCapabilities.LOCKABLE_STORAGE).orElse(null).values().forEach(lkb ->
-		{
-			handler.getLoaded().remove(lkb.id);
-			lkb.deleteObserver(handler);
-		});
-	}
-
-	@SubscribeEvent
-	public static void onRightClick(PlayerInteractEvent.RightClickBlock e)
-	{
-		BlockPos pos = e.getPos();
-		Level world = e.getLevel();
-		Player player = e.getEntity();
-		ILockableHandler handler = world.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
+		BlockPos pos = result.getBlockPos();
+		ILockableHandler handler = LocksComponents.LOCKABLE_HANDLER.get(world);
 		Lockable[] intersect = handler.getInChunk(pos).values().stream().filter(lkb -> lkb.bb.intersects(pos)).toArray(Lockable[]::new);
 		if(intersect.length == 0)
-			return;
+			return InteractionResult.PASS;
 		if(intersect.length > 1) {
 			for(Lockable lkb : Arrays.stream(intersect).toList().subList(1, intersect.length))
 			{
 				handler.remove(lkb.id);
 			}
 		}
-		if(e.getHand() != InteractionHand.MAIN_HAND) // FIXME Better way to prevent firing multiple times
+		if(hand != InteractionHand.MAIN_HAND) // FIXME Better way to prevent firing multiple times
 		{
-			e.setUseBlock(Event.Result.DENY);
-			return;
+			return InteractionResult.FAIL;
 		}
-		ItemStack stack = e.getItemStack();
+		ItemStack stack = player.getUseItem();
 		Optional<Lockable> locked = Arrays.stream(intersect).filter(LocksPredicates.LOCKED).findFirst();
 		if(locked.isPresent())
 		{
-			Lockable lkb = locked;
-			e.setUseBlock(Event.Result.DENY);
+			Lockable lkb = locked.get();
 			Item item = stack.getItem();
 			// FIXME erase this ugly ass hard coded shit from the face of the earth and make a proper way to do this (maybe mixin to where the right click event is fired from)
 			if(!stack.is(LocksItemTags.LOCK_PICKS) && item != LocksItems.MASTER_KEY && (!stack.is(LocksItemTags.KEYS) || LockingItem.getOrSetId(stack) != lkb.lock.id) && (item != LocksItems.KEY_RING || !KeyRingItem.containsId(stack, lkb.lock.id)))
@@ -105,14 +96,13 @@ public final class LocksForgeEvents
 			player.swing(InteractionHand.MAIN_HAND);
 			if(world.isClientSide && LocksClientConfig.DEAF_MODE.get())
 				player.displayClientMessage(LOCKED_MESSAGE, true);
-			return;
+			return InteractionResult.FAIL;
 		}
 		if(LocksServerConfig.ALLOW_REMOVING_LOCKS.get() && player.isShiftKeyDown() && stack.isEmpty())
 		{
 			Lockable[] match = Arrays.stream(intersect).filter(LocksPredicates.NOT_LOCKED).toArray(Lockable[]::new);
 			if(match.length == 0)
-				return;
-			e.setUseBlock(Event.Result.DENY);
+				return InteractionResult.PASS;
 			world.playSound(player, pos, SoundEvents.IRON_DOOR_OPEN, SoundSource.BLOCKS, 0.8f, 0.8f + world.random.nextFloat() * 0.4f);
 			player.swing(InteractionHand.MAIN_HAND);
 			if(!world.isClientSide)
@@ -121,39 +111,37 @@ public final class LocksForgeEvents
 					world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, lkb.stack));
 					handler.remove(lkb.id);
 				}
+			return InteractionResult.FAIL;
 		}
+		return InteractionResult.PASS;
 	}
 
-	@SubscribeEvent
-	public static void onPlayerTick(TickEvent.PlayerTickEvent e)
-	{
-		if(e.phase != Phase.START)
-			return;
-		ISelection select = e.player.getCapability(LocksCapabilities.SELECTION).orElse(null);
-		if (select == null || select == null)
-			return;
-		for (ItemStack stack : e.player.getHandSlots())
-			if(stack.is(LocksItemTags.LOCKS))
-				return;
-		select.set(null);
-	}
 
-	public static boolean canBreakLockable(Player player, BlockPos pos)
+	public static boolean canBreakLockable(Level world,Player player, BlockPos pos)
 	{
 		return LocksServerConfig.PROTECT_LOCKABLES.get() &&
 				!player.isCreative() &&
-				LocksUtil.lockedAndRelated(player.level(), pos);
+				LocksUtil.lockedAndRelated(world, pos);
 	}
 
-	@SubscribeEvent
-	public static void onBlockBreaking(PlayerEvent.BreakSpeed e)
+	public static boolean onBlockBreaking(Level world, Player player, BlockPos pos, BlockState state,@Nullable BlockEntity entity)
 	{
-        e.setCanceled(canBreakLockable(e.getEntity(), e.getPosition()));
+        return canBreakLockable(world,player, pos);
 	}
 
-	@SubscribeEvent
-	public static void onBlockBreak(BlockEvent.BreakEvent e)
+	public static void onBlockBreak(Level world, Player player, BlockPos pos, BlockState state,@Nullable BlockEntity entity)
 	{
-        e.setCanceled(canBreakLockable(e.getPlayer(), e.getPos()));
+		if(!canBreakLockable(world,player, pos)) {
+			world.setBlockAndUpdate(pos, state);
+		}
 	}
+
+	public static void register()
+	{
+		LootTableEvents.MODIFY.register(LocksEvents::onLootTableLoad);
+		PlayerBlockBreakEvents.BEFORE.register(LocksEvents::onBlockBreaking);
+		PlayerBlockBreakEvents.AFTER.register(LocksEvents::onBlockBreak);
+		UseBlockCallback.EVENT.register(LocksEvents::onRightClick);
+	}
+
 }

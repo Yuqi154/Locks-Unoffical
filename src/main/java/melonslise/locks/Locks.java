@@ -1,6 +1,7 @@
 package melonslise.locks;
 
 import fuzs.forgeconfigapiport.api.config.v2.ForgeConfigRegistry;
+import melonslise.locks.common.event.LocksEvents;
 import melonslise.locks.common.init.*;
 import net.fabricmc.api.ModInitializer;
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +24,8 @@ public final class Locks implements ModInitializer
 		LocksSoundEvents.register();
 		LocksContainerTypes.register();
 		LocksRecipeSerializers.register();
+		LocksVillagerTrades.register();
+		LocksEvents.register();
 		ForgeConfigRegistry.INSTANCE.register(ID, Type.COMMON, LocksConfig.SPEC);
 		ForgeConfigRegistry.INSTANCE.register(ID, Type.SERVER, LocksServerConfig.SPEC);
 	}
