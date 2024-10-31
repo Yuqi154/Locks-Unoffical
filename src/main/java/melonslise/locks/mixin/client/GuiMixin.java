@@ -21,26 +21,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Gui.class)
 public class GuiMixin {
 
-    @Unique
-    private static Lockable tooltipLockable;
 
     @Inject(method = "render",at = @At("TAIL"))
     private void render(GuiGraphics guiGraphics, float f, CallbackInfo ci) {
         Minecraft mc = Minecraft.getInstance();
         // if(e.getType() != RenderGuiOverlayEvent.ElementType.ALL || tooltipLockable == null)
-        if (tooltipLockable == null)
+        if (LocksClient.tooltipLockable == null)
             return;
         if (LocksClient.holdingPick(mc.player)) {
             PoseStack mtx = guiGraphics.pose();
-            Vector3f vec = LocksClientUtil.worldToScreen(tooltipLockable.getLockState(mc.level).pos, f);
+            Vector3f vec = LocksClientUtil.worldToScreen(LocksClient.tooltipLockable.getLockState(mc.level).pos, f);
             if (vec.z() < 0d) {
                 mtx.pushPose();
                 mtx.translate(vec.x(), vec.y(), 0f);
-                LocksClient.renderHudTooltip(mtx, Lists.transform(tooltipLockable.stack.getTooltipLines(mc.player, mc.options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL), Component::getVisualOrderText), mc.font);
+                LocksClient.renderHudTooltip(mtx, Lists.transform(LocksClient.tooltipLockable.stack.getTooltipLines(mc.player, mc.options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL), Component::getVisualOrderText), mc.font);
                 mtx.popPose();
             }
         }
-        tooltipLockable = null;
+        LocksClient.tooltipLockable = null;
 
 
     }

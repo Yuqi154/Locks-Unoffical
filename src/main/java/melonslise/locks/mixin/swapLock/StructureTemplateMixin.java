@@ -75,7 +75,7 @@ public class StructureTemplateMixin {
             ItemStack stack = LocksConfig.RANDOMIZE_LOADED_LOCKS.get() ? LocksConfig.getRandomLock(rng) : lkb.stack;
             Lock lock = LocksConfig.RANDOMIZE_LOADED_LOCKS.get() ? Lock.from(stack) : lkb.lock;
             Transform tr = Transform.fromDirectionAndFace(settings.getRotation().rotate(settings.getMirror().getRotation(lkb.tr.dir).rotate(lkb.tr.dir)), lkb.tr.face, Direction.NORTH);
-            handler.add(new Lockable(bb, lock, tr, stack, level));
+            handler.add(new Lockable(bb, lock, tr, stack, level),level);
         }
     }
 

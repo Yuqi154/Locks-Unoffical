@@ -38,7 +38,7 @@ public class AddLockablePacket {
         });
     }
     public static void execute(AddLockablePacket pkt, Level level){
-        LocksComponents.LOCKABLE_HANDLER.get(level).add(pkt.lockable);
+        LocksComponents.LOCKABLE_HANDLER.get(level).add(pkt.lockable,level);
     }
 
 }

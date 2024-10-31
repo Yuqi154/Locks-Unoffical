@@ -14,6 +14,7 @@ import melonslise.locks.common.util.Lockable;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -55,14 +56,14 @@ public class LockableHandler implements ILockableHandler {
     }
 
     @Override
-    public boolean add(Lockable lkb)
+    public boolean add(Lockable lkb,Level level)
     {
         if(lkb.bb.volume() > LocksServerConfig.MAX_LOCKABLE_VOLUME.get())
             return false;
         List<ILockableStorage> sts = lkb.bb.containedChunksTo((x, z) ->
         {
             try {
-                LevelChunk levelChunk = this.world.getChunk(x, z);
+                LevelChunk levelChunk = level.getChunk(x, z);
                 ILockableStorage st = LocksComponents.LOCKABLE_STORAGE.get(levelChunk);
                 return st.get().values().stream().anyMatch(lkb1 -> lkb1.bb.intersects(lkb.bb)) ? null : st;
             } catch (Exception e){
@@ -80,12 +81,12 @@ public class LockableHandler implements ILockableHandler {
         this.lockables.put(lkb.id, lkb);
         lkb.addObserver(this);
         // Do client/server extras
-        if(this.world.isClientSide)
+        if(level.isClientSide)
             lkb.swing(10);
         else
         {
-            AddLockablePacket.execute(new AddLockablePacket(lkb), this.world);
-//            world.getServer().getPlayerList().players.forEach(player -> {
+            AddLockablePacket.execute(new AddLockablePacket(lkb), level);
+//            level.getServer().getPlayerList().players.forEach(player -> {
 //                ServerPlayNetworking.send(player, AddLockablePacket.ID, AddLockablePacket.encode(new AddLockablePacket(lkb)));
 //            });
         }
@@ -130,10 +131,24 @@ public class LockableHandler implements ILockableHandler {
     @Override
     public void readFromNbt(CompoundTag compoundTag) {
         this.lastId.set(compoundTag.getInt("last_id"));
+        int size = compoundTag.getInt("LockablesSize");
+        ListTag lockables = compoundTag.getList("Lockables",size);
+        for(int a = 0; a < lockables.size(); ++a)
+        {
+            CompoundTag nbt1 = lockables.getCompound(a);
+            Lockable lkb = Lockable.fromNbt(nbt1);
+            this.lockables.put(lkb.id, lkb);
+            lkb.addObserver(this);
+        }
     }
 
     @Override
     public void writeToNbt(CompoundTag compoundTag) {
         compoundTag.putInt("last_id", this.lastId.get());
+        ListTag list = new ListTag();
+        for(Lockable lkb : this.lockables.values())
+            list.add(Lockable.toNbt(lkb));
+        compoundTag.put("Lockables", list);
+        compoundTag.putInt("LockablesSize", this.lockables.size());
     }
 }

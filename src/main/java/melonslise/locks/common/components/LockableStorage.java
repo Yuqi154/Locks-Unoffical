@@ -55,7 +55,8 @@ public class LockableStorage implements ILockableStorage
 
 	@Override
 	public void readFromNbt(CompoundTag nbt) {
-		ListTag lockables = nbt.getList("Lockables",0);
+		int size = nbt.getInt("LockablesSize");
+		ListTag lockables = nbt.getList("Lockables",size);
 		ILockableHandler handler;
 		if(this.chunk instanceof LevelChunk levelChunk){
 			handler =LocksComponents.LOCKABLE_HANDLER.get(levelChunk.getLevel());
@@ -85,5 +86,6 @@ public class LockableStorage implements ILockableStorage
 		for(Lockable lkb : this.lockables.values())
 			list.add(Lockable.toNbt(lkb));
 		compoundTag.put("Lockables", list);
+		compoundTag.putInt("LockablesSize", this.lockables.size());
 	}
 }
