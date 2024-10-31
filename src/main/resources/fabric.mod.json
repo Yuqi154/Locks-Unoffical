@@ -1,19 +1,19 @@
 {
 	"schemaVersion": 1,
-	"id": "mystias_izakaya",
+	"id": "locks",
 	"version": "${version}",
-	"name": "Mystia's Izakaya",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "Locks",
+	"description": "Locks is a small, but unique Minecraft mod that introduces flexible and universal locks which can be dynamically attached to multiple blocks of any kind, including other mods, a fun lock picking mechanic as well as lots of other little, but useful tools and utilities.",
 	"authors": [
-		"HiedaCamellia!"
+		"Melonslise", "Kaleb Langley", "Yuqi154"
 	],
-
+	"icon": "logo.png",
 	"accessWidener" : "locks.accesswidener",
 	"contact": {
-		"homepage": "https://www.curseforge.com/minecraft/mc-mods/mystias-izakaya",
-		"sources": "https://github.com/HiedaCamellia/MystiasIzakaya"
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/locks-unoffical",
+		"sources": "https://github.com/MCTeamPotato/Locks-Unoffical"
 	},
-	"license": "GPL-3.0",
+	"license": "CC-BY-NC-3.0",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
@@ -34,7 +34,13 @@
 		"fabricloader": ">=0.14.21",
 		"minecraft": "~1.20.1",
 		"java": ">=17",
-		"fabric-api": "*"
+		"fabric-api": "*",
+		"forgeconfigapiport": ">=8",
+		"cardinal-components-base": ">=5.2.2",
+		"cardinal-components-item": ">=5.2.2",
+		"cardinal-components-entity": ">=5.2.2",
+		"cardinal-components-world": ">=5.2.2",
+		"cardinal-components-chunk": ">=5.2.2"
 	},
 	"suggests": {
 		"jei": ">15.17.0.0"

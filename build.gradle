@@ -41,7 +41,7 @@ dependencies {
 	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-world:${project.cca_version}"
 	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-chunk:${project.cca_version}"
 	modImplementation "curse.maven:forge-config-api-port-fabric-547434:4583000"
-	modImplementation "curse.maven:beans-backpacks-946775:5368248"
+	//modImplementation "curse.maven:cloth-config-348521:5729104"
 }
 
 processResources {
