@@ -33,12 +33,6 @@ public final class LocksItems {
                     .icon(() -> new ItemStack(LocksItems.IRON_LOCK.get()))
                     .title(Component.translatable("itemGroup.locks"))
                     .displayItems((parameters, output) -> {
-                        for (RegistryObject<Enchantment> enchantmentRegistryObject : LocksEnchantments.ENCHANTMENTS.getEntries()) {
-                            Enchantment enchantment = enchantmentRegistryObject.get();
-                            ItemStack enchantedBook = new ItemStack(Items.ENCHANTED_BOOK);
-                            enchantedBook.enchant(enchantment, enchantment.getMaxLevel());
-                            output.accept(enchantedBook);
-                        }
                         for (RegistryObject<Item> itemRegistryObject : LocksItems.ITEMS.getEntries()) {
                             output.accept(itemRegistryObject.get());
                         }
