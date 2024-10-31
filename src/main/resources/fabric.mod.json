@@ -47,7 +47,10 @@
 	},
 	"custom": {
 		"cardinal-components": [
-			"mystias_izakaya:player_data"
+			"locks:lockable_handler",
+			"locks:lockable_storage",
+			"locks:selection",
+			"locks:item_handler"
 		]
 	}
 }

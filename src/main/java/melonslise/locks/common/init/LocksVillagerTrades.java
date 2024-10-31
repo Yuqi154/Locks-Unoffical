@@ -40,7 +40,7 @@ public class LocksVillagerTrades {
     public static void addWandererTrades()
     {
         Int2ObjectMap<VillagerTrades.ItemListing[]> wanderingTraderTrades = VillagerTrades.WANDERING_TRADER_TRADES;
-        List<VillagerTrades.ItemListing> trades = Arrays.stream(wanderingTraderTrades.get(1)).toList();
+        List<VillagerTrades.ItemListing> trades = new ArrayList<>(Arrays.stream(wanderingTraderTrades.get(1)).toList());
         trades.add(new VillagerTrades.ItemsForEmeralds(LocksItems.GOLD_LOCK_PICK, 5, 2, 6, 1));
         trades.add(new VillagerTrades.ItemsForEmeralds(LocksItems.STEEL_LOCK_PICK, 3, 2, 8, 1));
         trades.add(new VillagerTrades.EnchantedItemForEmeralds(LocksItems.STEEL_LOCK, 16, 4, 1));
