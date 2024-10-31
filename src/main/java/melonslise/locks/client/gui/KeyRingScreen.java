@@ -1,15 +1,15 @@
 package melonslise.locks.client.gui;
 
 import melonslise.locks.common.container.KeyRingContainer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class KeyRingScreen extends AbstractContainerScreen<KeyRingContainer>
 {
 	public static final ResourceLocation TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");

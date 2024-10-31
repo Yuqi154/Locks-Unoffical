@@ -6,6 +6,8 @@ import melonslise.locks.common.init.*;
 import melonslise.locks.common.item.LockPickItem;
 import melonslise.locks.common.network.toclient.TryPinResultPacket;
 import melonslise.locks.common.util.Lockable;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.FriendlyByteBuf;
@@ -21,10 +23,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.IContainerFactory;
-import net.minecraftforge.network.PacketDistributor;
 
 import java.util.function.Consumer;
 
@@ -37,7 +35,7 @@ public class LockPickingContainer extends AbstractContainerMenu
 			super(inventoryIn, index, xPosition, yPosition);
 		}
 
-		@OnlyIn(Dist.CLIENT)
+		@Environment(EnvType.CLIENT)
 		@Override
 		public boolean isActive()
 		{
@@ -59,7 +57,7 @@ public class LockPickingContainer extends AbstractContainerMenu
 
 	public LockPickingContainer(int id, Player player, InteractionHand hand, Lockable lkb)
 	{
-		super(LocksContainerTypes.LOCK_PICKING.get(), id);
+		super(LocksContainerTypes.LOCK_PICKING, id);
 		this.player = player;
 		this.hand = hand;
 		this.lockable = lkb;
@@ -67,9 +65,9 @@ public class LockPickingContainer extends AbstractContainerMenu
 		Lockable.State state = lkb.getLockState(player.level());
 		this.pos = state == null ? lkb.bb.center() : state.pos;
 
-		this.shocking = EnchantmentHelper.getTagEnchantmentLevel(LocksEnchantments.SHOCKING.get(), this.lockable.stack);
-		this.sturdy = EnchantmentHelper.getTagEnchantmentLevel(LocksEnchantments.STURDY.get(), this.lockable.stack);
-		this.complexity = EnchantmentHelper.getTagEnchantmentLevel(LocksEnchantments.COMPLEXITY.get(), this.lockable.stack);
+		this.shocking = EnchantmentHelper.getItemEnchantmentLevel(LocksEnchantments.SHOCKING, this.lockable.stack);
+		this.sturdy = EnchantmentHelper.getItemEnchantmentLevel(LocksEnchantments.STURDY, this.lockable.stack);
+		this.complexity = EnchantmentHelper.getItemEnchantmentLevel(LocksEnchantments.COMPLEXITY, this.lockable.stack);
 
 		// Syncs the player inventory
 
@@ -116,7 +114,7 @@ public class LockPickingContainer extends AbstractContainerMenu
 		{
 			++this.currIndex;
 			correct = true;
-			this.player.level().playSound(null, this.pos.x, this.pos.y, this.pos.z, LocksSoundEvents.PIN_MATCH.get(), SoundSource.BLOCKS, 1f, 1f);
+			this.player.level().playSound(null, this.pos.x, this.pos.y, this.pos.z, LocksSoundEvents.PIN_MATCH, SoundSource.BLOCKS, 1f, 1f);
 		}
 		else
 		{
@@ -127,15 +125,15 @@ public class LockPickingContainer extends AbstractContainerMenu
 				if(this.shocking > 0)
 				{
 					this.player.hurt(LocksDamageSources.getDamageSource(this.player.level(), LocksDamageSources.SHOCK), shocking * 1.5f);
-					this.player.level().playSound(null, this.player.position().x, this.player.position().y, this.player.position().z, LocksSoundEvents.SHOCK.get(), SoundSource.BLOCKS, 1f, 1f);
+					this.player.level().playSound(null, this.player.position().x, this.player.position().y, this.player.position().z, LocksSoundEvents.SHOCK, SoundSource.BLOCKS, 1f, 1f);
 				}
 			}
-			else this.player.level().playSound(null, this.pos.x, this.pos.y, this.pos.z, LocksSoundEvents.PIN_FAIL.get(), SoundSource.BLOCKS, 1f, 1f);
+			else this.player.level().playSound(null, this.pos.x, this.pos.y, this.pos.z, LocksSoundEvents.PIN_FAIL, SoundSource.BLOCKS, 1f, 1f);
 		}
 		LocksNetwork.MAIN.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) this.player), new TryPinResultPacket(correct, reset));
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void handlePin(boolean correct, boolean reset)
 	{
 		//处理销钉交互
@@ -202,7 +200,7 @@ public class LockPickingContainer extends AbstractContainerMenu
 		if(!this.isOpen() || !this.lockable.lock.isLocked())
 			return;
 		this.lockable.lock.setLocked(!this.lockable.lock.isLocked());
-		this.player.level().playSound(player, this.pos.x, this.pos.y, this.pos.z, LocksSoundEvents.LOCK_OPEN.get(), SoundSource.BLOCKS, 1f, 1f);
+		this.player.level().playSound(player, this.pos.x, this.pos.y, this.pos.z, LocksSoundEvents.LOCK_OPEN, SoundSource.BLOCKS, 1f, 1f);
 	}
 
 	public static final IContainerFactory<LockPickingContainer> FACTORY = (id, inv, buf) ->

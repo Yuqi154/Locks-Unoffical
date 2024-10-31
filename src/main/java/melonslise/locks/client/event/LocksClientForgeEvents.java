@@ -6,7 +6,9 @@ import com.mojang.blaze3d.vertex.*;
 import melonslise.locks.Locks;
 import melonslise.locks.client.init.LocksRenderTypes;
 import melonslise.locks.client.util.LocksClientUtil;
+import melonslise.locks.common.components.interfaces.ISelection;
 import melonslise.locks.common.config.LocksServerConfig;
+import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.init.LocksItemTags;
 import melonslise.locks.common.util.Lockable;
 import net.minecraft.client.Minecraft;
@@ -28,20 +30,12 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = Locks.ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class LocksClientForgeEvents {
     public static Lockable tooltipLockable;
 
@@ -53,23 +47,23 @@ public final class LocksClientForgeEvents {
         Minecraft mc = Minecraft.getInstance();
         if (e.phase != TickEvent.Phase.START || mc.level == null || mc.isPaused())
             return;
-        mc.level.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null).getLoaded().values().forEach(lkb -> lkb.tick());
+        LocksComponents.LOCKABLE_HANDLER.get(mc.level).getLoaded().values().forEach(lkb -> lkb.tick());
     }
 
-    @SubscribeEvent
-    public static void onRenderWorld(RenderLevelStageEvent e) {
-		/*
-		//if (e.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) return;
-
-		Minecraft mc = Minecraft.getInstance();
-		PoseStack mtx = e.getPoseStack();
-		MultiBufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-		bufferSource.hashCode();
-		// use mixin to avoid models disappearing  in water and when fabulous graphics are on
-		// renderLocks(mtx, buf, LocksClientUtil.getFrustum(mtx, e.getProjectionMatrix()), e.getPartialTicks());
-		renderSelection(mtx, bufferSource);
-		 */
-    }
+//    @SubscribeEvent
+//    public static void onRenderWorld(RenderLevelStageEvent e) {
+//		/*
+//		//if (e.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) return;
+//
+//		Minecraft mc = Minecraft.getInstance();
+//		PoseStack mtx = e.getPoseStack();
+//		MultiBufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+//		bufferSource.hashCode();
+//		// use mixin to avoid models disappearing  in water and when fabulous graphics are on
+//		// renderLocks(mtx, buf, LocksClientUtil.getFrustum(mtx, e.getProjectionMatrix()), e.getPartialTicks());
+//		renderSelection(mtx, bufferSource);
+//		 */
+//    }
 
     public static boolean holdingPick(Player player) {
         for (InteractionHand InteractionHand : InteractionHand.values())
@@ -104,7 +98,7 @@ public final class LocksClientForgeEvents {
 
         double dMin = 0d;
 
-        for (Lockable lkb : mc.level.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null).getLoaded().values()) {
+        for (Lockable lkb : LocksComponents.LOCKABLE_HANDLER.get(mc.level).getLoaded().values()) {
             Lockable.State state = lkb.getLockState(mc.level);
             if (state == null || !state.inRange(o) || !state.inView(ch))
                 continue;
@@ -147,7 +141,7 @@ public final class LocksClientForgeEvents {
     public static void renderSelection(PoseStack mtx, MultiBufferSource buf) {
         Minecraft mc = Minecraft.getInstance();
         Vec3 o = LocksClientUtil.getCamera().getPosition();
-        ISelection select = mc.player.getCapability(LocksCapabilities.SELECTION).orElse(null);
+        ISelection select = LocksComponents.SELECTION.get(mc.player);
         if (select == null)
             return;
         BlockPos pos = select.get();

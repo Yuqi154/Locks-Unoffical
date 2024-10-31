@@ -2,12 +2,12 @@ package melonslise.locks.client.gui.sprite;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import melonslise.locks.client.util.LocksClientUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SpringSprite extends Sprite
 {
 	public final TextureInfo[] texs;

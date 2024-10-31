@@ -7,6 +7,8 @@
 	"authors": [
 		"HiedaCamellia!"
 	],
+
+	"accessWidener" : "locks.accesswidener",
 	"contact": {
 		"homepage": "https://www.curseforge.com/minecraft/mc-mods/mystias-izakaya",
 		"sources": "https://github.com/HiedaCamellia/MystiasIzakaya"

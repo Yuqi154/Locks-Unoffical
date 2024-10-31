@@ -22,6 +22,12 @@ repositories {
 	}
 }
 
+loom{
+
+	accessWidenerPath = file("src/main/resources/locks.accesswidener")
+}
+
+
 dependencies {
 
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -29,6 +35,7 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "curse.maven:lootr-fabric-615106:5639247"
 	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}"
+	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-item:${project.cca_version}"
 	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
 	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-world:${project.cca_version}"
 	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-chunk:${project.cca_version}"

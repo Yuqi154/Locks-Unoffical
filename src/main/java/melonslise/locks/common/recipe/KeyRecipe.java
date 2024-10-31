@@ -24,7 +24,7 @@ public class KeyRecipe extends CustomRecipe
 	@Override
 	public RecipeSerializer<?> getSerializer()
 	{
-		return LocksRecipeSerializers.KEY.get();
+		return LocksRecipeSerializers.KEY;
 	}
 
 	@Override

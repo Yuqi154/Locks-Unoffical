@@ -3,11 +3,11 @@ package melonslise.locks.client.gui.sprite.action;
 import java.util.function.BiConsumer;
 
 import melonslise.locks.client.gui.sprite.Sprite;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 //控制精灵的行为
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public interface IAction<S extends Sprite>
 {
 	boolean isFinished(S sprite);

@@ -11,26 +11,27 @@ import melonslise.locks.client.gui.sprite.action.*;
 import melonslise.locks.common.container.LockPickingContainer;
 import melonslise.locks.common.init.LocksNetwork;
 import melonslise.locks.common.network.toserver.TryPinPacket;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiConsumer;
 
-@OnlyIn(Dist.CLIENT)
+
+@Environment(EnvType.CLIENT)
 public class LockPickingScreen extends AbstractContainerScreen<LockPickingContainer> {
     public static final Component HINT = Component.translatable(Locks.ID + ".gui.lockpicking.open");
 
@@ -99,7 +100,7 @@ public class LockPickingScreen extends AbstractContainerScreen<LockPickingContai
     }
 
     public static ResourceLocation getTextureFor(ItemStack stack) {
-        return new ResourceLocation(Locks.ID, "textures/gui/" + ForgeRegistries.ITEMS.getKey(stack.getItem()).getPath() + ".png");
+        return new ResourceLocation(Locks.ID, "textures/gui/" + BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath() + ".png");
     }
 
     public Sprite addSprite(Sprite sprite) {
@@ -193,11 +194,11 @@ public class LockPickingScreen extends AbstractContainerScreen<LockPickingContai
         if (this.frozen)
             return super.keyPressed(key, scan, modifier);
         ;
-        if (key == this.minecraft.options.keyLeft.getKey().getValue())
+        if (key == this.minecraft.options.keyLeft.key.getValue())
             this.lockPick.speedX = -4;
-        else if (key == this.minecraft.options.keyRight.getKey().getValue())
+        else if (key == this.minecraft.options.keyRight.key.getValue())
             this.lockPick.speedX = 4;
-        else if (key == this.minecraft.options.keyUp.getKey().getValue() && !this.lockPick.isExecuting() && this.pullPin(this.getSelectedPin()))
+        else if (key == this.minecraft.options.keyUp.key.getValue() && !this.lockPick.isExecuting() && this.pullPin(this.getSelectedPin()))
             this.lockPick.execute(MoveAction.at(0f, -2.5f).time(3), MoveAction.at(0f, 2.5f).time(3));
         return super.keyPressed(key, scan, modifier);
     }
@@ -206,7 +207,7 @@ public class LockPickingScreen extends AbstractContainerScreen<LockPickingContai
     public boolean keyReleased(int key, int scan, int modifier) {
         if (this.frozen)
             return super.keyReleased(key, scan, modifier);
-        if (key == this.minecraft.options.keyLeft.getKey().getValue() || key == this.minecraft.options.keyRight.getKey().getValue())
+        if (key == this.minecraft.options.keyLeft.key.getValue() || key == this.minecraft.options.keyRight.key.getValue())
             this.lockPick.speedX = 0;
         return super.keyReleased(key, scan, modifier);
     }

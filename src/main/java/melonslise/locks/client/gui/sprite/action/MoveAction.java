@@ -1,11 +1,11 @@
 package melonslise.locks.client.gui.sprite.action;
 
 import melonslise.locks.client.gui.sprite.Sprite;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 //定义精灵的移动
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class MoveAction<S extends Sprite> extends TimedAction <S>
 {
 	public float speedX, speedY;

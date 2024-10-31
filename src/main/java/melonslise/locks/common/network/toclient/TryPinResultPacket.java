@@ -39,7 +39,7 @@ public class TryPinResultPacket
 			public void run()
 			{
 				AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
-				if(container.getType() == LocksContainerTypes.LOCK_PICKING.get())
+				if(container.getType() == LocksContainerTypes.LOCK_PICKING)
 					((LockPickingContainer) container).handlePin(pkt.correct, pkt.reset);
 			}
 		});

@@ -3,17 +3,17 @@ package melonslise.locks.client.gui.sprite;
 import com.mojang.blaze3d.vertex.PoseStack;
 import melonslise.locks.client.gui.sprite.action.IAction;
 import melonslise.locks.client.util.LocksClientUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Quaternionf;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
 
 // 处理游戏中的精灵图像的显示和动画
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class Sprite
 {
 	private Queue<IAction> actions = new ArrayDeque<>(4);

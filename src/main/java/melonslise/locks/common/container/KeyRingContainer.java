@@ -1,5 +1,6 @@
 package melonslise.locks.common.container;
 
+import melonslise.locks.common.components.interfaces.IItemHandler;
 import melonslise.locks.common.init.LocksContainerTypes;
 import melonslise.locks.common.init.LocksSoundEvents;
 import net.minecraft.network.FriendlyByteBuf;
@@ -12,16 +13,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
-import net.minecraftforge.network.IContainerFactory;
 
 import java.util.function.Consumer;
 
 public class KeyRingContainer extends AbstractContainerMenu
 {
-	public static class KeyRingSlot extends SlotItemHandler
+	public static class KeyRingSlot extends Slot
 	{
 		public final Player player;
 
@@ -37,14 +34,14 @@ public class KeyRingContainer extends AbstractContainerMenu
 		{
 			super.set(stack);
 			if(!this.player.level().isClientSide)
-				this.player.level().playSound(null, this.player.getX(), this.player.getY(), this.player.getZ(), LocksSoundEvents.KEY_RING.get(), SoundSource.PLAYERS, 1f, 1f);
+				this.player.level().playSound(null, this.player.getX(), this.player.getY(), this.player.getZ(), LocksSoundEvents.KEY_RING, SoundSource.PLAYERS, 1f, 1f);
 		}
 
 		@Override
 		public void onTake(Player player, ItemStack stack)
 		{
 			if(!this.player.level().isClientSide)
-				this.player.level().playSound(null, this.player.getX(), this.player.getY(), this.player.getZ(), LocksSoundEvents.KEY_RING.get(), SoundSource.PLAYERS, 1f, 1f);
+				this.player.level().playSound(null, this.player.getX(), this.player.getY(), this.player.getZ(), LocksSoundEvents.KEY_RING, SoundSource.PLAYERS, 1f, 1f);
 			super.onTake(player, stack);
 		}
 	}
@@ -55,7 +52,7 @@ public class KeyRingContainer extends AbstractContainerMenu
 
 	public KeyRingContainer(int id, Player player, ItemStack stack)
 	{
-		super(LocksContainerTypes.KEY_RING.get(), id);
+		super(LocksContainerTypes.KEY_RING, id);
 		this.stack = stack;
 		this.inv = stack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
 
