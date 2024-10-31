@@ -27,56 +27,18 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.LootTableLoadEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.event.level.ChunkEvent;
-import net.minecraftforge.event.village.VillagerTradesEvent;
-import net.minecraftforge.event.village.WandererTradesEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-@Mod.EventBusSubscriber(modid = Locks.ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+
 public final class LocksForgeEvents
 {
 	public static final Component LOCKED_MESSAGE = Component.translatable(Locks.ID + ".status.locked");
 
 	private LocksForgeEvents() {}
 
-	@SubscribeEvent
-	public static void attachCapabilitiesToWorld(AttachCapabilitiesEvent<Level> e)
-	{
-		LocksCapabilities.attachToWorld(e);
-	}
-
-	@SubscribeEvent
-	public static void attachCapabilitiesToChunk(AttachCapabilitiesEvent<LevelChunk> e)
-	{
-		LocksCapabilities.attachToChunk(e);
-	}
-
-	@SubscribeEvent
-	public static void attachCapabilitiesToEntity(AttachCapabilitiesEvent<Entity> e)
-	{
-		LocksCapabilities.attachToEntity(e);
-	}
-
-	/*
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onBiomeLoad(BiomeLoadingEvent e)
-	{
-		LocksConfiguredFeatures.addTo(e);
-	}
-	*/
 
 	@SubscribeEvent
 	public static void onLootTableLoad(LootTableLoadEvent e)
@@ -93,40 +55,6 @@ public final class LocksForgeEvents
 
 	}
 
-	@SubscribeEvent
-	public static void addVillagerTrades(VillagerTradesEvent e)
-	{
-		if(e.getType() != VillagerProfession.TOOLSMITH)
-			return;
-		Int2ObjectMap<List<VillagerTrades.ItemListing>> levels = e.getTrades();
-		List<VillagerTrades.ItemListing> trades;
-		trades = levels.get(1);
-		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.WOOD_LOCK_PICK), 1, 2, 16, 2, 0.05f));
-		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.WOOD_LOCK_MECHANISM), 2, 1, 12, 1, 0.2f));
-		trades = levels.get(2);
-		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.IRON_LOCK_PICK), 2, 2, 16, 5, 0.05f));
-		trades = levels.get(3);
-		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.GOLD_LOCK_PICK), 6, 2, 12, 20, 0.05f));
-		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.IRON_LOCK_MECHANISM), 5, 1, 8, 10, 0.2f));
-		trades = levels.get(4);
-		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.STEEL_LOCK_PICK), 4, 2, 16, 20, 0.05f));
-		trades = levels.get(5);
-		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.DIAMOND_LOCK_PICK), 8, 2, 12, 30, 0.05f));
-		trades.add(new VillagerTrades.ItemsForEmeralds(new ItemStack(LocksItems.STEEL_LOCK_MECHANISM), 8, 1, 8, 30, 0.2f));
-	}
-
-	@SubscribeEvent
-	public static void addWandererTrades(WandererTradesEvent e)
-	{
-		List<VillagerTrades.ItemListing> trades;
-		trades = e.getGenericTrades();
-		trades.add(new VillagerTrades.ItemsForEmeralds(LocksItems.GOLD_LOCK_PICK, 5, 2, 6, 1));
-		trades.add(new VillagerTrades.ItemsForEmeralds(LocksItems.STEEL_LOCK_PICK, 3, 2, 8, 1));
-		trades.add(new VillagerTrades.EnchantedItemForEmeralds(LocksItems.STEEL_LOCK, 16, 4, 1));
-		trades = e.getRareTrades();
-		trades.add(new VillagerTrades.ItemsForEmeralds(LocksItems.STEEL_LOCK_MECHANISM, 6, 1, 4, 1));
-		trades.add(new VillagerTrades.EnchantedItemForEmeralds(LocksItems.DIAMOND_LOCK, 28, 4, 1));
-	}
 
 	@SubscribeEvent
 	public static void onChunkUnload(ChunkEvent.Unload e)
@@ -175,11 +103,11 @@ public final class LocksForgeEvents
 				world.playSound(player, pos, LocksSoundEvents.LOCK_RATTLE, SoundSource.BLOCKS, 1f, 1f);
 			}
 			player.swing(InteractionHand.MAIN_HAND);
-			if(world.isClientSide && LocksClientConfig.DEAF_MODE)
+			if(world.isClientSide && LocksClientConfig.DEAF_MODE.get())
 				player.displayClientMessage(LOCKED_MESSAGE, true);
 			return;
 		}
-		if(LocksServerConfig.ALLOW_REMOVING_LOCKS && player.isShiftKeyDown() && stack.isEmpty())
+		if(LocksServerConfig.ALLOW_REMOVING_LOCKS.get() && player.isShiftKeyDown() && stack.isEmpty())
 		{
 			Lockable[] match = Arrays.stream(intersect).filter(LocksPredicates.NOT_LOCKED).toArray(Lockable[]::new);
 			if(match.length == 0)
@@ -212,7 +140,7 @@ public final class LocksForgeEvents
 
 	public static boolean canBreakLockable(Player player, BlockPos pos)
 	{
-		return LocksServerConfig.PROTECT_LOCKABLES &&
+		return LocksServerConfig.PROTECT_LOCKABLES.get() &&
 				!player.isCreative() &&
 				LocksUtil.lockedAndRelated(player.level(), pos);
 	}

@@ -2,19 +2,20 @@ package melonslise.locks.client.util;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.*;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public final class LocksClientUtil
 {
 	private LocksClientUtil() {}
@@ -26,7 +27,9 @@ public final class LocksClientUtil
 
 	public static Frustum getFrustum(PoseStack mtx, Matrix4f proj)
 	{
-		Frustum ch = Minecraft.getInstance().levelRenderer.getFrustum();
+		LevelRenderer l = Minecraft.getInstance().levelRenderer;
+
+		Frustum ch = l.capturedFrustum != null ? l.capturedFrustum : l.cullingFrustum;
 		if(ch != null)
 			return ch;
 		ch = new Frustum(mtx.last().pose(), proj);

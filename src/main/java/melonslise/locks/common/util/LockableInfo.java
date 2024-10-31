@@ -31,7 +31,7 @@ public class LockableInfo
 		nbt.put(Lockable.KEY_BB, Cuboid6i.toNbt(lkb.bb));
 		nbt.put(Lockable.KEY_LOCK, Lock.toNbt(lkb.lock));
 		nbt.putByte(Lockable.KEY_TRANSFORM, (byte) lkb.tr.ordinal());
-		nbt.put(Lockable.KEY_STACK, lkb.stack.serializeNBT());
+		nbt.put(Lockable.KEY_STACK, lkb.stack.save(new CompoundTag()));
 		nbt.putInt(Lockable.KEY_ID, lkb.id);
 		return nbt;
 	}

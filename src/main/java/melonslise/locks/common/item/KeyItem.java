@@ -29,7 +29,7 @@ public class KeyItem extends LockingItem
 		List<Lockable> match = LocksUtil.intersecting(world, pos).filter(lkb -> lkb.lock.id == id).collect(Collectors.toList());
 		if(match.isEmpty())
 			return InteractionResult.PASS;
-		world.playSound(ctx.getPlayer(), pos, LocksSoundEvents.LOCK_OPEN.get(), SoundSource.BLOCKS, 1f, 1f);
+		world.playSound(ctx.getPlayer(), pos, LocksSoundEvents.LOCK_OPEN, SoundSource.BLOCKS, 1f, 1f);
 		if(world.isClientSide)
 			return InteractionResult.SUCCESS;
 		for(Lockable lkb : match)

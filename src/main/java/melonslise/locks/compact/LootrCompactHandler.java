@@ -1,5 +1,7 @@
 package melonslise.locks.compact;
 
+import melonslise.locks.common.components.interfaces.ILockableHandler;
+import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.util.Lockable;
 import melonslise.locks.common.util.LocksPredicates;
 import net.minecraft.core.BlockPos;
@@ -10,7 +12,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import noobanidus.mods.lootr.init.ModBlocks;
+import net.zestyblaze.lootr.init.ModBlocks;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -22,7 +24,7 @@ public class LootrCompactHandler {
         if(oldState.is(Blocks.CHEST)||oldState.is(Blocks.TRAPPED_CHEST)||oldState.is(Blocks.BARREL)){
             return;
         }
-        if(newState.is(ModBlocks.CHEST.get())||newState.is(ModBlocks.TRAPPED_CHEST.get())||newState.is(ModBlocks.BARREL.get())){
+        if(newState.is(ModBlocks.CHEST)||newState.is(ModBlocks.TRAPPED_CHEST)||newState.is(ModBlocks.BARREL)){
             return;
         }
 
@@ -36,7 +38,7 @@ public class LootrCompactHandler {
     }
     public static boolean handleInteract(Level level,BlockPos pos,BlockState blockState){
         if(blockState.is(Blocks.CHEST)||blockState.is(Blocks.TRAPPED_CHEST)){
-            ILockableHandler handler = level.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
+            ILockableHandler handler = LocksComponents.LOCKABLE_HANDLER.get(level);
             Lockable[] intersect = handler.getInChunk(pos).values().stream().filter(lkb -> lkb.bb.intersects(pos)).toArray(Lockable[]::new);
             Optional<Lockable> locked = Arrays.stream(intersect).filter(LocksPredicates.LOCKED).findFirst();
             return locked.isPresent();

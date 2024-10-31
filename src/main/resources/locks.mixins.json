@@ -4,9 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "locks.refmap.json",
   "mixins": [
-    "AbstractFurnaceTileEntityMixin",
     "ChestBlockMixin",
-    "ChestTileEntityMixin",
     "ChunkManagerMixin",
     "ChunkMixin",
     "ChunkPrimerMixin",
@@ -14,19 +12,19 @@
     "EnchantmentCategoryMixin",
     "ExplosionContextMixin",
     "HopperTileEntityMixin",
-    "LockableTileEntityMixin",
     "LootTableManagerMixin",
     "PistonBlockMixin",
     "PistonBlockStructureHelperMixin",
     "ServerWorldMixin",
     "WorldMixin",
-    "accessor.ForgeHooksAccessor",
     "accessor.LootPoolAccessor",
     "accessor.LootTableAccessor",
     "swapLock.StructurePieceMixin",
     "swapLock.StructureTemplateMixin"
   ],
   "client": [
+    "client.ClientTickMixin",
+    "client.GuiMixin",
     "client.WorldRendererMixin"
   ],
   "injectors": {

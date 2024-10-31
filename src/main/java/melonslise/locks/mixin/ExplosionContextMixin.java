@@ -28,10 +28,10 @@ public class ExplosionContextMixin
 	@Shadow @Final private Level level;
 
 	@Inject(at = @At(value = "INVOKE", target = "Ljava/util/Set;add(Ljava/lang/Object;)Z", shift = At.Shift.AFTER), method = "explode", locals = LocalCapture.CAPTURE_FAILSOFT)
-	private void removeBlockSet(CallbackInfo ci, Set<BlockPos> set, int i, int j, int k, int l, double d0, double d1, double d2, double d3, float f, double d4, double d6, double d8, float f1, BlockPos blockpos, BlockState blockstate, FluidState fluidstate, Optional<Float> optional)
+	private void removeBlockSet(CallbackInfo ci, Set set, int i, int j, int k, int l, double d, double e, double f, double g, float h, double m, double n, double o, float p, BlockPos blockPos, BlockState blockState)
 	{
-		if (LocksUtil.lockedAndRelated(this.level, blockpos)) {
-			set.remove(blockpos);
+		if (LocksUtil.lockedAndRelated(this.level, blockPos)) {
+			set.remove(blockPos);
 		}
 	}
 }

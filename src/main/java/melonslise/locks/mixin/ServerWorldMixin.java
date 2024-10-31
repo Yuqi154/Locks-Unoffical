@@ -1,5 +1,7 @@
 package melonslise.locks.mixin;
 
+import melonslise.locks.common.components.interfaces.ILockableHandler;
+import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.compact.LootrCompactHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -7,7 +9,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fml.ModList;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,19 +25,16 @@ public class ServerWorldMixin
 		if(oldState.is(newState.getBlock()))
 			return;
 		ServerLevel world = (ServerLevel) (Object) this;
-		ILockableHandler handler = world.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
-		if(ModList.get().isLoaded("lootr")){
-			LootrCompactHandler.handleBlockUpdate(world, handler, pos, oldState, newState);
-		}else {
-			// create buffer list because otherwise we will be deleting elements while iterating (BAD!!)
-			handler.getInChunk(pos).values().stream().filter(lkb -> lkb.bb.intersects(pos)).collect(Collectors.toList()).forEach(lkb ->
-			{
-				world.playSound(null, pos, SoundEvents.IRON_DOOR_OPEN, SoundSource.BLOCKS, 0.8f, 0.8f + world.random.nextFloat() * 0.4f);
-				world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, lkb.stack));
-				handler.remove(lkb.id);
-			});
+		ILockableHandler handler = LocksComponents.LOCKABLE_HANDLER.get(world);
+		// create buffer list because otherwise we will be deleting elements while iterating (BAD!!)
+		handler.getInChunk(pos).values().stream().filter(lkb -> lkb.bb.intersects(pos)).collect(Collectors.toList()).forEach(lkb ->
+		{
+			world.playSound(null, pos, SoundEvents.IRON_DOOR_OPEN, SoundSource.BLOCKS, 0.8f, 0.8f + world.random.nextFloat() * 0.4f);
+			world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, lkb.stack));
+			handler.remove(lkb.id);
+		});
 
-		}
+
 
 
 	}

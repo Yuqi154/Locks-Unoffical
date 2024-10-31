@@ -1,6 +1,9 @@
 package melonslise.locks.common.util;
 
+import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.item.LockItem;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.core.BlockPos;
@@ -14,8 +17,6 @@ import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.*;
 
@@ -50,14 +51,14 @@ public class Lockable extends Observable implements Observer
 			this.bb = bb;
 		}
 
-		@OnlyIn(Dist.CLIENT)
+		@Environment(EnvType.CLIENT)
 		public boolean inView(Frustum ch)
 		{
 			AABB aabb = new AABB(this.bb.minX, this.bb.minY, this.bb.minZ, this.bb.maxX, this.bb.maxY, this.bb.maxZ);
 			return ch.isVisible(aabb);
 		}
 
-		@OnlyIn(Dist.CLIENT)
+		@Environment(EnvType.CLIENT)
 		public boolean inRange(Vec3 pos)
 		{
 			Minecraft mc = Minecraft.getInstance();
@@ -79,7 +80,7 @@ public class Lockable extends Observable implements Observer
 
 	public Lockable(Cuboid6i bb, Lock lock, Transform tr, ItemStack stack, Level world)
 	{
-		this(bb, lock, tr, stack, world.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null).nextId());
+		this(bb, lock, tr, stack, LocksComponents.LOCKABLE_HANDLER.get(world).nextId());
 	}
 
 	public Lockable(Cuboid6i bb, Lock lock, Transform tr, ItemStack stack, int id)
@@ -105,7 +106,7 @@ public class Lockable extends Observable implements Observer
 		nbt.put(KEY_BB, Cuboid6i.toNbt(lkb.bb));
 		nbt.put(KEY_LOCK, Lock.toNbt(lkb.lock));
 		nbt.putByte(KEY_TRANSFORM, (byte) lkb.tr.ordinal());
-		nbt.put(KEY_STACK, lkb.stack.serializeNBT());
+		nbt.put(KEY_STACK, lkb.stack.save(new CompoundTag()));
 		nbt.putInt(KEY_ID, lkb.id);
 		return nbt;
 	}

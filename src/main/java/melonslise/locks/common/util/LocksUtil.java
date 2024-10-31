@@ -1,9 +1,7 @@
 package melonslise.locks.common.util;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonSyntaxException;
 import melonslise.locks.common.config.LocksConfig;
-import melonslise.locks.mixin.accessor.ForgeHooksAccessor;
+import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.mixin.accessor.LootPoolAccessor;
 import melonslise.locks.mixin.accessor.LootTableAccessor;
 import net.minecraft.core.BlockPos;
@@ -11,7 +9,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -22,19 +19,16 @@ import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
-import net.minecraft.world.level.storage.loot.LootDataType;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.charset.StandardCharsets;
-import java.util.Deque;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
@@ -118,40 +112,40 @@ public final class LocksUtil {
         return new Vec3((bb.minX + bb.maxX + (bb.maxX - bb.minX) * dir.getX()) * 0.5d, (bb.minY + bb.maxY + (bb.maxY - bb.minY) * dir.getY()) * 0.5d, (bb.minZ + bb.maxZ + (bb.maxZ - bb.minZ) * dir.getZ()) * 0.5d);
     }
 
-    public static LootTable lootTableFrom(ResourceLocation loc) throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+ //   public static LootTable lootTableFrom(ResourceLocation loc) throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         // JsonElement json = GsonHelper.fromJson(LootTableManager.GSON, new BufferedReader(new InputStreamReader(resourceManager.getResource(loc).getInputStream(), StandardCharsets.UTF_8)), JsonElement.class);
 
-        JsonElement json = GsonHelper.fromJson(LootDataType.TABLE.parser(), new BufferedReader(new InputStreamReader(resourceManager.getResource(loc).orElseThrow().open(), StandardCharsets.UTF_8)), JsonElement.class);
-        Deque que = ForgeHooksAccessor.getLootContext().get();
-        Object lootCtx = lootTableContextConstructor.newInstance(loc, false);
-        try {
-            que.push(lootCtx);
-            return LootDataType.TABLE.parser().fromJson(json, LootTable.class);
-        } catch (JsonSyntaxException e) {
-            throw e;
-        } finally // Still executes even if catch throws according to SO!
-        {
-            que.pop();
-        }
-    }
+//        JsonElement json = GsonHelper.fromJson(LootDataType.TABLE.parser(), new BufferedReader(new InputStreamReader(resourceManager.getResource(loc).orElseThrow().open(), StandardCharsets.UTF_8)), JsonElement.class);
+//        Deque que = ForgeHooksAccessor.getLootContext().get();
+//        Object lootCtx = lootTableContextConstructor.newInstance(loc, false);
+//        try {
+//            que.push(lootCtx);
+//            return LootDataType.TABLE.parser().fromJson(json, LootTable.class);
+//        } catch (JsonSyntaxException e) {
+//            throw e;
+//        } finally // Still executes even if catch throws according to SO!
+//        {
+//            que.pop();
+//        }
+ //   }
 
     // Only merges entries, not conditions and functions
     public static LootTable mergeEntries(LootTable table, LootTable inject) {
+        List<LootPool> list = Arrays.asList(((LootTableAccessor) table).getPools());
         for (LootPool injectPool : ((LootTableAccessor) inject).getPools()) {
-            LootPool pool = table.getPool(injectPool.getName());
-            if (pool == null)
-                table.addPool(injectPool);
-            else
-                ((LootPoolAccessor) pool).getEntries().addAll(((LootPoolAccessor) injectPool).getEntries());
+            if(list.contains(injectPool)) {
+                ((LootPoolAccessor) injectPool).getEntries().addAll(((LootPoolAccessor) injectPool).getEntries());
+            }else {
+                list.add(injectPool);
+            }
         }
+        ((LootTableAccessor) inject).setPools(list.toArray(new LootPool[0]));
         return table;
     }
 
     public static Stream<Lockable> intersecting(Level world, BlockPos pos) {
-        return world.getCapability(LocksCapabilities.LOCKABLE_HANDLER).lazyMap(
-                cap -> cap.getInChunk(pos).values().stream().filter(
-                        lkb -> lkb.bb.intersects(pos)
-                )).orElse(Stream.empty()
+        return LocksComponents.LOCKABLE_HANDLER.get(world).getInChunk(pos).values().stream().filter(
+                lkb -> lkb.bb.intersects(pos)
         );
     }
 

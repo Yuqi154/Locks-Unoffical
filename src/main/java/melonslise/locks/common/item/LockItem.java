@@ -1,13 +1,17 @@
 package melonslise.locks.common.item;
 
 import melonslise.locks.Locks;
+import melonslise.locks.common.components.interfaces.ILockableHandler;
 import melonslise.locks.common.components.interfaces.ISelection;
 import melonslise.locks.common.config.LocksServerConfig;
+import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.init.LocksSoundEvents;
 import melonslise.locks.common.util.Cuboid6i;
 import melonslise.locks.common.util.Lock;
 import melonslise.locks.common.util.Lockable;
 import melonslise.locks.common.util.Transform;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,8 +32,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -81,7 +83,7 @@ public class LockItem extends LockingItem
 	{
 		Level world = ctx.getLevel();
 		BlockPos pos = ctx.getClickedPos();
-		if (!LocksServerConfig.canLock(world, pos) ||  ctx.getLevel().getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null).getInChunk(pos).values().stream().anyMatch(lkb -> lkb.bb.intersects(pos)))
+		if (!LocksServerConfig.canLock(world, pos) ||  LocksComponents.LOCKABLE_HANDLER.get(ctx.getLevel()).getInChunk(pos).values().stream().anyMatch(lkb -> lkb.bb.intersects(pos)))
 			return InteractionResult.PASS;
 		return LocksServerConfig.EASY_LOCK.get() ? this.easyLock(ctx) : this.freeLock(ctx);
 	}
@@ -90,7 +92,7 @@ public class LockItem extends LockingItem
 	{
 		Player player = ctx.getPlayer();
 		BlockPos pos = ctx.getClickedPos();
-		ISelection select = player.getCapability(LocksCapabilities.SELECTION).orElse(null);
+		ISelection select = LocksComponents.SELECTION.get(player);
 		BlockPos pos1 = select.get();
 		if (pos1 == null)
 			select.set(pos);
@@ -99,13 +101,13 @@ public class LockItem extends LockingItem
 			Level world = ctx.getLevel();
 			select.set(null);
 			// FIXME Go through the add checks here as well
-			world.playSound(player, pos, LocksSoundEvents.LOCK_CLOSE.get(), SoundSource.BLOCKS, 1f, 1f);
+			world.playSound(player, pos, LocksSoundEvents.LOCK_CLOSE, SoundSource.BLOCKS, 1f, 1f);
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;
 			ItemStack stack = ctx.getItemInHand();
 			ItemStack lockStack = stack.copy();
 			lockStack.setCount(1);
-			ILockableHandler handler = world.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
+			ILockableHandler handler = LocksComponents.LOCKABLE_HANDLER.get(world);
 			if (!handler.add(new Lockable(new Cuboid6i(pos1, pos), Lock.from(stack), Transform.fromDirection(ctx.getClickedFace(), player.getDirection().getOpposite()), lockStack, world)))
 				return InteractionResult.PASS;
 			if (!player.isCreative())
@@ -119,7 +121,7 @@ public class LockItem extends LockingItem
 		Player player = ctx.getPlayer();
 		Level world = ctx.getLevel();
 		BlockPos pos = ctx.getClickedPos();
-		world.playSound(player, pos, LocksSoundEvents.LOCK_CLOSE.get(), SoundSource.BLOCKS, 1f, 1f);
+		world.playSound(player, pos, LocksSoundEvents.LOCK_CLOSE, SoundSource.BLOCKS, 1f, 1f);
 		if(world.isClientSide) return InteractionResult.SUCCESS;
 		BlockState state = world.getBlockState(pos);
 		BlockPos pos1 = pos;
@@ -140,7 +142,7 @@ public class LockItem extends LockingItem
 		ItemStack stack = ctx.getItemInHand();
 		ItemStack lockStack = stack.copy();
 		lockStack.setCount(1);
-		ILockableHandler handler = world.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
+		ILockableHandler handler = LocksComponents.LOCKABLE_HANDLER.get(world);
 		if (!handler.add(new Lockable(new Cuboid6i(pos, pos1), Lock.from(stack), Transform.fromDirection(ctx.getClickedFace(), player.getDirection().getOpposite()), lockStack, world)))
 			return InteractionResult.PASS;
 		if (!player.isCreative())
@@ -155,7 +157,7 @@ public class LockItem extends LockingItem
 		if(!isOpen(stack))
 			return super.use(world, player, hand);
 		setOpen(stack, false);
-		world.playSound(player, player.getX(), player.getY(), player.getZ(), LocksSoundEvents.PIN_MATCH.get(), SoundSource.PLAYERS, 1f, 1f);
+		world.playSound(player, player.getX(), player.getY(), player.getZ(), LocksSoundEvents.PIN_MATCH, SoundSource.PLAYERS, 1f, 1f);
 		return super.use(world, player, hand);
 	}
 
@@ -171,7 +173,7 @@ public class LockItem extends LockingItem
 		return this.enchantmentValue;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag flag)
 	{

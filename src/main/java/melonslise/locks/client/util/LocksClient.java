@@ -1,11 +1,8 @@
-package melonslise.locks.client.event;
+package melonslise.locks.client.util;
 
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import melonslise.locks.Locks;
 import melonslise.locks.client.init.LocksRenderTypes;
-import melonslise.locks.client.util.LocksClientUtil;
 import melonslise.locks.common.components.interfaces.ISelection;
 import melonslise.locks.common.config.LocksServerConfig;
 import melonslise.locks.common.init.LocksComponents;
@@ -20,76 +17,23 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.List;
 
-public final class LocksClientForgeEvents {
+public class LocksClient {
+
     public static Lockable tooltipLockable;
-
-    private LocksClientForgeEvents() {
-    }
-
-    @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent e) {
-        Minecraft mc = Minecraft.getInstance();
-        if (e.phase != TickEvent.Phase.START || mc.level == null || mc.isPaused())
-            return;
-        LocksComponents.LOCKABLE_HANDLER.get(mc.level).getLoaded().values().forEach(lkb -> lkb.tick());
-    }
-
-//    @SubscribeEvent
-//    public static void onRenderWorld(RenderLevelStageEvent e) {
-//		/*
-//		//if (e.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) return;
-//
-//		Minecraft mc = Minecraft.getInstance();
-//		PoseStack mtx = e.getPoseStack();
-//		MultiBufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-//		bufferSource.hashCode();
-//		// use mixin to avoid models disappearing  in water and when fabulous graphics are on
-//		// renderLocks(mtx, buf, LocksClientUtil.getFrustum(mtx, e.getProjectionMatrix()), e.getPartialTicks());
-//		renderSelection(mtx, bufferSource);
-//		 */
-//    }
-
-    public static boolean holdingPick(Player player) {
-        for (InteractionHand InteractionHand : InteractionHand.values())
-            if (player.getItemInHand(InteractionHand).is(LocksItemTags.LOCK_PICKS))
-                return true;
-        return false;
-    }
-
-    @SubscribeEvent
-    public static void onRenderOverlay(RenderGuiOverlayEvent.Pre e) {
-        Minecraft mc = Minecraft.getInstance();
-        // if(e.getType() != RenderGuiOverlayEvent.ElementType.ALL || tooltipLockable == null)
-        if (tooltipLockable == null)
-            return;
-        if (holdingPick(mc.player)) {
-            PoseStack mtx = e.getGuiGraphics().pose();
-            Vector3f vec = LocksClientUtil.worldToScreen(tooltipLockable.getLockState(mc.level).pos, e.getPartialTick());
-            if (vec.z() < 0d) {
-                mtx.pushPose();
-                mtx.translate(vec.x(), vec.y(), 0f);
-                renderHudTooltip(mtx, Lists.transform(tooltipLockable.stack.getTooltipLines(mc.player, mc.options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL), Component::getVisualOrderText), mc.font);
-                mtx.popPose();
-            }
-        }
-        tooltipLockable = null;
-    }
 
     public static void renderLocks(PoseStack mtx, MultiBufferSource.BufferSource buf, Frustum ch, float pt) {
         Minecraft mc = Minecraft.getInstance();
@@ -137,6 +81,14 @@ public final class LocksClientForgeEvents {
         }
         buf.endBatch();
     }
+
+    public static boolean holdingPick(Player player) {
+        for (net.minecraft.world.InteractionHand InteractionHand : InteractionHand.values())
+            if (player.getItemInHand(InteractionHand).is(LocksItemTags.LOCK_PICKS))
+                return true;
+        return false;
+    }
+
 
     public static void renderSelection(PoseStack mtx, MultiBufferSource buf) {
         Minecraft mc = Minecraft.getInstance();
