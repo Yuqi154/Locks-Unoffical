@@ -153,12 +153,14 @@ public final class LocksForgeEvents
 		Lockable[] intersect = handler.getInChunk(pos).values().stream().filter(lkb -> lkb.bb.intersects(pos)).toArray(Lockable[]::new);
 		if(intersect.length == 0)
 			return;
+		/*
 		if(intersect.length > 1) {
 			for(Lockable lkb : Arrays.stream(intersect).toList().subList(1, intersect.length))
 			{
 				handler.remove(lkb.id);
 			}
 		}
+		 */
 		if(e.getHand() != InteractionHand.MAIN_HAND) // FIXME Better way to prevent firing multiple times
 		{
 			e.setUseBlock(Event.Result.DENY);
@@ -205,7 +207,7 @@ public final class LocksForgeEvents
 		if(e.phase != Phase.START)
 			return;
 		ISelection select = e.player.getCapability(LocksCapabilities.SELECTION).orElse(null);
-		if (select == null || select.get() == null)
+		if (select.get() == null)
 			return;
 		for (ItemStack stack : e.player.getHandSlots())
 			if(stack.is(LocksItemTags.LOCKS))

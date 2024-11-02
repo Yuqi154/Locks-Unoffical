@@ -172,14 +172,15 @@ public final class LocksUtil {
 
     // TODO: 方块遮挡判断
     public static void lockWhenGen(ServerLevelAccessor levelAccessor, BlockPos blockPos, RandomSource randomSource) {
+        /*
         BlockState state = levelAccessor.getBlockState(blockPos);
         Block block = state.getBlock();
         if (LocksConfig.canGen(randomSource, block)) {
             BlockPos pos1 = blockPos;
             Direction dir;
-            if (state.hasProperty(FACING)){
+            if (state.hasProperty(FACING)) {
                 dir = state.getValue(FACING);
-            } else if(state.hasProperty(HORIZONTAL_FACING)){
+            } else if (state.hasProperty(HORIZONTAL_FACING)) {
                 dir = state.getValue(HORIZONTAL_FACING);
             } else {
                 dir = Direction.NORTH;
@@ -213,11 +214,13 @@ public final class LocksUtil {
             ItemStack stack = LocksConfig.getRandomLock(randomSource);
             Lock lock = Lock.from(stack);
             Transform tr = Transform.fromDirection(dir, dir);
+            if (tr == null) return;
             Lockable lkb = new Lockable(bb, lock, tr, stack, levelAccessor.getLevel());
             lkb.bb.getContainedChunks((x, z) -> {
                 ((ILockableProvider) levelAccessor.getChunk(x, z)).getLockables().add(lkb);
                 return true;
             });
         }
+         */
     }
 }

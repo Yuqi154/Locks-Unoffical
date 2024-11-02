@@ -30,9 +30,6 @@ public class ChunkMixin
 		// We trust that all checks pass (such as volume and intersect checks) due to this happening only during world gen
 		for(Lockable lkb : ((ILockableProvider) pChunk).getLockables())
 		{
-			if(lkb.tr == null){
-				return;
-			}
 			st.add(lkb);
 			handler.getLoaded().put(lkb.id, lkb);
 			lkb.addObserver(handler);

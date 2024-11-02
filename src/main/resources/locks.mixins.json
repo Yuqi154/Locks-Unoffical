@@ -23,7 +23,9 @@
     "accessor.LootPoolAccessor",
     "accessor.LootTableAccessor",
     "swapLock.StructurePieceMixin",
-    "swapLock.StructureTemplateMixin"
+    "swapLock.StructureTemplateMixin",
+    "swapLock.TileTickerMixin",
+    "swapLock.WorldGenRegionMixin"
   ],
   "client": [
     "client.WorldRendererMixin"

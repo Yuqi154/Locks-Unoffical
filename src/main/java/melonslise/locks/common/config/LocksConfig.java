@@ -12,7 +12,10 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
@@ -85,10 +88,14 @@ public final class LocksConfig {
 
     public static boolean canGen(RandomSource rng, Block block) {
         boolean random = LocksUtil.chance(rng, GENERATION_CHANCE.get());
+        return random && matchString(block);
+    }
+
+    public static boolean matchString(Block block){
         String name = BuiltInRegistries.BLOCK.getKey(block).toString();
         for (Pattern p : lockableGenBlocks) {
             if (p.matcher(name).matches()) {
-                return random;
+                return true;
             }
         }
         return false;

@@ -26,6 +26,7 @@ public class BeansBackpacksMixin {
 
     @Redirect(remap = false,method = "playerInteract(Lnet/minecraftforge/event/entity/player/PlayerInteractEvent$RightClickBlock;)V",at=@At(remap = false,value = "INVOKE",target = "Lnet/minecraftforge/event/entity/player/PlayerInteractEvent$RightClickBlock;setUseBlock(Lnet/minecraftforge/eventbus/api/Event$Result;)V"))
     private static void onsetUseBlock(PlayerInteractEvent.RightClickBlock instance, Event.Result triggerBlock){
+        /*
         BlockPos pos = instance.getPos();
         Level level = instance.getLevel();
         BlockState blockState = level.getBlockState(pos);
@@ -47,5 +48,7 @@ public class BeansBackpacksMixin {
                 }
             }
         }
+
+         */
     }
 }

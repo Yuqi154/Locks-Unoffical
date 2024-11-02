@@ -29,5 +29,6 @@ public final class Locks
 		LocksSoundEvents.register();
 		LocksContainerTypes.register();
 		LocksRecipeSerializers.register();
+		LocksFeatures.register();
 	}
 }

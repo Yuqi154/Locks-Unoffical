@@ -25,7 +25,7 @@ public class DungeonCrawlMixin {
         if (world instanceof ServerLevelAccessor accessor) {
             Block block = chest.getBlock();
             if (LocksConfig.canGen(rand, block)) {
-                LocksUtil.lockWhenGen(accessor, pos, rand);
+                //LocksUtil.lockWhenGen(accessor, pos, rand);
             }
         }
     }
