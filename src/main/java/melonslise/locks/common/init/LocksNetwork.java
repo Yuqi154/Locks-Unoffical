@@ -1,6 +1,6 @@
 package melonslise.locks.common.init;
 
-import melonslise.locks.common.network.toclient.*;
+import melonslise.locks.common.network.toserver.ServerNet;
 import melonslise.locks.common.network.toserver.TryPinPacket;
 
 public final class LocksNetwork
@@ -9,13 +9,7 @@ public final class LocksNetwork
 
 	public static void register()
 	{
-		//S2C
-		AddLockablePacket.register();
-		AddLockableToChunkPacket.register();
-		RemoveLockablePacket.register();
-		UpdateLockablePacket.register();
-		TryPinResultPacket.register();
 		//C2S
-		TryPinPacket.register();
+		ServerNet.register();
 	}
 }

@@ -12,7 +12,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 public class TryPinPacket
 {
 	public static final ResourceLocation ID = new ResourceLocation(Locks.ID, "try_pin");
-	private final byte pin;
+	public final byte pin;
 
 	public TryPinPacket(byte pin)
 	{
@@ -31,15 +31,4 @@ public class TryPinPacket
 		return buf;
 	}
 
-	public static void register() {
-		ServerPlayNetworking.registerGlobalReceiver(ID,(server,player,Impl,buf,sender)->{
-			server.execute(()->{
-				TryPinPacket pkt = decode(buf);
-				AbstractContainerMenu container = player.containerMenu;
-				if(container.getType() == LocksContainerTypes.LOCK_PICKING)
-					((LockPickingContainer) container).tryPin(pkt.pin);
-			});
-		});
-
-	}
 }

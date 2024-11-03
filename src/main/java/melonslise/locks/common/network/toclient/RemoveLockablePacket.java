@@ -26,17 +26,6 @@ public class RemoveLockablePacket {
         return empty;
     }
 
-    public static void register() {
-        ClientPlayNetworking.registerGlobalReceiver(ID, (client, handler, buf, responseSender) -> {
-            client.execute(() -> {
-                RemoveLockablePacket packet = decode(buf);
-                if(client.level==null){
-                    return;
-                }
-                execute(packet, client.level);
-            });
-        });
-    }
 
     public static void execute(RemoveLockablePacket pkt, Level level){
         LocksComponents.LOCKABLE_HANDLER.get(level).remove(pkt.id);

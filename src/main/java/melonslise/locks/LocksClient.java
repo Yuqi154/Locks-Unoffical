@@ -2,6 +2,7 @@ package melonslise.locks;
 
 import fuzs.forgeconfigapiport.api.config.v2.ForgeConfigRegistry;
 import melonslise.locks.client.init.LocksItemModelsProperties;
+import melonslise.locks.client.init.LocksNetworkClient;
 import melonslise.locks.client.init.LocksScreens;
 import melonslise.locks.common.config.LocksClientConfig;
 import net.fabricmc.api.ClientModInitializer;
@@ -13,6 +14,7 @@ public class LocksClient implements ClientModInitializer {
 
         LocksScreens.register();
         LocksItemModelsProperties.register();
+        LocksNetworkClient.register();
         ForgeConfigRegistry.INSTANCE.register(Locks.ID, ModConfig.Type.CLIENT, LocksClientConfig.SPEC);
     }
 }

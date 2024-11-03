@@ -29,14 +29,6 @@ public class AddLockablePacket {
         return buf;
     }
 
-    public static void register() {
-        ClientPlayNetworking.registerGlobalReceiver(ID, (client, handler, buf, responseSender) -> {
-            client.execute(() -> {
-                AddLockablePacket packet = decode(buf);
-                execute(packet, client.level);
-            });
-        });
-    }
     public static void execute(AddLockablePacket pkt, Level level){
         LocksComponents.LOCKABLE_HANDLER.get(level).add(pkt.lockable,level);
     }

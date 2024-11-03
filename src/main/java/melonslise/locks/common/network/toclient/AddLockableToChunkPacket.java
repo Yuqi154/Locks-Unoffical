@@ -45,17 +45,6 @@ public class AddLockableToChunkPacket {
         return buf;
     }
 
-    public static void register() {
-        ClientPlayNetworking.registerGlobalReceiver(ID, (client, phandler, buf, responseSender) -> {
-            client.execute(() -> {
-                AddLockableToChunkPacket pkt = decode(buf);
-				if(client.level==null){
-					return;
-				}
-                execute(pkt, client.level);
-            });
-        });
-    }
 
     public static void execute(AddLockableToChunkPacket pkt, Level level){
 

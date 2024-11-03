@@ -35,17 +35,6 @@ public class UpdateLockablePacket {
         return buf;
     }
 
-    public static void register() {
-        ClientPlayNetworking.registerGlobalReceiver(ID, (client, handler, buf, responseSender) -> {
-            client.execute(() -> {
-                UpdateLockablePacket pkt = decode(buf);
-                if(client.level==null){
-                    return;
-                }
-                execute(pkt, client.level);
-            });
-        });
-    }
 
     public static void execute(UpdateLockablePacket pkt, Level level){
         LocksComponents.LOCKABLE_HANDLER.get(level).getLoaded().get(pkt.id).lock.setLocked(pkt.locked);

@@ -85,10 +85,10 @@ public class LockableHandler implements ILockableHandler {
             lkb.swing(10);
         else
         {
-            AddLockablePacket.execute(new AddLockablePacket(lkb), level);
-//            level.getServer().getPlayerList().players.forEach(player -> {
-//                ServerPlayNetworking.send(player, AddLockablePacket.ID, AddLockablePacket.encode(new AddLockablePacket(lkb)));
-//            });
+            //AddLockablePacket.execute(new AddLockablePacket(lkb), level);
+            level.getServer().getPlayerList().players.forEach(player -> {
+                ServerPlayNetworking.send(player, AddLockablePacket.ID, AddLockablePacket.encode(new AddLockablePacket(lkb)));
+            });
         }
         return true;
     }
@@ -110,10 +110,10 @@ public class LockableHandler implements ILockableHandler {
         // Do client/server extras
         if(this.world.isClientSide)
             return true;
-//        world.getServer().getPlayerList().players.forEach(player -> {
-//            ServerPlayNetworking.send(player, RemoveLockablePacket.ID, RemoveLockablePacket.encode(new RemoveLockablePacket(lkb.id)));
-//        });
-        RemoveLockablePacket.execute(new RemoveLockablePacket(lkb.id), this.world);
+        world.getServer().getPlayerList().players.forEach(player -> {
+            ServerPlayNetworking.send(player, RemoveLockablePacket.ID, RemoveLockablePacket.encode(new RemoveLockablePacket(lkb.id)));
+        });
+//        RemoveLockablePacket.execute(new RemoveLockablePacket(lkb.id), this.world);
         return true;
     }
     @Override
@@ -122,10 +122,10 @@ public class LockableHandler implements ILockableHandler {
         if(this.world.isClientSide || !(o instanceof Lockable))
             return;
         Lockable lockable = (Lockable) o;
-        UpdateLockablePacket.execute(new UpdateLockablePacket(lockable), this.world);
-//        world.getServer().getPlayerList().players.forEach(player -> {
-//            ServerPlayNetworking.send(player, UpdateLockablePacket.ID, UpdateLockablePacket.encode(new UpdateLockablePacket(lockable)));
-//        });
+//        UpdateLockablePacket.execute(new UpdateLockablePacket(lockable), this.world);
+        world.getServer().getPlayerList().players.forEach(player -> {
+            ServerPlayNetworking.send(player, UpdateLockablePacket.ID, UpdateLockablePacket.encode(new UpdateLockablePacket(lockable)));
+        });
     }
 
     @Override
