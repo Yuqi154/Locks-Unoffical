@@ -7,6 +7,7 @@ import melonslise.locks.Locks;
 import melonslise.locks.client.init.LocksRenderTypes;
 import melonslise.locks.client.util.LocksClientUtil;
 import melonslise.locks.common.capability.ISelection;
+import melonslise.locks.common.config.LocksClientConfig;
 import melonslise.locks.common.config.LocksServerConfig;
 import melonslise.locks.common.init.LocksCapabilities;
 import melonslise.locks.common.init.LocksItemTags;
@@ -83,6 +84,7 @@ public final class LocksClientForgeEvents {
 
     @SubscribeEvent
     public static void onRenderOverlay(RenderGuiOverlayEvent.Pre e) {
+        if (!LocksClientConfig.OVERLAY.get()) return;
         Minecraft mc = Minecraft.getInstance();
         // if(e.getType() != RenderGuiOverlayEvent.ElementType.ALL || tooltipLockable == null)
         if (tooltipLockable == null)

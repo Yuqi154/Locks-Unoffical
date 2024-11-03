@@ -53,7 +53,7 @@ public final class LocksConfig {
         GEN_LOCKABLE_BLOCKS = cfg
                 .comment("Blocks that can be locked during the world generation")
                 .comment("当世界生成时锁定的方块")
-                .defineList("Lockable Generated Blocks", Lists.newArrayList(".*chest", ".*barrel"), e -> e instanceof String);
+                .defineList("Lockable Generated Blocks", Lists.newArrayList("minecraft:chest", "minecraft:barrel", "lootr:.*"), e -> e instanceof String);
         GENERATED_LOCKS = cfg
                 .comment("Items that can be generated as locks (must be instance of LockItem in code!)")
                 .comment("可以作为锁生成的物品（在代码中必须是 LockItem 的实例！）")

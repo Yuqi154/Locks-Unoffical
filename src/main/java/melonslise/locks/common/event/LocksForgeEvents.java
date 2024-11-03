@@ -41,6 +41,7 @@ import net.minecraftforge.event.level.ChunkEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
 import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -143,7 +144,7 @@ public final class LocksForgeEvents
 		});
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void onRightClick(PlayerInteractEvent.RightClickBlock e)
 	{
 		BlockPos pos = e.getPos();
@@ -207,7 +208,7 @@ public final class LocksForgeEvents
 		if(e.phase != Phase.START)
 			return;
 		ISelection select = e.player.getCapability(LocksCapabilities.SELECTION).orElse(null);
-		if (select.get() == null)
+		if (select == null || select.get() == null)
 			return;
 		for (ItemStack stack : e.player.getHandSlots())
 			if(stack.is(LocksItemTags.LOCKS))

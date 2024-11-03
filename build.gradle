@@ -86,14 +86,15 @@ repositories {
 dependencies {
 	minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 	compileOnly fg.deobf("curse.maven:lootr-361276:5636598")
-	runtimeOnly fg.deobf("curse.maven:lootr-361276:5636598")
-	//compileOnly fg.deobf("curse.maven:yungs-better-dungeons-510089:5271360")
-	compileOnly fg.deobf("curse.maven:lendercataclysm-551586:5852933")
-	compileOnly fg.deobf("curse.maven:lionfish-api-1001614:5363774")
-	compileOnly fg.deobf("curse.maven:curios-309927:5843594")
 	compileOnly fg.deobf("curse.maven:dungeon-crawl-324973:4612224")
-	runtimeOnly fg.deobf("curse.maven:dungeon-crawl-324973:4612224")
+	//compileOnly fg.deobf("curse.maven:yungs-better-dungeons-510089:5271360")
+
+	runtimeOnly fg.deobf("curse.maven:lendercataclysm-551586:5852933")
+	runtimeOnly fg.deobf("curse.maven:lionfish-api-1001614:5363774")
+	runtimeOnly fg.deobf("curse.maven:curios-309927:5843594")
+
 	compileOnly fg.deobf("curse.maven:beans-backpacks-946775:5368249")
+	//runtimeOnly fg.deobf("curse.maven:beans-backpacks-946775:5368249")
 	annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
