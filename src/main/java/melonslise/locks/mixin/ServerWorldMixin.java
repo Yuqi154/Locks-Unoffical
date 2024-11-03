@@ -23,9 +23,7 @@ public class ServerWorldMixin
 	@Inject(at = @At("HEAD"), method = "sendBlockUpdated")
 	private void sendBlockUpdated(BlockPos pos, BlockState oldState, BlockState newState, int flag, CallbackInfo ci)
 	{
-		if (LocksConfig.matchString(oldState.getBlock()) || LocksConfig.matchString(newState.getBlock())) {
-			Locks.LOGGER.info(oldState);
-			Locks.LOGGER.info(newState);
+		if (LocksConfig.matchString(oldState.getBlock()) && LocksConfig.matchString(newState.getBlock())) {
 			return;
 		}
 		ServerLevel world = (ServerLevel) (Object) this;

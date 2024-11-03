@@ -10,7 +10,7 @@ public class ShockingEnchantment extends Enchantment
 {
 	public ShockingEnchantment()
 	{
-		super(Rarity.UNCOMMON, Enum.valueOf(EnchantmentCategory.class, "LOCKS"), new EquipmentSlot[] { EquipmentSlot.MAINHAND });
+		super(Rarity.UNCOMMON, EnchantmentCategory.BREAKABLE, new EquipmentSlot[] { EquipmentSlot.MAINHAND });
 	}
 
 	@Override

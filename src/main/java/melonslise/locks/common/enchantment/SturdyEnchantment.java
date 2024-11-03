@@ -10,7 +10,7 @@ public class SturdyEnchantment extends Enchantment
 {
 	public SturdyEnchantment()
 	{
-		super(Rarity.RARE,  Enum.valueOf(EnchantmentCategory.class, "LOCKS"), new EquipmentSlot[] { EquipmentSlot.MAINHAND });
+		super(Rarity.RARE,  EnchantmentCategory.BREAKABLE, new EquipmentSlot[] { EquipmentSlot.MAINHAND });
 	}
 
 	@Override

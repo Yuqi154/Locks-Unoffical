@@ -5,7 +5,6 @@ import melonslise.locks.common.config.LocksConfig;
 import melonslise.locks.common.config.LocksServerConfig;
 import melonslise.locks.common.event.LocksEvents;
 import melonslise.locks.common.init.*;
-import melonslise.locks.common.addenchant.EnumModifier;
 import net.fabricmc.api.ModInitializer;
 import net.minecraftforge.fml.config.ModConfig.Type;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +19,8 @@ public final class Locks implements ModInitializer
 	@Override
 	public void onInitialize() {
 
-		EnumModifier.run();
+		//EnumModifier.run();
+		//TODO: run the EnumModifier class to add enchantments to the game
 
 		LocksItems.register();
 		LocksEnchantments.register();

@@ -10,7 +10,7 @@ public class ComplexityEnchantment extends Enchantment
 {
 	public ComplexityEnchantment()
 	{
-		super(Rarity.VERY_RARE, Enum.valueOf(EnchantmentCategory.class, "LOCKS"), new EquipmentSlot[] { EquipmentSlot.MAINHAND });
+		super(Rarity.VERY_RARE, EnchantmentCategory.BREAKABLE, new EquipmentSlot[] { EquipmentSlot.MAINHAND });
 	}
 
 	@Override

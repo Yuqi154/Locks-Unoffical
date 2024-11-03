@@ -40,17 +40,6 @@ import static net.minecraft.world.level.block.state.properties.DoubleBlockHalf.L
 public final class LocksUtil {
     public static ResourceManager resourceManager;
 
-    public static Constructor<?> lootTableContextConstructor;
-
-    static {
-        try {
-            lootTableContextConstructor = Class.forName("net.minecraftforge.common.ForgeHooks$LootTableContext").getDeclaredConstructor(ResourceLocation.class, boolean.class);
-            lootTableContextConstructor.setAccessible(true);
-        } catch (SecurityException | IllegalArgumentException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
     private LocksUtil() {
     }
 
