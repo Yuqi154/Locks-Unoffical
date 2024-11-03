@@ -4,13 +4,23 @@ import melonslise.locks.Locks;
 import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.util.Lockable;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
 
-public class AddLockablePacket {
+public class AddLockablePacket implements FabricPacket  {
     public static final ResourceLocation ID = new ResourceLocation(Locks.ID, "add_lockable");
+    public static final PacketType<AddLockablePacket> TYPE = PacketType.create(ID, AddLockablePacket::new);
+
+    public static class Handler implements ClientPlayNetworking.PlayPacketHandler<AddLockablePacket>{
+        @Override
+        public void receive(AddLockablePacket pkt, LocalPlayer localPlayer, PacketSender packetSender) {
+            LocksComponents.LOCKABLE_HANDLER.get(localPlayer.level()).add(pkt.lockable,localPlayer.level());
+        }
+    }
 
     private final Lockable lockable;
 
@@ -18,19 +28,18 @@ public class AddLockablePacket {
         this.lockable = lkb;
     }
 
-    public static AddLockablePacket decode(FriendlyByteBuf buf) {
-        return new AddLockablePacket(Lockable.fromBuf(buf));
+    public AddLockablePacket(FriendlyByteBuf buf) {
+        this(Lockable.fromBuf(buf));
     }
 
-    public static FriendlyByteBuf encode(AddLockablePacket pkt) {
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        Lockable.toBuf(buf, pkt.lockable);
-        Locks.LOGGER.info(buf.copy().toString());
-        return buf;
+    @Override
+    public void write(FriendlyByteBuf friendlyByteBuf) {
+        Lockable.toBuf(friendlyByteBuf, this.lockable);
     }
 
-    public static void execute(AddLockablePacket pkt, Level level){
-        LocksComponents.LOCKABLE_HANDLER.get(level).add(pkt.lockable,level);
+    @Override
+    public PacketType<?> getType() {
+        return TYPE;
     }
 
 }

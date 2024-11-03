@@ -7,17 +7,50 @@ import melonslise.locks.common.components.interfaces.ILockableStorage;
 import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.util.Lockable;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 
-public class AddLockableToChunkPacket {
+public class AddLockableToChunkPacket implements FabricPacket {
     public static final ResourceLocation ID = new ResourceLocation(Locks.ID, "add_lockable2chunk");
     private final Lockable lockable;
     private final int x, z;
+
+    public static final PacketType<AddLockableToChunkPacket> TYPE = PacketType.create(ID, AddLockableToChunkPacket::new);
+
+    public static class Handler implements ClientPlayNetworking.PlayPacketHandler<AddLockableToChunkPacket>{
+        @Override
+        public void receive(AddLockableToChunkPacket pkt, LocalPlayer localPlayer, PacketSender packetSender) {
+            ILockableStorage st = LocksComponents.LOCKABLE_STORAGE.get(localPlayer.level().getChunk(pkt.x, pkt.z));
+            ILockableHandler handler = LocksComponents.LOCKABLE_HANDLER.get(localPlayer.level());
+            Int2ObjectMap<Lockable> lkbs = handler.getLoaded();
+            Lockable lkb = lkbs.get(pkt.lockable.id);
+            if (lkb == lkbs.defaultReturnValue()) {
+                lkb = pkt.lockable;
+                lkb.addObserver(handler);
+                lkbs.put(lkb.id, lkb);
+            }
+            st.add(lkb);
+        }
+    }
+
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        Lockable.toBuf(buf, this.lockable);
+        buf.writeInt(this.x);
+        buf.writeInt(this.z);
+    }
+
+    @Override
+    public PacketType<?> getType() {
+        return TYPE;
+    }
+
 
     public AddLockableToChunkPacket(Lockable lkb, int x, int z) {
         this.lockable = lkb;
@@ -33,30 +66,9 @@ public class AddLockableToChunkPacket {
         this(lkb, ch.getPos());
     }
 
-    public static AddLockableToChunkPacket decode(FriendlyByteBuf buf) {
-        return new AddLockableToChunkPacket(Lockable.fromBuf(buf), buf.readInt(), buf.readInt());
-    }
-
-    public static FriendlyByteBuf encode(AddLockableToChunkPacket pkt) {
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        Lockable.toBuf(buf, pkt.lockable);
-        buf.writeInt(pkt.x);
-        buf.writeInt(pkt.z);
-        return buf;
+    public AddLockableToChunkPacket(FriendlyByteBuf buf) {
+        this(Lockable.fromBuf(buf), buf.readInt(), buf.readInt());
     }
 
 
-    public static void execute(AddLockableToChunkPacket pkt, Level level){
-
-        ILockableStorage st = LocksComponents.LOCKABLE_STORAGE.get(level.getChunk(pkt.x, pkt.z));
-        ILockableHandler handler = LocksComponents.LOCKABLE_HANDLER.get(level);
-        Int2ObjectMap<Lockable> lkbs = handler.getLoaded();
-        Lockable lkb = lkbs.get(pkt.lockable.id);
-        if (lkb == lkbs.defaultReturnValue()) {
-            lkb = pkt.lockable;
-            lkb.addObserver(handler);
-            lkbs.put(lkb.id, lkb);
-        }
-        st.add(lkb);
-    }
 }

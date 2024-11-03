@@ -78,8 +78,9 @@ public class LockPickItem extends Item
 		if(world.isClientSide)
 			return InteractionResult.SUCCESS;
 		InteractionHand hand = ctx.getHand();
-		if(player instanceof ServerPlayer)
+		if(player instanceof ServerPlayer) {
 			player.openMenu(new LockPickingContainer.Provider(hand, lkb));
+		}
 		//NetworkHooks.openScreen((ServerPlayer) player, new LockPickingContainer.Provider(hand, lkb), new LockPickingContainer.Writer(hand, lkb));
 		return InteractionResult.SUCCESS;
 	}

@@ -219,7 +219,7 @@ public class LockPickingScreen extends AbstractContainerScreen<LockPickingContai
         if (this.pins[pin])
             return false;
         this.currPin = pin;
-        ClientPlayNetworking.send(TryPinPacket.ID,TryPinPacket.encode(new TryPinPacket((byte) pin)));
+        ClientPlayNetworking.send(new TryPinPacket((byte) pin));
         return true;
     }
 

@@ -5,11 +5,12 @@ import melonslise.locks.client.gui.LockPickingScreen;
 import melonslise.locks.common.init.*;
 import melonslise.locks.common.item.LockPickItem;
 import melonslise.locks.common.network.toclient.TryPinResultPacket;
-import melonslise.locks.common.util.IContainerFactory;
 import melonslise.locks.common.util.Lockable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.FriendlyByteBuf;
@@ -17,7 +18,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -132,7 +132,7 @@ public class LockPickingContainer extends AbstractContainerMenu
 			}
 			else this.player.level().playSound(null, this.pos.x, this.pos.y, this.pos.z, LocksSoundEvents.PIN_FAIL, SoundSource.BLOCKS, 1f, 1f);
 		}
-		ServerPlayNetworking.send((ServerPlayer) this.player,TryPinResultPacket.ID,TryPinResultPacket.encode(new TryPinResultPacket(correct, reset)));
+		ServerPlayNetworking.send((ServerPlayer) this.player,new TryPinResultPacket(correct, reset));
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -205,7 +205,7 @@ public class LockPickingContainer extends AbstractContainerMenu
 		this.player.level().playSound(player, this.pos.x, this.pos.y, this.pos.z, LocksSoundEvents.LOCK_OPEN, SoundSource.BLOCKS, 1f, 1f);
 	}
 
-	public static final IContainerFactory<LockPickingContainer> FACTORY = (id, inv, buf) ->
+	public static final ExtendedScreenHandlerType.ExtendedFactory<LockPickingContainer> FACTORY = (id, inv, buf) ->
 	{
 		return new LockPickingContainer(id, inv.player, buf.readEnum(InteractionHand.class), LocksComponents.LOCKABLE_HANDLER.get(inv.player.level()).getLoaded().get(buf.readInt()));
 	};
@@ -231,7 +231,7 @@ public class LockPickingContainer extends AbstractContainerMenu
 		}
 	}
 
-	public static class Provider implements MenuProvider
+	public static class Provider implements ExtendedScreenHandlerFactory
 	{
 		public final InteractionHand hand;
 		public final Lockable lockable;
@@ -252,6 +252,11 @@ public class LockPickingContainer extends AbstractContainerMenu
 		public Component getDisplayName()
 		{
 			return TITLE;
+		}
+
+		@Override
+		public void writeScreenOpeningData(ServerPlayer serverPlayer, FriendlyByteBuf friendlyByteBuf) {
+			new Writer(this.hand, this.lockable).accept(friendlyByteBuf);
 		}
 	}
 }

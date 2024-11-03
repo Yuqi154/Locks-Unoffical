@@ -3,32 +3,42 @@ package melonslise.locks.common.network.toclient;
 import melonslise.locks.Locks;
 import melonslise.locks.common.init.LocksComponents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
 
-public class RemoveLockablePacket {
+public class RemoveLockablePacket implements FabricPacket {
     public static final ResourceLocation ID = new ResourceLocation(Locks.ID, "remove_lockable");
     private final int id;
+
+    public static final PacketType<RemoveLockablePacket> TYPE = PacketType.create(ID, RemoveLockablePacket::new);
+
+    public static class Handler implements ClientPlayNetworking.PlayPacketHandler<RemoveLockablePacket>{
+        @Override
+        public void receive(RemoveLockablePacket pkt, LocalPlayer localPlayer, PacketSender packetSender) {
+            LocksComponents.LOCKABLE_HANDLER.get(localPlayer.level()).remove(pkt.id);
+        }
+    }
+    @Override
+    public void write(FriendlyByteBuf buf) {
+
+        buf.writeInt(this.id);
+    }
+
+    @Override
+    public PacketType<?> getType() {
+        return TYPE;
+    }
 
     public RemoveLockablePacket(int id) {
         this.id = id;
     }
 
-    public static RemoveLockablePacket decode(FriendlyByteBuf buf) {
-        return new RemoveLockablePacket(buf.readInt());
-    }
-
-    public static FriendlyByteBuf encode(RemoveLockablePacket pkt) {
-        FriendlyByteBuf empty = PacketByteBufs.create();
-        empty.writeInt(pkt.id);
-        return empty;
-    }
-
-
-    public static void execute(RemoveLockablePacket pkt, Level level){
-        LocksComponents.LOCKABLE_HANDLER.get(level).remove(pkt.id);
+    public RemoveLockablePacket(FriendlyByteBuf buf) {
+        this(buf.readInt());
     }
 
 }

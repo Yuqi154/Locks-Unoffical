@@ -4,12 +4,13 @@ import melonslise.locks.common.components.interfaces.IItemHandler;
 import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.init.LocksContainerTypes;
 import melonslise.locks.common.init.LocksSoundEvents;
-import melonslise.locks.common.util.IContainerFactory;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -101,12 +102,12 @@ public class KeyRingContainer extends AbstractContainerMenu
 		return stack;
 	}
 
-	public static final IContainerFactory<KeyRingContainer> FACTORY = (id, inv, buffer) ->
+	public static final ExtendedScreenHandlerType.ExtendedFactory<KeyRingContainer> FACTORY = (id, inv, buffer) ->
 	{
 		return new KeyRingContainer(id, inv.player, inv.player.getItemInHand(buffer.readEnum(InteractionHand.class)));
 	};
 
-	public static class Provider implements MenuProvider
+	public static class Provider implements ExtendedScreenHandlerFactory
 	{
 		public final ItemStack stack;
 
@@ -125,6 +126,11 @@ public class KeyRingContainer extends AbstractContainerMenu
 		public Component getDisplayName()
 		{
 			return this.stack.getHoverName();
+		}
+
+		@Override
+		public void writeScreenOpeningData(ServerPlayer serverPlayer, FriendlyByteBuf friendlyByteBuf) {
+			friendlyByteBuf.writeEnum(InteractionHand.MAIN_HAND);
 		}
 	}
 
