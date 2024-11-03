@@ -72,7 +72,7 @@ mixin {
     add sourceSets.main, "${mod_id}.refmap.json"
 
 	config "${mod_id}.mixins.json"
-	config "${mod_id}.mixins.compact.json"
+	//config "${mod_id}.mixins.compact.json"
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
@@ -86,7 +86,7 @@ repositories {
 dependencies {
 	minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 	compileOnly fg.deobf("curse.maven:lootr-361276:5636598")
-	//runtimeOnly fg.deobf("curse.maven:lootr-361276:5636598")
+	runtimeOnly fg.deobf("curse.maven:lootr-361276:5636598")
 	//compileOnly fg.deobf("curse.maven:yungs-better-dungeons-510089:5271360")
 	compileOnly fg.deobf("curse.maven:lendercataclysm-551586:5852933")
 	compileOnly fg.deobf("curse.maven:lionfish-api-1001614:5363774")

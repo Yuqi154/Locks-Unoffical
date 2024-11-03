@@ -1,4 +1,4 @@
-package melonslise.locks.mixin.swapLock;
+package melonslise.locks.mixin.compact;
 
 import melonslise.locks.Locks;
 import net.minecraft.core.BlockPos;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Pseudo
 @Mixin(targets = "noobanidus.mods.lootr.block.entities.TileTicker", remap = false)
-public class TileTickerMixin {
+public class LootrMixin {
     @Redirect(method = "serverTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;destroyBlock(Lnet/minecraft/core/BlockPos;Z)Z"))
     private static boolean lockLootr(ServerLevel instance, BlockPos pos, boolean b){
         Locks.LOGGER.info(instance.getBlockState(pos));

@@ -95,7 +95,7 @@ public class LockPickingScreen extends AbstractContainerScreen<LockPickingContai
         this.lockPick = this.addSprite(new Sprite(LOCK_PICK_TEX).position(0f, -4 + COLUMN_TEX.height - LOCK_PICK_TEX.height));
         this.resetPick();
         this.rightPickPart = this.addSprite(new Sprite(new TextureInfo(0, 0, 0, 12, 160, 16, this.pickTex)).position(-10f, this.lockPick.posY).alpha(0f));
-        this.leftPickPart = this.addSprite(new Sprite(new TextureInfo(0, 0, 0, 12, 160, 16, this.pickTex)).position(0f, this.lockPick.posY).rotation(-30f, -10f, this.lockPick.posY + 13f).alpha(0f));
+        this.leftPickPart = this.addSprite(new Sprite(new TextureInfo(0, 0, 0, 12, 160, 16, this.pickTex)).position(0f, this.lockPick.posY).rotation(-24.5f, -10f, this.lockPick.posY + 13f).alpha(0f));
     }
 
     public static ResourceLocation getTextureFor(ItemStack stack) {

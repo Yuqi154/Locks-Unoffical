@@ -65,7 +65,7 @@ public class Sprite
 		PoseStack mtx = guiGraphics.pose();
 		mtx.pushPose();
 		mtx.translate(this.originX, this.originY, 0f);
-		mtx.mulPose(new Quaternionf().rotateZ(LocksClientUtil.lerp(this.oldRot, this.rot, partialTick)));
+		mtx.mulPose(new Quaternionf().rotateZ(-LocksClientUtil.lerp(this.oldRot, this.rot, partialTick)));
 		mtx.translate(-this.originX, -this.originY, 0f);
 		this.tex.draw(guiGraphics, LocksClientUtil.lerp(this.oldPosX, this.posX, partialTick), LocksClientUtil.lerp(this.oldPosY, this.posY, partialTick), LocksClientUtil.lerp(this.oldAlpha, this.alpha, partialTick), location);
 		mtx.popPose();

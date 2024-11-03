@@ -22,10 +22,11 @@
     "accessor.ForgeHooksAccessor",
     "accessor.LootPoolAccessor",
     "accessor.LootTableAccessor",
-    "swapLock.StructurePieceMixin",
-    "swapLock.StructureTemplateMixin",
-    "swapLock.TileTickerMixin",
-    "swapLock.WorldGenRegionMixin"
+    "addlock.StructurePieceMixin",
+    "addlock.StructureTemplateMixin",
+    "addlock.WorldGenRegionMixin",
+    "compact.DungeonCrawlMixin",
+    "compact.LootrMixin"
   ],
   "client": [
     "client.WorldRendererMixin"
