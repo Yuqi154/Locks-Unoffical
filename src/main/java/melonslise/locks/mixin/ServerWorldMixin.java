@@ -1,6 +1,8 @@
 package melonslise.locks.mixin;
 
+import melonslise.locks.Locks;
 import melonslise.locks.common.components.interfaces.ILockableHandler;
+import melonslise.locks.common.config.LocksConfig;
 import melonslise.locks.common.init.LocksComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -21,8 +23,11 @@ public class ServerWorldMixin
 	@Inject(at = @At("HEAD"), method = "sendBlockUpdated")
 	private void sendBlockUpdated(BlockPos pos, BlockState oldState, BlockState newState, int flag, CallbackInfo ci)
 	{
-		if(oldState.is(newState.getBlock()))
+		if (LocksConfig.matchString(oldState.getBlock()) || LocksConfig.matchString(newState.getBlock())) {
+			Locks.LOGGER.info(oldState);
+			Locks.LOGGER.info(newState);
 			return;
+		}
 		ServerLevel world = (ServerLevel) (Object) this;
 		ILockableHandler handler = LocksComponents.LOCKABLE_HANDLER.get(world);
 		// create buffer list because otherwise we will be deleting elements while iterating (BAD!!)

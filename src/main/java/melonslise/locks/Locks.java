@@ -5,6 +5,7 @@ import melonslise.locks.common.config.LocksConfig;
 import melonslise.locks.common.config.LocksServerConfig;
 import melonslise.locks.common.event.LocksEvents;
 import melonslise.locks.common.init.*;
+import melonslise.locks.common.addenchant.EnumModifier;
 import net.fabricmc.api.ModInitializer;
 import net.minecraftforge.fml.config.ModConfig.Type;
 import org.apache.logging.log4j.LogManager;
@@ -18,6 +19,9 @@ public final class Locks implements ModInitializer
 
 	@Override
 	public void onInitialize() {
+
+		EnumModifier.run();
+
 		LocksItems.register();
 		LocksEnchantments.register();
 		LocksSoundEvents.register();
@@ -26,6 +30,7 @@ public final class Locks implements ModInitializer
 		LocksVillagerTrades.register();
 		LocksEvents.register();
 		LocksNetwork.register();
+		LocksFeatures.register();
 		ForgeConfigRegistry.INSTANCE.register(ID, Type.COMMON, LocksConfig.SPEC);
 		ForgeConfigRegistry.INSTANCE.register(ID, Type.SERVER, LocksServerConfig.SPEC);
 	}

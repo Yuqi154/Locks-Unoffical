@@ -4,12 +4,13 @@ import melonslise.locks.common.item.LockItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class ComplexityEnchantment extends Enchantment
 {
 	public ComplexityEnchantment()
 	{
-		super(Rarity.VERY_RARE, null, new EquipmentSlot[] { EquipmentSlot.MAINHAND });
+		super(Rarity.VERY_RARE, Enum.valueOf(EnchantmentCategory.class, "LOCKS"), new EquipmentSlot[] { EquipmentSlot.MAINHAND });
 	}
 
 	@Override

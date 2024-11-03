@@ -68,8 +68,6 @@ public final class LocksEvents
 
 	public static InteractionResult onRightClick(Player player, Level world, InteractionHand hand, BlockHitResult result)
 	{
-		if(!(player instanceof ServerPlayer))
-			return InteractionResult.PASS;
 
 		BlockPos pos = result.getBlockPos();
 		ILockableHandler handler = LocksComponents.LOCKABLE_HANDLER.get(world);
@@ -95,10 +93,12 @@ public final class LocksEvents
 				f=false;
 			}
 			player.swing(InteractionHand.MAIN_HAND);
+
+			if(!(player instanceof ServerPlayer))
+				return InteractionResult.PASS;
 			if(world.isClientSide && LocksClientConfig.DEAF_MODE.get())
 				player.displayClientMessage(LOCKED_MESSAGE, true);
 
-			Locks.LOGGER.info(f);
 			if(f) {
 				player.openMenu(new LockPickingContainer.Provider(hand, lkb));
 				return InteractionResult.CONSUME;

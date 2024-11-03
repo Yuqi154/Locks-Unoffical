@@ -1,4 +1,4 @@
-package melonslise.locks.mixin.swapLock;
+package melonslise.locks.mixin.addlock;
 
 import melonslise.locks.common.config.LocksConfig;
 import melonslise.locks.common.util.LocksUtil;
@@ -20,7 +20,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(StructurePiece.class)
 public abstract class StructurePieceMixin {
-
     @Inject(method = "placeBlock", at = @At(value = "TAIL"))
     public void lockPlace(WorldGenLevel level, BlockState blockState, int x, int y, int z, BoundingBox boundingBox, CallbackInfo ci) {
         if(level.hasChunk(x >> 4, z >> 4)){

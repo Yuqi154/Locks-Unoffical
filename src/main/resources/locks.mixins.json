@@ -20,8 +20,8 @@
     "WorldMixin",
     "accessor.LootPoolAccessor",
     "accessor.LootTableAccessor",
-    "swapLock.StructurePieceMixin",
-    "swapLock.StructureTemplateMixin"
+    "addlock.StructurePieceMixin",
+    "addlock.StructureTemplateMixin"
   ],
   "client": [
     "ChunkCacheMixin",

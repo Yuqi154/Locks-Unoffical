@@ -1,4 +1,4 @@
-package melonslise.locks.mixin.swapLock;
+package melonslise.locks.mixin.addlock;
 
 import com.mojang.datafixers.util.Pair;
 import melonslise.locks.Locks;
@@ -112,7 +112,7 @@ public class StructureTemplateMixin {
     public void lockShape(ServerLevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2,
                           StructurePlaceSettings structurePlaceSettings, RandomSource pRandom, int i,
                           CallbackInfoReturnable<Boolean> cir
-                          ) {
+    ) {
         if (levelAccessor.hasChunk(blockPos.getX() >> 4, blockPos.getZ() >> 4)){
             Block block = levelAccessor.getBlockState(blockPos).getBlock();
             if (LocksConfig.canGen(pRandom, block)) {

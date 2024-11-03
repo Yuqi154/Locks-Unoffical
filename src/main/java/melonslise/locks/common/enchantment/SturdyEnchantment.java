@@ -4,12 +4,13 @@ import melonslise.locks.common.item.LockItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class SturdyEnchantment extends Enchantment
 {
 	public SturdyEnchantment()
 	{
-		super(Rarity.RARE, null, new EquipmentSlot[] { EquipmentSlot.MAINHAND });
+		super(Rarity.RARE,  Enum.valueOf(EnchantmentCategory.class, "LOCKS"), new EquipmentSlot[] { EquipmentSlot.MAINHAND });
 	}
 
 	@Override
