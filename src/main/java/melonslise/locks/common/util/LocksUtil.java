@@ -241,4 +241,55 @@ public final class LocksUtil {
         });
         return true;
     }
+
+    // TODO: 非常紧急的解决方法（很坏）
+    public static void lockWhenGen(ServerLevelAccessor levelAccessor, BlockPos blockPos, RandomSource randomSource) {
+        BlockState state = levelAccessor.getBlockState(blockPos);
+        Block block = state.getBlock();
+        if (LocksConfig.canGen(randomSource, block)) {
+            BlockPos pos1 = blockPos;
+            Direction dir;
+            if (state.hasProperty(FACING)){
+                dir = state.getValue(FACING);
+            } else if(state.hasProperty(HORIZONTAL_FACING)){
+                dir = state.getValue(HORIZONTAL_FACING);
+            } else {
+                dir = Direction.NORTH;
+            }
+
+            if (state.hasProperty(CHEST_TYPE)) {
+                switch (state.getValue(CHEST_TYPE)) {
+                    case LEFT -> pos1 = blockPos.relative(ChestBlock.getConnectedDirection(state));
+                    case RIGHT -> {
+                        return;
+                    }
+                }
+            }
+            if (state.hasProperty(DOUBLE_BLOCK_HALF)) {
+                if (state.getValue(DOUBLE_BLOCK_HALF) == LOWER) return;
+                pos1 = blockPos.below();
+                if (state.hasProperty(DOOR_HINGE)) {
+                    if (state.hasProperty(DOOR_HINGE) && state.hasProperty(HORIZONTAL_FACING)) {
+                        BlockPos pos2 = pos1.relative(state.getValue(DOOR_HINGE) == LEFT ? dir.getClockWise() : dir.getCounterClockWise());
+                        if (levelAccessor.getBlockState(pos2).is(state.getBlock())) {
+                            if (state.getValue(DOOR_HINGE) == LEFT) {
+                                return;
+                            }
+                            pos1 = pos2;
+                        }
+                    }
+                    dir = dir.getOpposite();
+                }
+            }
+            Cuboid6i bb = new Cuboid6i(blockPos, pos1);
+            ItemStack stack = LocksConfig.getRandomLock(randomSource);
+            Lock lock = Lock.from(stack);
+            Transform tr = Transform.fromDirection(dir, dir);
+            Lockable lkb = new Lockable(bb, lock, tr, stack, levelAccessor.getLevel());
+            lkb.bb.getContainedChunks((x, z) -> {
+                ((ILockableProvider) levelAccessor.getChunk(x, z)).getLockables().add(lkb);
+                return true;
+            });
+        }
+    }
 }
