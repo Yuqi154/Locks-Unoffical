@@ -14,13 +14,12 @@ import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import xiroc.dungeoncrawl.dungeon.model.DungeonModelFeature;
 import xiroc.dungeoncrawl.theme.SecondaryTheme;
 import xiroc.dungeoncrawl.theme.Theme;
 
-@Pseudo
-@Mixin(targets = "xiroc.dungeoncrawl.dungeon.model.DungeonModelFeature", remap = false)
+@Mixin(value = DungeonModelFeature.class, remap = false)
 public class DungeonCrawlMixin {
-
     @Inject(method = "placeChest(Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lxiroc/dungeoncrawl/theme/Theme;Lxiroc/dungeoncrawl/theme/SecondaryTheme;ILnet/minecraft/util/RandomSource;)V", at = @At(value = "RETURN"))
     private static void lockChest(LevelAccessor world, BlockPos pos, BlockState chest, Theme theme, SecondaryTheme secondaryTheme, int lootLevel, RandomSource rand, CallbackInfo ci) {
         if (world instanceof ServerLevelAccessor accessor) {

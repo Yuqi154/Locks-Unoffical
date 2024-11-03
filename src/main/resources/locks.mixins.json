@@ -24,9 +24,7 @@
     "accessor.LootTableAccessor",
     "addlock.StructurePieceMixin",
     "addlock.StructureTemplateMixin",
-    "addlock.WorldGenRegionMixin",
-    "compact.DungeonCrawlMixin",
-    "compact.LootrMixin"
+    "addlock.WorldGenRegionMixin"
   ],
   "client": [
     "client.WorldRendererMixin"
