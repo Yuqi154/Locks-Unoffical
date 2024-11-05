@@ -22,10 +22,9 @@
     "accessor.ForgeHooksAccessor",
     "accessor.LootPoolAccessor",
     "accessor.LootTableAccessor",
-    "addlock.LevelChunkMixin",
-    "addlock.StructurePieceMixin",
     "addlock.StructureTemplateMixin",
-    "addlock.WorldGenRegionMixin"
+    "addlock.WorldGenRegionMixin",
+    "compact.LootrMixin"
   ],
   "client": [
     "client.WorldRendererMixin"
