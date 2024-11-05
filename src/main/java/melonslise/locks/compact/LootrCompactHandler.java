@@ -20,13 +20,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class LootrCompactHandler {
-    public static boolean handleInteract(Level level,BlockPos pos,BlockState blockState){
-        if(blockState.is(Blocks.CHEST)||blockState.is(Blocks.TRAPPED_CHEST)){
-            ILockableHandler handler = level.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
-            Lockable[] intersect = handler.getInChunk(pos).values().stream().filter(lkb -> lkb.bb.intersects(pos)).toArray(Lockable[]::new);
-            Optional<Lockable> locked = Arrays.stream(intersect).filter(LocksPredicates.LOCKED).findFirst();
-            return locked.isPresent();
-        }
-        return false;
-    }
+//    public static boolean handleInteract(Level level,BlockPos pos,BlockState blockState){
+//        if(blockState.is(Blocks.CHEST)||blockState.is(Blocks.TRAPPED_CHEST)){
+//            ILockableHandler handler = level.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
+//            Lockable[] intersect = handler.getInChunk(pos).values().stream().filter(lkb -> lkb.bb.intersects(pos)).toArray(Lockable[]::new);
+//            Optional<Lockable> locked = Arrays.stream(intersect).filter(LocksPredicates.LOCKED).findFirst();
+//            return locked.isPresent();
+//        }
+//        return false;
+//    }
 }

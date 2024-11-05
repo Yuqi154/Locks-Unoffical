@@ -86,8 +86,9 @@ repositories {
 dependencies {
 	minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 	compileOnly fg.deobf("curse.maven:lootr-361276:5636598")
-	runtimeOnly fg.deobf("curse.maven:lootr-361276:5636598")
+	//runtimeOnly fg.deobf("curse.maven:lootr-361276:5636598")
 	compileOnly fg.deobf("curse.maven:dungeon-crawl-324973:4612224")
+	runtimeOnly fg.deobf("curse.maven:dungeon-crawl-324973:4612224")
 	//compileOnly fg.deobf("curse.maven:yungs-better-dungeons-510089:5271360")
 
 	//runtimeOnly fg.deobf("curse.maven:lendercataclysm-551586:5852933")
