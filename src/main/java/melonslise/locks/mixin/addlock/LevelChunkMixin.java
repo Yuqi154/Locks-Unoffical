@@ -12,6 +12,7 @@ import melonslise.locks.common.util.Lockable;
 import melonslise.locks.common.util.Transform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -43,6 +44,11 @@ public abstract class LevelChunkMixin {
     @Inject(method = "updateBlockEntityTicker", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getTicker(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/entity/BlockEntityType;)Lnet/minecraft/world/level/block/entity/BlockEntityTicker;", shift = At.Shift.AFTER))
     public void lockChest(BlockEntity entity, CallbackInfo ci) {
         if (entity instanceof RandomizableContainerBlockEntity) {
+            CompoundTag compoundTag = entity.getPersistentData();
+            if (!compoundTag.getBoolean("locked")){
+                compoundTag.putBoolean("locked", true);
+                return;
+            }
             if (this.getLevel().isClientSide()) return;
             LevelChunk ch = (LevelChunk) (Object) this;
             BlockPos blockPos = entity.getBlockPos();
@@ -69,7 +75,8 @@ public abstract class LevelChunkMixin {
                     Cuboid6i bb = new Cuboid6i(blockPos, pos1);
                     ItemStack stack = LocksConfig.getRandomLock(randomSource);
                     Lock lock = Lock.from(stack);
-                    Transform tr = dir == null ? Transform.NORTH_UP : Transform.fromDirection(dir, dir);
+                    Transform tr = Transform.fromDirection(dir, dir);
+                    if (tr == null) tr = Transform.NORTH_UP;
                     Lockable lkb = new Lockable(bb, lock, tr, stack, this.getLevel());
                     lkb.bb.getContainedChunks((x, z) -> {
                         ILockableStorage st = ch.getCapability(LocksCapabilities.LOCKABLE_STORAGE).orElse(null);
