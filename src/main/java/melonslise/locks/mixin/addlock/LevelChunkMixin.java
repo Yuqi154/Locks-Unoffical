@@ -6,22 +6,20 @@ import melonslise.locks.common.config.LocksConfig;
 import melonslise.locks.common.init.LocksCapabilities;
 import melonslise.locks.common.init.LocksNetwork;
 import melonslise.locks.common.network.toclient.AddLockableToChunkPacket;
-import melonslise.locks.common.util.*;
+import melonslise.locks.common.util.Cuboid6i;
+import melonslise.locks.common.util.Lock;
+import melonslise.locks.common.util.Lockable;
+import melonslise.locks.common.util.Transform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.common.capabilities.CapabilityProvider;
 import net.minecraftforge.network.PacketDistributor;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,11 +29,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.*;
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.DOOR_HINGE;
-import static net.minecraft.world.level.block.state.properties.DoorHingeSide.LEFT;
-import static net.minecraft.world.level.block.state.properties.DoubleBlockHalf.LOWER;
 
-@Mixin(value = LevelChunk.class, priority = 1001)
+@Mixin(LevelChunk.class)
 public abstract class LevelChunkMixin {
     @Shadow
     public abstract Level getLevel();
@@ -49,7 +44,6 @@ public abstract class LevelChunkMixin {
     public void lockChest(BlockEntity entity, CallbackInfo ci) {
         if (entity instanceof RandomizableContainerBlockEntity) {
             if (this.getLevel().isClientSide()) return;
-            ChunkAccess chunkAccess = (ChunkAccess) (Object) this;
             LevelChunk ch = (LevelChunk) (Object) this;
             BlockPos blockPos = entity.getBlockPos();
             BlockState state = entity.getBlockState();
