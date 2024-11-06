@@ -19,7 +19,7 @@ apply plugin: 'org.spongepowered.mixin'
 
 
 base {
-	archivesName = "${mod_name}-${mod_version}"
+	archivesName = "${mod_name}-forge-${mod_version}"
 }
 
 java {
