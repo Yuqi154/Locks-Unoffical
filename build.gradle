@@ -87,9 +87,10 @@ dependencies {
 	compileOnly fg.deobf("curse.maven:lootr-361276:5636598")
 	//runtimeOnly fg.deobf("curse.maven:lootr-361276:5636598")
 	compileOnly fg.deobf("curse.maven:dungeon-crawl-324973:4612224")
-	runtimeOnly fg.deobf("curse.maven:dungeon-crawl-324973:4612224")
+	compileOnly fg.deobf("curse.maven:dungeon-crawl-324973:4612224")
 	//compileOnly fg.deobf("curse.maven:yungs-better-dungeons-510089:5271360")
-
+	runtimeOnly fg.deobf("curse.maven:quark-243121:5594847")
+	runtimeOnly fg.deobf("curse.maven:zeta-968868:5597406")
 	//runtimeOnly fg.deobf("curse.maven:lendercataclysm-551586:5852933")
 	//runtimeOnly fg.deobf("curse.maven:lionfish-api-1001614:5363774")
 	//runtimeOnly fg.deobf("curse.maven:curios-309927:5843594")
