@@ -25,6 +25,10 @@ public class RandomizableContainerBlockEntityMixin {
     private NonNullList<ItemStack> lockRandomizableContainerBlockEntity(RandomizableContainerBlockEntity instance) {
         BlockPos pos = ((RandomizableContainerBlockEntity) (Object) this).getBlockPos();
         Level level = ((RandomizableContainerBlockEntity) (Object) this).getLevel();
+        if(level==null){
+            return instance.getItems();
+        }
+
         ILockableHandler handler = level.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
         Lockable[] intersect = handler.getInChunk(pos).values().stream().filter(lkb -> lkb.bb.intersects(pos)).toArray(Lockable[]::new);
         Optional<Lockable> locked = Arrays.stream(intersect).filter(LocksPredicates.LOCKED).findFirst();
@@ -39,6 +43,9 @@ public class RandomizableContainerBlockEntityMixin {
     private NonNullList<ItemStack> lockRandomizableContainerBlockEntityRemoveItem(RandomizableContainerBlockEntity instance) {
         BlockPos pos = ((RandomizableContainerBlockEntity) (Object) this).getBlockPos();
         Level level = ((RandomizableContainerBlockEntity) (Object) this).getLevel();
+        if(level==null){
+            return instance.getItems();
+        }
         ILockableHandler handler = level.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
         Lockable[] intersect = handler.getInChunk(pos).values().stream().filter(lkb -> lkb.bb.intersects(pos)).toArray(Lockable[]::new);
         Optional<Lockable> locked = Arrays.stream(intersect).filter(LocksPredicates.LOCKED).findFirst();
@@ -52,6 +59,9 @@ public class RandomizableContainerBlockEntityMixin {
     private ItemStack lockRandomizableContainerBlockEntityRemoveItem(List<ItemStack> list, int i, int j) {
         BlockPos pos = ((RandomizableContainerBlockEntity) (Object) this).getBlockPos();
         Level level = ((RandomizableContainerBlockEntity) (Object) this).getLevel();
+        if(level==null){
+            return ContainerHelper.removeItem(list, i, j);
+        }
         ILockableHandler handler = level.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
         Lockable[] intersect = handler.getInChunk(pos).values().stream().filter(lkb -> lkb.bb.intersects(pos)).toArray(Lockable[]::new);
         Optional<Lockable> locked = Arrays.stream(intersect).filter(LocksPredicates.LOCKED).findFirst();
@@ -65,6 +75,9 @@ public class RandomizableContainerBlockEntityMixin {
     private NonNullList<ItemStack> lockRandomizableContainerBlockEntitySetItem(RandomizableContainerBlockEntity instance) {
         BlockPos pos = ((RandomizableContainerBlockEntity) (Object) this).getBlockPos();
         Level level = ((RandomizableContainerBlockEntity) (Object) this).getLevel();
+        if(level==null){
+            return instance.getItems();
+        }
         ILockableHandler handler = level.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
         Lockable[] intersect = handler.getInChunk(pos).values().stream().filter(lkb -> lkb.bb.intersects(pos)).toArray(Lockable[]::new);
         Optional<Lockable> locked = Arrays.stream(intersect).filter(LocksPredicates.LOCKED).findFirst();
