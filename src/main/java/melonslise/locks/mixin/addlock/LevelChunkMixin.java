@@ -43,52 +43,52 @@ public abstract class LevelChunkMixin {
 
     @Inject(method = "updateBlockEntityTicker", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getTicker(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/entity/BlockEntityType;)Lnet/minecraft/world/level/block/entity/BlockEntityTicker;", shift = At.Shift.AFTER))
     public void lockChest(BlockEntity entity, CallbackInfo ci) {
-        if (entity instanceof RandomizableContainerBlockEntity) {
-            CompoundTag compoundTag = entity.getPersistentData();
-            if (!compoundTag.getBoolean("locked")){
-                compoundTag.putBoolean("locked", true);
-                return;
-            }
-            if (this.getLevel().isClientSide()) return;
-            LevelChunk ch = (LevelChunk) (Object) this;
-            BlockPos blockPos = entity.getBlockPos();
-            BlockState state = entity.getBlockState();
-            RandomSource randomSource = RandomSource.create();
-            if (this.getLevel().hasChunk(blockPos.getX() >> 4, blockPos.getZ() >> 4)) {
-                if (LocksConfig.canGen(randomSource, state.getBlock())) {
-                    BlockPos pos1 = blockPos;
-                    Direction dir = null;
-                    if (state.hasProperty(FACING)) {
-                        dir = state.getValue(FACING);
-                    } else if (state.hasProperty(HORIZONTAL_FACING)) {
-                        dir = state.getValue(HORIZONTAL_FACING);
-                    }
-
-                    if (state.hasProperty(CHEST_TYPE)) {
-                        switch (state.getValue(CHEST_TYPE)) {
-                            case LEFT -> pos1 = blockPos.relative(ChestBlock.getConnectedDirection(state));
-                            case RIGHT -> {
-                                return;
-                            }
-                        }
-                    }
-                    Cuboid6i bb = new Cuboid6i(blockPos, pos1);
-                    ItemStack stack = LocksConfig.getRandomLock(randomSource);
-                    Lock lock = Lock.from(stack);
-                    Transform tr = Transform.fromDirection(dir, dir);
-                    if (tr == null) tr = Transform.NORTH_UP;
-                    Lockable lkb = new Lockable(bb, lock, tr, stack, this.getLevel());
-                    lkb.bb.getContainedChunks((x, z) -> {
-                        ILockableStorage st = ch.getCapability(LocksCapabilities.LOCKABLE_STORAGE).orElse(null);
-                        ILockableHandler handler = this.level.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
-                        st.add(lkb);
-                        handler.getLoaded().put(lkb.id, lkb);
-                        lkb.addObserver(handler);
-                        LocksNetwork.MAIN.send(PacketDistributor.TRACKING_CHUNK.with(() -> ch), new AddLockableToChunkPacket(lkb, ch));
-                        return true;
-                    });
-                }
-            }
-        }
+//        if (entity instanceof RandomizableContainerBlockEntity) {
+//            CompoundTag compoundTag = entity.getPersistentData();
+//            if (compoundTag.getBoolean("locked")) {
+//                return;
+//            }
+//            compoundTag.putBoolean("locked", true);
+//            if (this.getLevel().isClientSide()) return;
+//            LevelChunk ch = (LevelChunk) (Object) this;
+//            BlockPos blockPos = entity.getBlockPos();
+//            BlockState state = entity.getBlockState();
+//            RandomSource randomSource = RandomSource.create();
+//            if (this.getLevel().hasChunk(blockPos.getX() >> 4, blockPos.getZ() >> 4)) {
+//                if (LocksConfig.canGen(randomSource, state.getBlock())) {
+//                    BlockPos pos1 = blockPos;
+//                    Direction dir = null;
+//                    if (state.hasProperty(FACING)) {
+//                        dir = state.getValue(FACING);
+//                    } else if (state.hasProperty(HORIZONTAL_FACING)) {
+//                        dir = state.getValue(HORIZONTAL_FACING);
+//                    }
+//
+//                    if (state.hasProperty(CHEST_TYPE)) {
+//                        switch (state.getValue(CHEST_TYPE)) {
+//                            case LEFT -> pos1 = blockPos.relative(ChestBlock.getConnectedDirection(state));
+//                            case RIGHT -> {
+//                                return;
+//                            }
+//                        }
+//                    }
+//                    Cuboid6i bb = new Cuboid6i(blockPos, pos1);
+//                    ItemStack stack = LocksConfig.getRandomLock(randomSource);
+//                    Lock lock = Lock.from(stack);
+//                    Transform tr = Transform.fromDirection(dir, dir);
+//                    if (tr == null) tr = Transform.NORTH_UP;
+//                    Lockable lkb = new Lockable(bb, lock, tr, stack, this.getLevel());
+//                    lkb.bb.getContainedChunks((x, z) -> {
+//                        ILockableStorage st = ch.getCapability(LocksCapabilities.LOCKABLE_STORAGE).orElse(null);
+//                        ILockableHandler handler = this.level.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
+//                        st.add(lkb);
+//                        handler.getLoaded().put(lkb.id, lkb);
+//                        lkb.addObserver(handler);
+//                        LocksNetwork.MAIN.send(PacketDistributor.TRACKING_CHUNK.with(() -> ch), new AddLockableToChunkPacket(lkb, ch));
+//                        return true;
+//                    });
+//                }
+//            }
+//        }
     }
 }

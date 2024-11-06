@@ -25,6 +25,7 @@
     "addlock.LevelChunkMixin",
     "addlock.StructureTemplateMixin",
     "addlock.WorldGenRegionMixin",
+    "compact.DungeonCrawlMixin",
     "compact.LootrMixin"
   ],
   "client": [

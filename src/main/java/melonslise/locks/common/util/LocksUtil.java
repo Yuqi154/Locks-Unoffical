@@ -236,7 +236,7 @@ public final class LocksUtil {
         Lockable lkb = LocksUtil.lockCheck(levelAccessor, level, blockPos, randomSource);
         if (lkb == null) return false;
         lkb.bb.getContainedChunks((x, z) -> {
-            ((ILockableProvider) level.getChunk(x, z)).getLockables().add(lkb);
+            ((ILockableProvider) levelAccessor.getChunk(x, z)).getLockables().add(lkb);
             return true;
         });
         return true;
