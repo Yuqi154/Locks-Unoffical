@@ -17,6 +17,7 @@
     "LootTableManagerMixin",
     "PistonBlockMixin",
     "PistonBlockStructureHelperMixin",
+    "RandomizableContainerBlockEntityMixin",
     "ServerWorldMixin",
     "WorldMixin",
     "accessor.ForgeHooksAccessor",
