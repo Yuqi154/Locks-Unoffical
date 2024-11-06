@@ -22,7 +22,7 @@ import java.util.Objects;
  */
 public class LockableStorage implements ILockableStorage
 {
-	public static final ResourceLocation ID = new ResourceLocation(Locks.ID, "lockable_storage");
+	public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Locks.ID, "lockable_storage");
 
 	public final ChunkAccess chunk;
 

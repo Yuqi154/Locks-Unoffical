@@ -19,7 +19,7 @@ import net.minecraft.world.level.chunk.EmptyLevelChunk;
 import net.minecraft.world.level.chunk.LevelChunk;
 
 public class AddLockableToChunkPacket implements FabricPacket {
-    public static final ResourceLocation ID = new ResourceLocation(Locks.ID, "add_lockable2chunk");
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Locks.ID, "add_lockable2chunk");
     private final Lockable lockable;
     private final int x, z;
 

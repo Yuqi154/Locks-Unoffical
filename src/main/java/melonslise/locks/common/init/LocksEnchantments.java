@@ -25,6 +25,6 @@ public final class LocksEnchantments
 
 	public static Enchantment add(String name, Enchantment ench)
 	{
-		return Registry.register(BuiltInRegistries.ENCHANTMENT,new ResourceLocation(Locks.ID,name),ench);
+		return Registry.register(BuiltInRegistries.ENCHANTMENT,ResourceLocation.fromNamespaceAndPath(Locks.ID,name),ench);
 	}
 }

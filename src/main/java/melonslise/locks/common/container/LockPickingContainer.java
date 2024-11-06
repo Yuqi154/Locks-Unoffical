@@ -8,6 +8,7 @@ import melonslise.locks.common.network.toclient.TryPinResultPacket;
 import melonslise.locks.common.util.Lockable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
@@ -205,7 +206,7 @@ public class LockPickingContainer extends AbstractContainerMenu
 		this.player.level().playSound(player, this.pos.x, this.pos.y, this.pos.z, LocksSoundEvents.LOCK_OPEN, SoundSource.BLOCKS, 1f, 1f);
 	}
 
-	public static final ExtendedScreenHandlerType.ExtendedFactory<LockPickingContainer> FACTORY = (id, inv, buf) ->
+	public static final ExtendedScreenHandlerType.ExtendedFactory<LockPickingContainer,FriendlyByteBuf> FACTORY = (id, inv, buf) ->
 	{
 		return new LockPickingContainer(id, inv.player, buf.readEnum(InteractionHand.class), LocksComponents.LOCKABLE_HANDLER.get(inv.player.level()).getLoaded().get(buf.readInt()));
 	};
@@ -231,7 +232,7 @@ public class LockPickingContainer extends AbstractContainerMenu
 		}
 	}
 
-	public static class Provider implements ExtendedScreenHandlerFactory
+	public static class Provider implements ExtendedScreenHandlerFactory<FriendlyByteBuf>
 	{
 		public final InteractionHand hand;
 		public final Lockable lockable;
@@ -255,8 +256,10 @@ public class LockPickingContainer extends AbstractContainerMenu
 		}
 
 		@Override
-		public void writeScreenOpeningData(ServerPlayer serverPlayer, FriendlyByteBuf friendlyByteBuf) {
+		public FriendlyByteBuf getScreenOpeningData(ServerPlayer serverPlayer) {
+			FriendlyByteBuf friendlyByteBuf = PacketByteBufs.create();
 			new Writer(this.hand, this.lockable).accept(friendlyByteBuf);
+			return friendlyByteBuf;
 		}
 	}
 }

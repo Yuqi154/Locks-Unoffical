@@ -4,6 +4,7 @@ import melonslise.locks.common.components.interfaces.IItemHandler;
 import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.init.LocksContainerTypes;
 import melonslise.locks.common.init.LocksSoundEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.network.FriendlyByteBuf;
@@ -102,12 +103,12 @@ public class KeyRingContainer extends AbstractContainerMenu
 		return stack;
 	}
 
-	public static final ExtendedScreenHandlerType.ExtendedFactory<KeyRingContainer> FACTORY = (id, inv, buffer) ->
+	public static final ExtendedScreenHandlerType.ExtendedFactory<KeyRingContainer,Integer> FACTORY = (id, inv, i) ->
 	{
-		return new KeyRingContainer(id, inv.player, inv.player.getItemInHand(buffer.readEnum(InteractionHand.class)));
+		return new KeyRingContainer(id, inv.player, inv.player.getItemInHand(InteractionHand.values()[i]));
 	};
 
-	public static class Provider implements ExtendedScreenHandlerFactory
+	public static class Provider implements ExtendedScreenHandlerFactory<FriendlyByteBuf>
 	{
 		public final ItemStack stack;
 
@@ -128,9 +129,12 @@ public class KeyRingContainer extends AbstractContainerMenu
 			return this.stack.getHoverName();
 		}
 
+
 		@Override
-		public void writeScreenOpeningData(ServerPlayer serverPlayer, FriendlyByteBuf friendlyByteBuf) {
+		public FriendlyByteBuf getScreenOpeningData(ServerPlayer serverPlayer) {
+			FriendlyByteBuf friendlyByteBuf = PacketByteBufs.create();
 			friendlyByteBuf.writeEnum(InteractionHand.MAIN_HAND);
+			return friendlyByteBuf;
 		}
 	}
 

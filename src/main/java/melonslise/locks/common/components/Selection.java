@@ -3,12 +3,13 @@ package melonslise.locks.common.components;
 import melonslise.locks.Locks;
 import melonslise.locks.common.components.interfaces.ISelection;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
 public class Selection implements ISelection{
 
-    public static final ResourceLocation ID = new ResourceLocation(Locks.ID, "selection");
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Locks.ID, "selection");
 
     public BlockPos pos;
 
@@ -30,12 +31,15 @@ public class Selection implements ISelection{
     }
 
     @Override
-    public void readFromNbt(CompoundTag compoundTag) {
+    public void readFromNbt(CompoundTag compoundTag, HolderLookup.Provider provider) {
+
         this.pos = new BlockPos(compoundTag.getInt("pos_x"), compoundTag.getInt("pos_y"), compoundTag.getInt("pos_z"));
+
     }
 
     @Override
-    public void writeToNbt(CompoundTag compoundTag) {
+    public void writeToNbt(CompoundTag compoundTag, HolderLookup.Provider provider) {
+
         if(this.pos == null) {
             pos = new BlockPos(0, 0, 0);
         }

@@ -20,6 +20,6 @@ public final class LocksRecipeSerializers
 
 	public static <T extends Recipe<?>> RecipeSerializer<T> add(String name, RecipeSerializer<T> serializer)
 	{
-		return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER,new ResourceLocation(Locks.ID,name),serializer);
+		return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER,ResourceLocation.fromNamespaceAndPath(Locks.ID,name),serializer);
 	}
 }

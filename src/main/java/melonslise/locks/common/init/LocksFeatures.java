@@ -11,7 +11,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 
 public class LocksFeatures {
 
-    public static final LocksFeature BOULDER_TRAP = Registry.register(BuiltInRegistries.FEATURE, new ResourceLocation(Locks.ID, "locks"), new LocksFeature(NoneFeatureConfiguration.CODEC));
+    public static final LocksFeature BOULDER_TRAP = Registry.register(BuiltInRegistries.FEATURE, ResourceLocation.fromNamespaceAndPath(Locks.ID, "locks"), new LocksFeature(NoneFeatureConfiguration.CODEC));
 
     public static void register()
     {

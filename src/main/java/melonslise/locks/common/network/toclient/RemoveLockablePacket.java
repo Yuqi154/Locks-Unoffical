@@ -11,7 +11,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 public class RemoveLockablePacket implements FabricPacket {
-    public static final ResourceLocation ID = new ResourceLocation(Locks.ID, "remove_lockable");
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Locks.ID, "remove_lockable");
     private final int id;
 
     public static final PacketType<RemoveLockablePacket> TYPE = PacketType.create(ID, RemoveLockablePacket::new);

@@ -58,7 +58,7 @@ public final class LocksEvents
         if (!id.getNamespace().equals("minecraft") || !id.getPath().startsWith("chests"))
 			return;
 		// And only if there is a corresponding inject table...
-		ResourceLocation injectLoc = new ResourceLocation(Locks.ID, "loot_tables/inject/" + id.getPath() + ".json");
+		ResourceLocation injectLoc = ResourceLocation.fromNamespaceAndPath(Locks.ID, "loot_tables/inject/" + id.getPath() + ".json");
 		if (LocksUtil.resourceManager.getResource(injectLoc).isEmpty())
 			return;
 		// todo (kota): bring back

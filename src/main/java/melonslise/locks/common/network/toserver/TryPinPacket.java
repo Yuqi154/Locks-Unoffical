@@ -13,7 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 public class TryPinPacket implements FabricPacket {
-	public static final ResourceLocation ID = new ResourceLocation(Locks.ID, "try_pin");
+	public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Locks.ID, "try_pin");
 	public final byte pin;
 
 	public static final PacketType<TryPinPacket> TYPE = PacketType.create(ID, TryPinPacket::new);

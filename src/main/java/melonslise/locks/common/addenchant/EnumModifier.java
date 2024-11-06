@@ -3,26 +3,25 @@ package melonslise.locks.common.addenchant;
 import melonslise.locks.Locks;
 import melonslise.locks.common.item.LockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 import java.lang.reflect.*;
 import java.util.Arrays;
 
 public class EnumModifier {
     public static void run() {
-        try {
-            // 1. 创建新的枚举实例
-            EnchantmentCategory customItem = addEnumConstant(
-                    EnchantmentCategory.class,
-                    "LOCKS",
-                    new Class<?>[0],
-                    new Object[0],
-                    (Item item) -> item instanceof LockItem
-            );
-
-        } catch (Exception e) {
-            Locks.LOGGER.error("Failed to add custom enchantment category", e);
-        }
+//        try {
+//            // 1. 创建新的枚举实例
+//            EnchantmentCategory customItem = addEnumConstant(
+//                    EnchantmentCategory.class,
+//                    "LOCKS",
+//                    new Class<?>[0],
+//                    new Object[0],
+//                    (Item item) -> item instanceof LockItem
+//            );
+//
+//        } catch (Exception e) {
+//            Locks.LOGGER.error("Failed to add custom enchantment category", e);
+//        }
     }
 
     @SuppressWarnings("unchecked")

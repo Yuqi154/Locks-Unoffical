@@ -1,10 +1,10 @@
 package melonslise.locks.common.components.interfaces;
 
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import dev.onyxstudios.cca.api.v3.entity.PlayerComponent;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
+import org.ladysnake.cca.api.v3.entity.RespawnableComponent;
 import net.minecraft.core.BlockPos;
 
-public interface ISelection extends PlayerComponent, AutoSyncedComponent {
+public interface ISelection extends RespawnableComponent, AutoSyncedComponent {
     BlockPos get();
 
     void set(BlockPos pos);

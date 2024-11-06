@@ -12,7 +12,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 public class AddLockablePacket implements FabricPacket  {
-    public static final ResourceLocation ID = new ResourceLocation(Locks.ID, "add_lockable");
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Locks.ID, "add_lockable");
     public static final PacketType<AddLockablePacket> TYPE = PacketType.create(ID, AddLockablePacket::new);
 
     public static class Handler implements ClientPlayNetworking.PlayPacketHandler<AddLockablePacket>{

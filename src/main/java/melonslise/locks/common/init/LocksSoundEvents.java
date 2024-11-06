@@ -25,6 +25,6 @@ public final class LocksSoundEvents
 
 	public static SoundEvent add(String name)
 	{
-	 	return Registry.register(BuiltInRegistries.SOUND_EVENT, new ResourceLocation(Locks.ID, name), SoundEvent.createVariableRangeEvent(new ResourceLocation(Locks.ID, name)));
+	 	return Registry.register(BuiltInRegistries.SOUND_EVENT, ResourceLocation.fromNamespaceAndPath(Locks.ID, name), SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Locks.ID, name)));
 	}
 }

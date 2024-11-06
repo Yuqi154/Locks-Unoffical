@@ -12,7 +12,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 public class UpdateLockablePacket implements FabricPacket {
-    public static final ResourceLocation ID = new ResourceLocation(Locks.ID, "update_lockable");
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Locks.ID, "update_lockable");
     private final int id;
     // Expandable
     private final boolean locked;

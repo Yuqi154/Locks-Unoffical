@@ -42,7 +42,7 @@ public final class LocksItems {
     }
 
     public static Item add(String resourceLocation, Supplier<Item> itemSupplier) {
-        Item register = Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(Locks.ID, resourceLocation), itemSupplier.get());
+        Item register = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(Locks.ID, resourceLocation), itemSupplier.get());
         items.add(register);
         return register;
     }
