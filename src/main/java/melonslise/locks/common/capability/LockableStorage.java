@@ -60,7 +60,7 @@ public class LockableStorage implements ILockableStorage {
             CompoundTag nbt1 = nbt.getCompound(a);
             Lockable lkb = lkbs.get(Lockable.idFromNbt(nbt1));
             if (lkb == lkbs.defaultReturnValue()) {
-				if (lkb==null) return;
+				//if (lkb==null) return;
                 lkb = Lockable.fromNbt(nbt1);
                 lkb.addObserver(handler);
                 lkbs.put(lkb.id, lkb);

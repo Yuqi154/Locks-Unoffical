@@ -1,6 +1,5 @@
 package melonslise.locks.mixin.addlock;
 
-import melonslise.locks.Locks;
 import melonslise.locks.common.util.LocksUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -19,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(WorldGenRegion.class)
 public class WorldGenRegionMixin {
-
     @Shadow
     @Final
     private ServerLevel level;
@@ -31,5 +29,4 @@ public class WorldGenRegionMixin {
 
         LocksUtil.lockChunk((LevelAccessor) this, level, blockPos, randomSource, chunkaccess);
     }
-
 }

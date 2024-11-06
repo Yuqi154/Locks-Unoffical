@@ -30,7 +30,7 @@ public final class LocksConfig {
     public static final ForgeConfigSpec.DoubleValue GENERATION_ENCHANT_CHANCE;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> GENERATED_LOCKS;
     public static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> GENERATED_LOCK_WEIGHTS;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> GEN_LOCKABLE_LOOT;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> GEN_LOCKABLE_BLOCKS;
 
     public static final ForgeConfigSpec.BooleanValue RANDOMIZE_LOADED_LOCKS;
 
@@ -50,10 +50,10 @@ public final class LocksConfig {
                 .comment("Chance to randomly enchant a generated lock during world generation. Set to 0 to disable")
                 .comment("在世界生成过程中，随机附魔生成的锁的概率。设置为0以禁用此功能。")
                 .defineInRange("Generation Enchant Chance", 0.4d, 0d, 1d);
-        GEN_LOCKABLE_LOOT = cfg
-                .comment("Loot block that can be locked during the world generation")
-                .comment("当世界生成时锁定的战利品方块")
-                .defineList("Lockable Generated Blocks", Lists.newArrayList(".*chest", ".*barrel", "lootr:.*"), e -> e instanceof String);
+        GEN_LOCKABLE_BLOCKS = cfg
+                .comment("Blocks that can be locked during the world generation")
+                .comment("当世界生成时锁定的方块")
+                .defineList("Lockable Generated Blocks", Lists.newArrayList("minecraft:chest", "minecraft:barrel", "lootr:.*", "quark:.*_chest"), e -> e instanceof String);
         GENERATED_LOCKS = cfg
                 .comment("Items that can be generated as locks (must be instance of LockItem in code!)")
                 .comment("可以作为锁生成的物品（在代码中必须是 LockItem 的实例！）")
@@ -77,7 +77,7 @@ public final class LocksConfig {
     public static void init() {
         weightedGeneratedLocks = new TreeMap<>();
         weightTotal = 0;
-        lockableGenBlocks = GEN_LOCKABLE_LOOT.get().stream().map(Pattern::compile).toArray(Pattern[]::new);
+        lockableGenBlocks = GEN_LOCKABLE_BLOCKS.get().stream().map(Pattern::compile).toArray(Pattern[]::new);
         List<? extends String> locks = GENERATED_LOCKS.get();
         List<? extends Integer> weights = GENERATED_LOCK_WEIGHTS.get();
         for (int a = 0; a < locks.size(); ++a) {
@@ -91,7 +91,7 @@ public final class LocksConfig {
         return random && matchString(block);
     }
 
-    public static boolean matchString(Block block){
+    public static boolean matchString(Block block) {
         String name = BuiltInRegistries.BLOCK.getKey(block).toString();
         for (Pattern p : lockableGenBlocks) {
             if (p.matcher(name).matches()) {

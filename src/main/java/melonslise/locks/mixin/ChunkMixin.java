@@ -8,8 +8,6 @@ import melonslise.locks.common.network.toclient.AddLockableToChunkPacket;
 import melonslise.locks.common.util.ILockableProvider;
 import melonslise.locks.common.util.Lockable;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.ProtoChunk;
 import net.minecraftforge.network.PacketDistributor;
@@ -17,6 +15,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.stream.Stream;
 
 @Mixin(LevelChunk.class)
 public class ChunkMixin

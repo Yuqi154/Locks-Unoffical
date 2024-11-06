@@ -174,6 +174,7 @@ public final class LocksUtil {
 
     // TODO: 方块遮挡判断
     public static Lockable lockWhenGen(LevelAccessor levelAccessor, ServerLevel level, BlockPos blockPos, RandomSource randomSource) {
+        if (locked(level, blockPos)) return null;
         BlockState state = levelAccessor.getBlockState(blockPos);
         Block block = state.getBlock();
         if (!LocksConfig.canGen(randomSource, block)) return null;
@@ -215,6 +216,7 @@ public final class LocksUtil {
         ItemStack stack = LocksConfig.getRandomLock(randomSource);
         Lock lock = Lock.from(stack);
         Transform tr = Transform.fromDirection(dir, dir);
+        if (tr == null) tr = Transform.NORTH_UP;
         return new Lockable(bb, lock, tr, stack, level);
     }
 
