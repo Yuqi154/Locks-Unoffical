@@ -108,7 +108,7 @@ public class Cuboid6i
 	// 检测两个立方体是否重叠
 	public boolean intersects(int x1, int y1, int z1, int x2, int y2, int z2)
 	{
-		return this.x1 <= x2 && this.x2 >= x1 && this.y1 <= y2 && this.y2 >= y1 && this.z1 <= z2 && this.z2 >= z1;
+		return this.x1 < x2 && this.x2 > x1 && this.y1 < y2 && this.y2 > y1 && this.z1 < z2 && this.z2 > z1;
 	}
 
 	public boolean intersects(Cuboid6i other)

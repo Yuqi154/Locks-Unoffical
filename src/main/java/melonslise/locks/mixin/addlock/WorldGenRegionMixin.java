@@ -26,7 +26,6 @@ public class WorldGenRegionMixin {
     public void lockBlock(BlockPos blockPos, BlockState state, int pFlags, int pRecursionLeft, CallbackInfoReturnable<Boolean> cir, ChunkAccess chunkaccess, BlockState pState) {
         ServerLevel level = this.level;
         RandomSource randomSource = RandomSource.create();
-
         LocksUtil.lockChunk((LevelAccessor) this, level, blockPos, randomSource, chunkaccess);
     }
 }
