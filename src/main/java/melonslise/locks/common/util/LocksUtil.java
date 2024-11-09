@@ -178,13 +178,13 @@ public final class LocksUtil {
         Block block = state.getBlock();
         if (!LocksConfig.canGen(randomSource, block)) return null;
         BlockPos pos1 = blockPos;
-        Direction dir = null;
+        Direction dir;
         if (state.hasProperty(FACING)) {
             dir = state.getValue(FACING);
         } else if (state.hasProperty(HORIZONTAL_FACING)) {
             dir = state.getValue(HORIZONTAL_FACING);
         }else{
-            return null;
+            dir = Direction.DOWN;
         }
 
         if (state.hasProperty(CHEST_TYPE)) {
