@@ -6,3 +6,5 @@ pluginManagement {
         maven { url = "https://files.minecraftforge.net/maven/" }
     }
 }
+
+rootProject.name = 'Locks-Unoffical'
