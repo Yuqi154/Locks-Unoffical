@@ -1,45 +1,44 @@
 package melonslise.locks.common.network.toclient;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import melonslise.locks.Locks;
 import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.util.Lockable;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
-public class AddLockablePacket implements FabricPacket  {
-    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Locks.ID, "add_lockable");
-    public static final PacketType<AddLockablePacket> TYPE = PacketType.create(ID, AddLockablePacket::new);
+public record AddLockablePacket(Lockable.LockableRecord lockable) implements CustomPacketPayload {
+//    public static final PacketType<AddLockablePacket> TYPE = PacketType.create(ID, AddLockablePacket::new);
 
-    public static class Handler implements ClientPlayNetworking.PlayPacketHandler<AddLockablePacket>{
-        @Override
-        public void receive(AddLockablePacket pkt, LocalPlayer localPlayer, PacketSender packetSender) {
-            LocksComponents.LOCKABLE_HANDLER.get(localPlayer.level()).add(pkt.lockable,localPlayer.level());
-        }
-    }
-
-    private final Lockable lockable;
-
-    public AddLockablePacket(Lockable lkb) {
-        this.lockable = lkb;
-    }
-
-    public AddLockablePacket(FriendlyByteBuf buf) {
-        this(Lockable.fromBuf(buf));
-    }
+    public static final Type<AddLockablePacket> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Locks.ID, "add_lockable"));
 
     @Override
-    public void write(FriendlyByteBuf friendlyByteBuf) {
-        Lockable.toBuf(friendlyByteBuf, this.lockable);
-    }
-
-    @Override
-    public PacketType<?> getType() {
+    public Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
+
+    public void handle(AddLockablePacket pkt, LocalPlayer localPlayer) {
+        LocksComponents.LOCKABLE_HANDLER.get(localPlayer.level()).add(new Lockable(pkt.lockable), localPlayer.level());
+    }
+
+
+//    public AddLockablePacket(FriendlyByteBuf buf) {
+//        this(Lockable.fromBuf(buf));
+//    }
+
+    public static final Codec<AddLockablePacket> CODEC = RecordCodecBuilder.create(objectInstance ->
+        objectInstance.group(
+                Lockable.CODEC.fieldOf("lockable").forGetter(AddLockablePacket::lockable)
+        ).apply(objectInstance, AddLockablePacket::new)
+    );
+
+    public static final StreamCodec<RegistryFriendlyByteBuf,AddLockablePacket> STREAM_CODEC = StreamCodec.composite(
+            Lockable.STREAM_CODEC,AddLockablePacket::lockable,
+            AddLockablePacket::new
+    );
 
 }

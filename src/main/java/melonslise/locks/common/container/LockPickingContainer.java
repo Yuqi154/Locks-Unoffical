@@ -1,5 +1,6 @@
 package melonslise.locks.common.container;
 
+import io.netty.buffer.ByteBuf;
 import melonslise.locks.Locks;
 import melonslise.locks.client.gui.LockPickingScreen;
 import melonslise.locks.common.init.*;
@@ -16,6 +17,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -206,9 +209,16 @@ public class LockPickingContainer extends AbstractContainerMenu
 		this.player.level().playSound(player, this.pos.x, this.pos.y, this.pos.z, LocksSoundEvents.LOCK_OPEN, SoundSource.BLOCKS, 1f, 1f);
 	}
 
-	public static final ExtendedScreenHandlerType.ExtendedFactory<LockPickingContainer,FriendlyByteBuf> FACTORY = (id, inv, buf) ->
+	public record LockPickingRecord(int hand, int id) {}
+
+	public static StreamCodec<ByteBuf,LockPickingRecord> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.INT,LockPickingRecord::hand,
+			ByteBufCodecs.INT,LockPickingRecord::id,
+			LockPickingRecord::new
+	);
+	public static final ExtendedScreenHandlerType.ExtendedFactory<LockPickingContainer,LockPickingRecord> FACTORY = (id, inv, buf) ->
 	{
-		return new LockPickingContainer(id, inv.player, buf.readEnum(InteractionHand.class), LocksComponents.LOCKABLE_HANDLER.get(inv.player.level()).getLoaded().get(buf.readInt()));
+		return new LockPickingContainer(id, inv.player, InteractionHand.values()[buf.hand], LocksComponents.LOCKABLE_HANDLER.get(inv.player.level()).getLoaded().get(buf.id));
 	};
 
 

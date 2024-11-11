@@ -1,44 +1,38 @@
 package melonslise.locks.common.network.toclient;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import melonslise.locks.Locks;
 import melonslise.locks.common.init.LocksComponents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
-public class RemoveLockablePacket implements FabricPacket {
-    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Locks.ID, "remove_lockable");
-    private final int id;
+public record RemoveLockablePacket(int id) implements CustomPacketPayload {
 
-    public static final PacketType<RemoveLockablePacket> TYPE = PacketType.create(ID, RemoveLockablePacket::new);
 
-    public static class Handler implements ClientPlayNetworking.PlayPacketHandler<RemoveLockablePacket>{
-        @Override
-        public void receive(RemoveLockablePacket pkt, LocalPlayer localPlayer, PacketSender packetSender) {
-            LocksComponents.LOCKABLE_HANDLER.get(localPlayer.level()).remove(pkt.id);
-        }
-    }
-    @Override
-    public void write(FriendlyByteBuf buf) {
-
-        buf.writeInt(this.id);
-    }
+    public static final Type<RemoveLockablePacket> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Locks.ID, "remove_lockable"));
 
     @Override
-    public PacketType<?> getType() {
+    public Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 
-    public RemoveLockablePacket(int id) {
-        this.id = id;
+    public void handle(RemoveLockablePacket pkt, LocalPlayer localPlayer) {
+        LocksComponents.LOCKABLE_HANDLER.get(localPlayer.level()).remove(pkt.id);
     }
 
-    public RemoveLockablePacket(FriendlyByteBuf buf) {
-        this(buf.readInt());
-    }
+    public static final Codec<RemoveLockablePacket> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                    Codec.INT.fieldOf("id").forGetter(RemoveLockablePacket::id)
+            ).apply(instance, RemoveLockablePacket::new)
+    );
 
+    public static final StreamCodec<ByteBuf,RemoveLockablePacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT,RemoveLockablePacket::id,
+            RemoveLockablePacket::new
+    );
 }

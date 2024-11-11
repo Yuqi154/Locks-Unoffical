@@ -1,50 +1,42 @@
 package melonslise.locks.common.network.toserver;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import melonslise.locks.Locks;
 import melonslise.locks.common.container.LockPickingContainer;
 import melonslise.locks.common.init.LocksContainerTypes;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
-public class TryPinPacket implements FabricPacket {
-	public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Locks.ID, "try_pin");
-	public final byte pin;
+public record TryPinPacket(byte pin) implements CustomPacketPayload {
 
-	public static final PacketType<TryPinPacket> TYPE = PacketType.create(ID, TryPinPacket::new);
-
-	public static class Handler implements ServerPlayNetworking.PlayPacketHandler<TryPinPacket>{
-		@Override
-		public void receive(TryPinPacket TryPinPacket, ServerPlayer serverPlayer, PacketSender packetSender) {
-			AbstractContainerMenu container = serverPlayer.containerMenu;
-			if(container.getType() == LocksContainerTypes.LOCK_PICKING)
-				((LockPickingContainer) container).tryPin(TryPinPacket.pin);
-		}
-	}
+	public static final CustomPacketPayload.Type<TryPinPacket> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Locks.ID, "try_pin"));
 
 	@Override
-	public void write(FriendlyByteBuf buf) {
-		buf.writeByte(this.pin);
-	}
-
-	@Override
-	public PacketType<?> getType() {
+	public Type<? extends CustomPacketPayload> type() {
 		return TYPE;
 	}
 
-	public TryPinPacket(byte pin)
-	{
-		this.pin = pin;
+	public void handle(TryPinPacket TryPinPacket, ServerPlayer serverPlayer) {
+		AbstractContainerMenu container = serverPlayer.containerMenu;
+		if (container.getType() == LocksContainerTypes.LOCK_PICKING)
+			((LockPickingContainer) container).tryPin(TryPinPacket.pin);
 	}
 
-	public TryPinPacket(FriendlyByteBuf buf)
-	{
-		this(buf.readByte());
-	}
+	public static final Codec<TryPinPacket> CODEC = RecordCodecBuilder.create(
+			instance->instance.group(
+					Codec.BYTE.fieldOf("pin").forGetter(TryPinPacket::pin)
+			).apply(instance, TryPinPacket::new)
+	);
+
+	public static final StreamCodec<ByteBuf,TryPinPacket> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.BYTE,TryPinPacket::pin,
+			TryPinPacket::new
+	);
 
 }

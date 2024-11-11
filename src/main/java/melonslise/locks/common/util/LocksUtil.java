@@ -47,12 +47,12 @@ public final class LocksUtil {
     private LocksUtil() {
     }
 
-    public static void shuffle(byte[] array, Random rng) {
-        for (int a = array.length - 1; a > 0; --a) {
+    public static void shuffle(List<Byte> array, Random rng) {
+        for (int a = array.size() - 1; a > 0; --a) {
             int index = rng.nextInt(a + 1);
-            byte temp = array[index];
-            array[index] = array[a];
-            array[a] = temp;
+            byte temp = array.get(index);
+            array.set(index, array.get(a));
+            array.set(a, temp);
         }
     }
 

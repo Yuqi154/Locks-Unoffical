@@ -1,53 +1,46 @@
 package melonslise.locks.common.network.toclient;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import melonslise.locks.Locks;
 import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.util.Lockable;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
-public class UpdateLockablePacket implements FabricPacket {
-    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Locks.ID, "update_lockable");
-    private final int id;
-    // Expandable
-    private final boolean locked;
+public record UpdateLockablePacket(int id ,boolean locked) implements CustomPacketPayload {
+    public static final Type<UpdateLockablePacket> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Locks.ID, "update_lockable"));
 
-    public static final PacketType<UpdateLockablePacket> TYPE = PacketType.create(ID, UpdateLockablePacket::new);
-
-    public static class Handler implements ClientPlayNetworking.PlayPacketHandler<UpdateLockablePacket>{
-        @Override
-        public void receive(UpdateLockablePacket pkt, LocalPlayer localPlayer, PacketSender packetSender) {
-            LocksComponents.LOCKABLE_HANDLER.get(localPlayer.level()).getLoaded().get(pkt.id).lock.setLocked(pkt.locked);
-        }
-    }
 
     @Override
-    public void write(FriendlyByteBuf friendlyByteBuf) {
-        friendlyByteBuf.writeInt(this.id);
-        friendlyByteBuf.writeBoolean(this.locked);
-    }
-
-    @Override
-    public PacketType<?> getType() {
+    public Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 
-    public UpdateLockablePacket(int id, boolean locked) {
-        this.id = id;
-        this.locked = locked;
+    public void handle(UpdateLockablePacket pkt, LocalPlayer localPlayer) {
+        LocksComponents.LOCKABLE_HANDLER.get(localPlayer.level()).getLoaded().get(pkt.id).lock.setLocked(pkt.locked);
     }
 
     public UpdateLockablePacket(Lockable lkb) {
         this(lkb.id, lkb.lock.isLocked());
     }
 
-    public UpdateLockablePacket(FriendlyByteBuf buf) {
-          this(buf.readInt(), buf.readBoolean());
-    }
+    public static final Codec<UpdateLockablePacket> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                    Codec.INT.fieldOf("id").forGetter(UpdateLockablePacket::id),
+                    Codec.BOOL.fieldOf("locked").forGetter(UpdateLockablePacket::locked)
+            ).apply(instance, UpdateLockablePacket::new)
+    );
+
+    public static final StreamCodec<ByteBuf,UpdateLockablePacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT,UpdateLockablePacket::id,
+            ByteBufCodecs.BOOL,UpdateLockablePacket::locked,
+            UpdateLockablePacket::new
+    );
+
 
 }

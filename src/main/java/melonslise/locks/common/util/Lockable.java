@@ -1,7 +1,11 @@
 package melonslise.locks.common.util;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.item.LockItem;
+import melonslise.locks.common.network.toclient.AddLockablePacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -10,6 +14,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,6 +29,40 @@ import java.util.*;
 
 public class Lockable extends Observable implements Observer
 {
+	public static final Codec<LockableRecord> CODEC = RecordCodecBuilder.create(objectInstance ->
+			objectInstance.group(
+					Cuboid6i.CODEC.fieldOf("bb").forGetter(LockableRecord::bb),
+					Lock.CODEC.fieldOf("lock").forGetter(LockableRecord::lock),
+					Codec.INT.fieldOf("tr").forGetter(LockableRecord::tr),
+					ItemStack.CODEC.fieldOf("stack").forGetter(LockableRecord::stack),
+					Codec.INT.fieldOf("id").forGetter(LockableRecord::id)
+			).apply(objectInstance, LockableRecord::new)
+	);
+
+	public static final StreamCodec<RegistryFriendlyByteBuf,LockableRecord> STREAM_CODEC = StreamCodec.composite(
+			Cuboid6i.STREAM_CODEC,LockableRecord::bb,
+			Lock.STREAM_CODEC,LockableRecord::lock,
+			ByteBufCodecs.INT,LockableRecord::tr,
+			ItemStack.STREAM_CODEC,LockableRecord::stack,
+			ByteBufCodecs.INT,LockableRecord::id,
+			LockableRecord::new
+	);
+
+
+	public record LockableRecord(
+			 Cuboid6i bb,
+			 Lock.LockRecord lock,
+			 int tr,
+			 ItemStack stack,
+			 int id
+	){}
+
+	public LockableRecord toRecord(){
+		return new LockableRecord(this.bb, this.lock.lockRecord, this.tr.ordinal(), this.stack, this.id);
+	}
+
+
+
 	public static class State
 	{
 		public static final AABB
@@ -78,6 +119,7 @@ public class Lockable extends Observable implements Observer
 
 	public Map<List<BlockState>, State> cache = new HashMap<>(6);
 
+
 	public Lockable(Cuboid6i bb, Lock lock, Transform tr, ItemStack stack, Level world)
 	{
 		this(bb, lock, tr, stack, LocksComponents.LOCKABLE_HANDLER.get(world).nextId());
@@ -90,6 +132,15 @@ public class Lockable extends Observable implements Observer
 		this.tr = tr;
 		this.stack = stack;
 		this.id = id;
+		lock.addObserver(this);
+	}
+	public Lockable(LockableRecord lockableRecord)
+	{
+		this.bb = lockableRecord.bb;
+		this.lock = new Lock(lockableRecord.lock);
+		this.tr = Transform.values()[lockableRecord.tr];
+		this.stack = lockableRecord.stack;
+		this.id = lockableRecord.id;
 		lock.addObserver(this);
 	}
 

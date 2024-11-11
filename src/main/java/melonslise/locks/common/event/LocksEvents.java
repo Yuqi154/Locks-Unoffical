@@ -16,10 +16,12 @@ import melonslise.locks.common.util.LocksPredicates;
 import melonslise.locks.common.util.LocksUtil;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
-import net.fabricmc.fabric.api.loot.v2.LootTableSource;
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.fabricmc.fabric.api.loot.v3.LootTableSource;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -34,7 +36,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootDataManager;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
@@ -51,14 +52,16 @@ public final class LocksEvents
 
 
 
-	public static void onLootTableLoad(ResourceManager resourceManager, LootDataManager lootManager, ResourceLocation id, LootTable.Builder tableBuilder, LootTableSource source)
+
+	private static void onLootTableLoad(ResourceKey<LootTable> lootTableResourceKey, LootTable.Builder builder, LootTableSource lootTableSource, HolderLookup.Provider provider)
 	{
+
 		// Only modify if it was a vanilla chest loot table
 
-        if (!id.getNamespace().equals("minecraft") || !id.getPath().startsWith("chests"))
+        if (!lootTableSource.isBuiltin() || !lootTableResourceKey.location().getPath().startsWith("chests"))
 			return;
 		// And only if there is a corresponding inject table...
-		ResourceLocation injectLoc = ResourceLocation.fromNamespaceAndPath(Locks.ID, "loot_tables/inject/" + id.getPath() + ".json");
+		ResourceLocation injectLoc = ResourceLocation.fromNamespaceAndPath(Locks.ID, "loot_tables/inject/" + lootTableResourceKey.location().getPath() + ".json");
 		if (LocksUtil.resourceManager.getResource(injectLoc).isEmpty())
 			return;
 		// todo (kota): bring back
@@ -151,5 +154,6 @@ public final class LocksEvents
 		PlayerBlockBreakEvents.AFTER.register(LocksEvents::onBlockBreak);
 		UseBlockCallback.EVENT.register(LocksEvents::onRightClick);
 	}
+
 
 }

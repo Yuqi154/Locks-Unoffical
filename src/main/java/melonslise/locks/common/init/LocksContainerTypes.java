@@ -19,8 +19,8 @@ public final class LocksContainerTypes
 {
 
 
-	public static final ExtendedScreenHandlerType<LockPickingContainer, FriendlyByteBuf>
-			LOCK_PICKING = new ExtendedScreenHandlerType<>(LockPickingContainer.FACTORY);
+	public static final ExtendedScreenHandlerType<LockPickingContainer, LockPickingContainer.LockPickingRecord>
+			LOCK_PICKING = new ExtendedScreenHandlerType<>(LockPickingContainer.FACTORY,LockPickingContainer.STREAM_CODEC);
 
 	public static final ExtendedScreenHandlerType<KeyRingContainer, Integer>
 			KEY_RING = new ExtendedScreenHandlerType<>(KeyRingContainer.FACTORY, ByteBufCodecs.INT);
