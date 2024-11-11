@@ -21,7 +21,7 @@ public record AddLockablePacket(Lockable.LockableRecord lockable) implements Cus
         return TYPE;
     }
 
-    public void handle(AddLockablePacket pkt, LocalPlayer localPlayer) {
+    public static void handle(AddLockablePacket pkt, LocalPlayer localPlayer) {
         LocksComponents.LOCKABLE_HANDLER.get(localPlayer.level()).add(new Lockable(pkt.lockable), localPlayer.level());
     }
 

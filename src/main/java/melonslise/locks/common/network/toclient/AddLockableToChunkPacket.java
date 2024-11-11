@@ -25,7 +25,7 @@ public record AddLockableToChunkPacket(Lockable.LockableRecord lockable,int x,in
 
     public static final Type<AddLockableToChunkPacket> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Locks.ID, "add_lockable2chunk"));
 
-    public void handle(AddLockableToChunkPacket pkt, LocalPlayer localPlayer) {
+    public static void handle(AddLockableToChunkPacket pkt, LocalPlayer localPlayer) {
         Level level = localPlayer.level();
         if (level.getChunk(pkt.x, pkt.z) instanceof EmptyLevelChunk) return;
         ILockableStorage st = LocksComponents.LOCKABLE_STORAGE.get(level.getChunk(pkt.x, pkt.z));

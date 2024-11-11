@@ -23,7 +23,7 @@ public record TryPinResultPacket(boolean correct,boolean reset) implements Custo
 		return TYPE;
 	}
 
-	public void handle(TryPinResultPacket pkt, LocalPlayer localPlayer) {
+	public static void handle(TryPinResultPacket pkt, LocalPlayer localPlayer) {
 		AbstractContainerMenu container = localPlayer.containerMenu;
 		if (container.getType() == LocksContainerTypes.LOCK_PICKING)
 			((LockPickingContainer) container).handlePin(pkt.correct, pkt.reset);

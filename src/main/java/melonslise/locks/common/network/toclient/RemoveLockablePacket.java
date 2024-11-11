@@ -21,7 +21,7 @@ public record RemoveLockablePacket(int id) implements CustomPacketPayload {
         return TYPE;
     }
 
-    public void handle(RemoveLockablePacket pkt, LocalPlayer localPlayer) {
+    public static void handle(RemoveLockablePacket pkt, LocalPlayer localPlayer) {
         LocksComponents.LOCKABLE_HANDLER.get(localPlayer.level()).remove(pkt.id);
     }
 

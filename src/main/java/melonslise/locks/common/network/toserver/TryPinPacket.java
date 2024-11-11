@@ -22,7 +22,7 @@ public record TryPinPacket(byte pin) implements CustomPacketPayload {
 		return TYPE;
 	}
 
-	public void handle(TryPinPacket TryPinPacket, ServerPlayer serverPlayer) {
+	public static void handle(TryPinPacket TryPinPacket, ServerPlayer serverPlayer) {
 		AbstractContainerMenu container = serverPlayer.containerMenu;
 		if (container.getType() == LocksContainerTypes.LOCK_PICKING)
 			((LockPickingContainer) container).tryPin(TryPinPacket.pin);

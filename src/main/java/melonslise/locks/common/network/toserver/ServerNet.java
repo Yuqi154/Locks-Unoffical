@@ -1,10 +1,16 @@
 package melonslise.locks.common.network.toserver;
 
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 public class ServerNet {
     public static void register() {
-        ServerPlayNetworking.registerGlobalReceiver(TryPinPacket.TYPE,new TryPinPacket.Handler());
+        PayloadTypeRegistry.playC2S().register(TryPinPacket.TYPE, TryPinPacket.STREAM_CODEC);
 
+        ServerPlayNetworking.registerGlobalReceiver(TryPinPacket.TYPE, (payload, context) -> {
+            context.server().execute(() -> {
+                TryPinPacket.handle(payload, context.player());
+            });
+        });
     }
 }

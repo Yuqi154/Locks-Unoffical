@@ -21,7 +21,7 @@ public record UpdateLockablePacket(int id ,boolean locked) implements CustomPack
         return TYPE;
     }
 
-    public void handle(UpdateLockablePacket pkt, LocalPlayer localPlayer) {
+    public static void handle(UpdateLockablePacket pkt, LocalPlayer localPlayer) {
         LocksComponents.LOCKABLE_HANDLER.get(localPlayer.level()).getLoaded().get(pkt.id).lock.setLocked(pkt.locked);
     }
 
