@@ -8,6 +8,7 @@ import melonslise.locks.common.components.interfaces.ILockableStorage;
 import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.util.Lockable;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
@@ -54,7 +55,7 @@ public class LockableStorage implements ILockableStorage
 	}
 
 	@Override
-	public void readFromNbt(CompoundTag nbt) {
+	public void readFromNbt(CompoundTag nbt, HolderLookup.Provider provider) {
 		int size = nbt.getInt("LockablesSize");
 		ListTag lockables = nbt.getList("Lockables",size);
 		ILockableHandler handler;
@@ -72,7 +73,7 @@ public class LockableStorage implements ILockableStorage
 			if(lkb == lkbs.defaultReturnValue())
 			{
 				if (lkb==null) return;
-				lkb = Lockable.fromNbt(nbt1);
+				lkb = Lockable.fromNbt(provider,nbt1);
 				lkb.addObserver(handler);
 				lkbs.put(lkb.id, lkb);
 			}
@@ -82,10 +83,10 @@ public class LockableStorage implements ILockableStorage
 	}
 
 	@Override
-	public void writeToNbt(CompoundTag compoundTag) {
+	public void writeToNbt(CompoundTag compoundTag, HolderLookup.Provider provider) {
 		ListTag list = new ListTag();
 		for(Lockable lkb : this.lockables.values())
-			list.add(Lockable.toNbt(lkb));
+			list.add(Lockable.toNbt(provider,lkb));
 		compoundTag.put("Lockables", list);
 		compoundTag.putInt("LockablesSize", this.lockables.size());
 	}

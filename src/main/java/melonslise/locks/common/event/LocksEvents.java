@@ -62,8 +62,8 @@ public final class LocksEvents
 			return;
 		// And only if there is a corresponding inject table...
 		ResourceLocation injectLoc = ResourceLocation.fromNamespaceAndPath(Locks.ID, "loot_tables/inject/" + lootTableResourceKey.location().getPath() + ".json");
-		if (LocksUtil.resourceManager.getResource(injectLoc).isEmpty())
-			return;
+//		if (LocksUtil.resourceManager.getResource(injectLoc).isEmpty())
+//			return;
 		// todo (kota): bring back
 
 	}

@@ -114,7 +114,7 @@ public class LockPickingScreen extends AbstractContainerScreen<LockPickingContai
 
     @Override
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(pGuiGraphics);
+        this.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
     }
     // 初始化
@@ -125,7 +125,7 @@ public class LockPickingScreen extends AbstractContainerScreen<LockPickingContai
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        float pt = this.minecraft.getFrameTime(); // idk why, but partialTick looks laggy AF... Use getFrameTime instead!
+        float pt = this.minecraft.getFrameTimeNs(); // idk why, but partialTick looks laggy AF... Use getFrameTime instead!
         int cornerX = (this.width - this.imageWidth) / 2;
         int cornerY = (this.height - this.imageHeight) / 2;
 

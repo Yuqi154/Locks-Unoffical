@@ -6,10 +6,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import melonslise.locks.client.util.LocksClient;
 import melonslise.locks.client.util.LocksClientUtil;
 import melonslise.locks.common.util.Lockable;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,18 +25,18 @@ public class GuiMixin {
 
 
     @Inject(method = "render",at = @At("TAIL"))
-    private void render(GuiGraphics guiGraphics, float f, CallbackInfo ci) {
+    private void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         Minecraft mc = Minecraft.getInstance();
         // if(e.getType() != RenderGuiOverlayEvent.ElementType.ALL || tooltipLockable == null)
         if (LocksClient.tooltipLockable == null)
             return;
         if (LocksClient.holdingPick(mc.player)) {
             PoseStack mtx = guiGraphics.pose();
-            Vector3f vec = LocksClientUtil.worldToScreen(LocksClient.tooltipLockable.getLockState(mc.level).pos, f);
+            Vector3f vec = LocksClientUtil.worldToScreen(LocksClient.tooltipLockable.getLockState(mc.level).pos, deltaTracker.getGameTimeDeltaTicks());
             if (vec.z() < 0d) {
                 mtx.pushPose();
                 mtx.translate(vec.x(), vec.y(), 0f);
-                LocksClient.renderHudTooltip(mtx, Lists.transform(LocksClient.tooltipLockable.stack.getTooltipLines(mc.player, mc.options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL), Component::getVisualOrderText), mc.font);
+                LocksClient.renderHudTooltip(mtx, Lists.transform(LocksClient.tooltipLockable.stack.getTooltipLines(Item.TooltipContext.of(mc.level),mc.player,mc.options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL), Component::getVisualOrderText), mc.font);
                 mtx.popPose();
             }
         }

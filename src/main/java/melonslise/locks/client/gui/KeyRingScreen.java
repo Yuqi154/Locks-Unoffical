@@ -1,5 +1,6 @@
 package melonslise.locks.client.gui;
 
+import melonslise.locks.Locks;
 import melonslise.locks.common.container.KeyRingContainer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -12,7 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 @Environment(EnvType.CLIENT)
 public class KeyRingScreen extends AbstractContainerScreen<KeyRingContainer>
 {
-	public static final ResourceLocation TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
+	public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Locks.ID,"textures/gui/container/generic_54.png");
 
 	public KeyRingScreen(KeyRingContainer cont, Inventory inv, Component title)
 	{
@@ -24,7 +25,7 @@ public class KeyRingScreen extends AbstractContainerScreen<KeyRingContainer>
 	@Override
 	public void render(GuiGraphics mtx, int mouseX, int mouseY, float partialTick)
 	{
-		this.renderBackground(mtx);
+		this.renderBackground(mtx,mouseX, mouseY, partialTick);
 		super.render(mtx, mouseX, mouseY, partialTick);
 		this.renderTooltip(mtx, mouseX, mouseY);
 	}

@@ -1,13 +1,13 @@
 package melonslise.locks;
 
-import fuzs.forgeconfigapiport.api.config.v2.ForgeConfigRegistry;
+import fuzs.forgeconfigapiport.fabric.api.forge.v4.ForgeConfigRegistry;
 import melonslise.locks.client.init.LocksItemModelsProperties;
 import melonslise.locks.client.init.LocksNetworkClient;
 import melonslise.locks.client.init.LocksScreens;
 import melonslise.locks.common.config.LocksClientConfig;
 import melonslise.locks.common.init.LocksContainerTypes;
 import net.fabricmc.api.ClientModInitializer;
-import net.minecraftforge.fml.config.ModConfig;
+import net.neoforged.fml.config.ModConfig;
 
 public class LocksClient implements ClientModInitializer {
     @Override

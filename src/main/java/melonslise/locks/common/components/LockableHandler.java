@@ -13,6 +13,7 @@ import melonslise.locks.common.network.toclient.UpdateLockablePacket;
 import melonslise.locks.common.util.Lockable;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
@@ -87,7 +88,7 @@ public class LockableHandler implements ILockableHandler {
         {
             //AddLockablePacket.execute(new AddLockablePacket(lkb), level);
             level.getServer().getPlayerList().players.forEach(player -> {
-                ServerPlayNetworking.send(player,new AddLockablePacket(lkb));
+                ServerPlayNetworking.send(player,new AddLockablePacket(lkb.toRecord()));
             });
         }
         return true;
@@ -129,26 +130,27 @@ public class LockableHandler implements ILockableHandler {
     }
 
     @Override
-    public void readFromNbt(CompoundTag compoundTag) {
+    public void readFromNbt(CompoundTag compoundTag, HolderLookup.Provider provider) {
         this.lastId.set(compoundTag.getInt("last_id"));
         int size = compoundTag.getInt("LockablesSize");
         ListTag lockables = compoundTag.getList("Lockables",size);
         for(int a = 0; a < lockables.size(); ++a)
         {
             CompoundTag nbt1 = lockables.getCompound(a);
-            Lockable lkb = Lockable.fromNbt(nbt1);
+            Lockable lkb = Lockable.fromNbt(provider,nbt1);
             this.lockables.put(lkb.id, lkb);
             lkb.addObserver(this);
         }
     }
 
     @Override
-    public void writeToNbt(CompoundTag compoundTag) {
+    public void writeToNbt(CompoundTag compoundTag, HolderLookup.Provider provider) {
         compoundTag.putInt("last_id", this.lastId.get());
         ListTag list = new ListTag();
         for(Lockable lkb : this.lockables.values())
-            list.add(Lockable.toNbt(lkb));
+            list.add(Lockable.toNbt(provider,lkb));
         compoundTag.put("Lockables", list);
         compoundTag.putInt("LockablesSize", this.lockables.size());
     }
+
 }
