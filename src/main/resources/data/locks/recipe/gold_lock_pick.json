@@ -15,7 +15,7 @@
 	},
 	"result":
 	{
-		"item": "locks:gold_lock_pick",
+		"id": "locks:gold_lock_pick",
 		"count": 2
 	}
 }

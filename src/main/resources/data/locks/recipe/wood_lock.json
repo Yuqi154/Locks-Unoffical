@@ -19,6 +19,6 @@
 	},
 	"result":
 	{
-		"item": "locks:wood_lock"
+		"id": "locks:wood_lock"
 	}
 }

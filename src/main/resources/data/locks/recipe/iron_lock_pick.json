@@ -2,16 +2,12 @@
 	"type": "minecraft:crafting_shaped",
 	"pattern":
 	[
-		"NN",
-		"NN",
-		"I "
+		" II",
+		" I ",
+		"I  "
 	],
 	"key":
 	{
-		"N":
-		{
-			"tag": "c:nuggets/iron"
-		},
 		"I":
 		{
 			"tag": "c:ingots/iron"
@@ -19,6 +15,7 @@
 	},
 	"result":
 	{
-		"item": "locks:key_blank"
+		"id": "locks:iron_lock_pick",
+		"count": 2
 	}
 }

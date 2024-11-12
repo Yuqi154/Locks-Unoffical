@@ -2,15 +2,15 @@
 	"type": "minecraft:crafting_shaped",
 	"pattern":
 	[
-		" D ",
-		"DLD",
-		"DDD"
+		" G ",
+		"GLG",
+		"GGG"
 	],
 	"key":
 	{
-		"D":
+		"G":
 		{
-			"tag": "c:gems/diamond"
+			"tag": "c:ingots/gold"
 		},
 		"L":
 		{
@@ -19,6 +19,6 @@
 	},
 	"result":
 	{
-		"item": "locks:diamond_lock"
+		"id": "locks:gold_lock"
 	}
 }

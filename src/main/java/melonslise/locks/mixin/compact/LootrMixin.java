@@ -9,9 +9,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Pseudo
-@Mixin(targets = "net.zestyblaze.lootr.block.entities.TileTicker")
+@Mixin(targets = "noobanidus.mods.lootr.common.block.entity.BlockEntityTicker")
 public class LootrMixin {
-    @Redirect(method = "serverTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;destroyBlock(Lnet/minecraft/core/BlockPos;Z)Z"))
+    @Redirect(method = "onServerTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;destroyBlock(Lnet/minecraft/core/BlockPos;Z)Z"))
     private static boolean lockLootr(ServerLevel instance, BlockPos pos, boolean b){
         //Locks.LOGGER.info(instance.getBlockState(pos));
         return b;

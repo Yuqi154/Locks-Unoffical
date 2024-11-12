@@ -14,15 +14,15 @@
 		},
 		"N":
 		{
-			"tag": "c:nuggets/iron"
+			"tag": "c:nuggets/steel"
 		},
 		"I":
 		{
-			"tag": "c:ingots/iron"
+			"tag": "c:ingots/steel"
 		}
 	},
 	"result":
 	{
-		"item": "locks:iron_lock_mechanism"
+		"id": "locks:steel_lock_mechanism"
 	}
 }

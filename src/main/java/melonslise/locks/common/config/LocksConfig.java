@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public final class LocksConfig {
-    public static final ModConfigSpec SPEC;
 
     public static final ModConfigSpec.DoubleValue GENERATION_CHANCE;
     public static final ModConfigSpec.DoubleValue GENERATION_ENCHANT_CHANCE;
@@ -37,9 +36,9 @@ public final class LocksConfig {
     public static int weightTotal;
     public static Pattern[] lockableGenBlocks;
 
+    public static final ModConfigSpec.Builder cfg = new ModConfigSpec.Builder();
 
     static {
-        ModConfigSpec.Builder cfg = new ModConfigSpec.Builder();
 
         GENERATION_CHANCE = cfg
                 .comment("Chance to generate a random lock on every new chest during world generation. Set to 0 to disable")
@@ -66,8 +65,9 @@ public final class LocksConfig {
                 .comment("从结构文件加载锁ID和组合时进行随机化。随机化的方式与世界生成时相同。")
                 .define("Randomize Loaded Locks", true);
 
-        SPEC = cfg.build();
     }
+
+    public static final ModConfigSpec SPEC =  cfg.build();
 
     private LocksConfig() {
     }
@@ -81,7 +81,7 @@ public final class LocksConfig {
         List<? extends Integer> weights = GENERATED_LOCK_WEIGHTS.get();
         for (int a = 0; a < locks.size(); ++a) {
             weightTotal += weights.get(a);
-            weightedGeneratedLocks.put(weightTotal, BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(Locks.ID,locks.get(a))));
+            weightedGeneratedLocks.put(weightTotal, BuiltInRegistries.ITEM.get(ResourceLocation.parse(locks.get(a))));
         }
     }
 

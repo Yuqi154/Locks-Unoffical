@@ -51,8 +51,8 @@ public class Lock extends Observable
 	}
 	public Lock(int id, int length, boolean locked)
 	{
-		this.lockRecord = new LockRecord(id, this.shuffle(length), locked);
 		this.rng = new Random(id);
+		this.lockRecord = new LockRecord(id, this.shuffle(length), locked);
 	}
 
 	public static Lock from(ItemStack stack)
@@ -92,7 +92,7 @@ public class Lock extends Observable
 	{
 		List<Byte> combo = new ArrayList<>(length);
 		for(byte a = 0; a < length; ++a)
-			combo.set(a, a);
+			combo.add(a);
 		LocksUtil.shuffle(combo, this.rng);
 		return combo;
 	}

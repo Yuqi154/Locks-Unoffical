@@ -23,6 +23,6 @@
 	},
 	"result":
 	{
-		"item": "locks:wood_lock_mechanism"
+		"id": "locks:wood_lock_mechanism"
 	}
 }

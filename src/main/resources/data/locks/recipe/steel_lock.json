@@ -2,20 +2,23 @@
 	"type": "minecraft:crafting_shaped",
 	"pattern":
 	[
-		" SS",
 		" S ",
-		"S  "
+		"SLS",
+		"SSS"
 	],
 	"key":
 	{
 		"S":
 		{
 			"tag": "c:ingots/steel"
+		},
+		"L":
+		{
+			"item": "locks:steel_lock_mechanism"
 		}
 	},
 	"result":
 	{
-		"item": "locks:steel_lock_pick",
-		"count": 2
+		"id": "locks:steel_lock"
 	}
 }

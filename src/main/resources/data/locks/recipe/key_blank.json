@@ -2,19 +2,23 @@
 	"type": "minecraft:crafting_shaped",
 	"pattern":
 	[
-		"N",
-		"N",
-		"N"
+		"NN",
+		"NN",
+		"I "
 	],
 	"key":
 	{
 		"N":
 		{
 			"tag": "c:nuggets/iron"
+		},
+		"I":
+		{
+			"tag": "c:ingots/iron"
 		}
 	},
 	"result":
 	{
-		"item": "locks:spring"
+		"id": "locks:key_blank"
 	}
 }
