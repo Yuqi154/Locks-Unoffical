@@ -89,7 +89,7 @@ public final class LocksEvents
 			Item item = stack.getItem();
 			boolean f=true;
 			// FIXME erase this ugly ass hard coded shit from the face of the earth and make a proper way to do this (maybe mixin to where the right click event is fired from)
-			if(!stack.is(LocksItemTags.LOCK_PICKS) && item != LocksItems.MASTER_KEY && (!stack.is(LocksItemTags.KEYS) || LockingItem.getOrSetId(stack) != lkb.lock.id) && (item != LocksItems.KEY_RING || !KeyRingItem.containsId(stack, lkb.lock.id)))
+			if(!stack.is(LocksItemTags.LOCK_PICKS) && item != LocksItems.MASTER_KEY && (!stack.is(LocksItemTags.KEYS) || LockingItem.getOrSetId(stack) != lkb.lock.lockRecord.id()) && (item != LocksItems.KEY_RING || !KeyRingItem.containsId(stack, lkb.lock.lockRecord.id())))
 			{
 				lkb.swing(20);
 				world.playSound(player, pos, LocksSoundEvents.LOCK_RATTLE, SoundSource.BLOCKS, 1f, 1f);

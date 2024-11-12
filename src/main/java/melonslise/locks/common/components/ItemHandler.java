@@ -1,8 +1,14 @@
 package melonslise.locks.common.components;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import melonslise.locks.common.components.interfaces.IItemHandler;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -10,27 +16,35 @@ import net.minecraft.world.item.ItemStack;
 import java.util.Iterator;
 import java.util.List;
 
-public class ItemHandler implements IItemHandler {
+public record ItemHandler(List<ItemStack> items) implements IItemHandler {
 
-    public NonNullList<ItemStack> items;
+
+    public static final Codec<ItemHandler> CODEC = RecordCodecBuilder.create(itemHandlerInstance ->
+            itemHandlerInstance.group(
+                    Codec.list(ItemStack.CODEC).fieldOf("items").forGetter(ItemHandler::items)
+            ).apply(itemHandlerInstance, ItemHandler::new)
+    );
+    public static final StreamCodec<ByteBuf,ItemHandler> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.fromCodec(Codec.list(ItemStack.CODEC)),ItemHandler::items,
+            ItemHandler::new
+    );
 
     public ItemHandler() {
-        super();
-        items = NonNullList.withSize(0, ItemStack.EMPTY);
+        this(NonNullList.withSize(0, ItemStack.EMPTY));
     }
 
     @Override
-    public void readFromNbt(CompoundTag compoundTag) {
+    public void readFromNbt(CompoundTag compoundTag, HolderLookup.Provider provider) {
         this.items.clear();
         int i = compoundTag.getInt("size");
-        this.items = NonNullList.withSize(i, ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(compoundTag, this.items);
+        this.items.addAll(NonNullList.withSize(i, ItemStack.EMPTY));
+        ContainerHelper.loadAllItems(compoundTag, this.items,provider);
     }
 
     @Override
-    public void writeToNbt(CompoundTag compoundTag) {
+    public void writeToNbt(CompoundTag compoundTag, HolderLookup.Provider provider) {
         compoundTag.putInt("size", this.items.size());
-        ContainerHelper.saveAllItems(compoundTag, this.items);
+        ContainerHelper.saveAllItems(compoundTag, this.items,provider);
     }
 
     @Override

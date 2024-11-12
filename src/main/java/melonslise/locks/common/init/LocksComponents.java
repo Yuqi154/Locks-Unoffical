@@ -1,5 +1,6 @@
 package melonslise.locks.common.init;
 
+import net.minecraft.core.component.DataComponentType;
 import org.ladysnake.cca.api.v3.chunk.ChunkComponentFactoryRegistry;
 import org.ladysnake.cca.api.v3.chunk.ChunkComponentInitializer;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
@@ -34,8 +35,8 @@ public class LocksComponents implements EntityComponentInitializer, WorldCompone
     public static final ComponentKey<ISelection> SELECTION =
             ComponentRegistry.getOrCreate(ResourceLocation.fromNamespaceAndPath(Locks.ID,"selection"), ISelection.class);
 
-    public static final ComponentKey<IItemHandler> ITEM_HANDLER =
-            ComponentRegistry.getOrCreate(ResourceLocation.fromNamespaceAndPath(Locks.ID,"item_handler"), IItemHandler.class);
+    public static final DataComponentType<ItemHandler> ITEM_HANDLER =
+            DataComponentType.<ItemHandler>builder().persistent(ItemHandler.CODEC).networkSynchronized().build();
 
     @Override
     public void registerChunkComponentFactories(ChunkComponentFactoryRegistry chunkComponentFactoryRegistry) {
@@ -54,9 +55,7 @@ public class LocksComponents implements EntityComponentInitializer, WorldCompone
 
     @Override
     public void registerItemComponentMigrations(ItemComponentMigrationRegistry itemComponentMigrationRegistry) {
-
-        itemComponentMigrationRegistry.registerMigration(item -> item instanceof LockItem,ITEM_HANDLER, (stack) -> new ItemHandler());
-        itemComponentMigrationRegistry.registerMigration(LocksItems.KEY_RING,ITEM_HANDLER, (stack) -> new ItemHandler());
+        itemComponentMigrationRegistry.registerMigration(ResourceLocation.fromNamespaceAndPath(Locks.ID,"item_handler"),ITEM_HANDLER);
 
     }
 }

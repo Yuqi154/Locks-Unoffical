@@ -77,7 +77,7 @@ public final class LocksConfig {
         List<? extends Integer> weights = GENERATED_LOCK_WEIGHTS.get();
         for (int a = 0; a < locks.size(); ++a) {
             weightTotal += weights.get(a);
-            weightedGeneratedLocks.put(weightTotal, BuiltInRegistries.ITEM.get(new ResourceLocation(locks.get(a))));
+            weightedGeneratedLocks.put(weightTotal, BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(Locks.ID,locks.get(a))));
         }
     }
 

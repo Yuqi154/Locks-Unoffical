@@ -126,8 +126,7 @@ public class LocksClient {
 
         mtx.pushPose();
 
-        BufferBuilder buf = Tesselator.getInstance().getBuilder();
-        buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder buf = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         LocksClientUtil.square(buf, mtx, 0f, 0f, 4f, 0.05f, 0f, 0.3f, 0.8f);
         LocksClientUtil.line(buf, mtx, 1f, -1f, x / 3f + 0.6f, y / 2f, 2f, 0.05f, 0f, 0.3f, 0.8f);
         LocksClientUtil.line(buf, mtx, x / 3f, y / 2f, x - 3f, y / 2f, 2f, 0.05f, 0f, 0.3f, 0.8f);
@@ -147,12 +146,12 @@ public class LocksClient {
         RenderSystem.defaultBlendFunc();
         // RenderSystem.shadeModel(7425);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        BufferUploader.draw(buf.end());
+        BufferUploader.draw(buf.buildOrThrow());
         // RenderSystem.shadeModel(7424);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.disableBlend();
         RenderSystem.setShaderTexture(0, 7424);
-        MultiBufferSource.BufferSource buf1 = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+        MultiBufferSource.BufferSource buf1 = MultiBufferSource.immediate(new ByteBufferBuilder(0));
 
         Matrix4f last = mtx.last().pose();
         for (int a = 0; a < lines.size(); ++a) {
