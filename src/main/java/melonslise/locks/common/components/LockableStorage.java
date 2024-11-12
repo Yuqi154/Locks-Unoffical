@@ -62,8 +62,12 @@ public class LockableStorage implements ILockableStorage
 		if(this.chunk instanceof LevelChunk levelChunk){
 			handler =LocksComponents.LOCKABLE_HANDLER.get(levelChunk.getLevel());
 		}else {
-			BlockPos blockPos = this.chunk.getBlockEntitiesPos().stream().findFirst().get();
-			handler = LocksComponents.LOCKABLE_HANDLER.get(Objects.requireNonNull(Objects.requireNonNull(this.chunk.getBlockEntity(blockPos)).getLevel()).getChunkAt(blockPos));
+			if (this.chunk.getBlockEntitiesPos().stream().findFirst().isPresent()){
+				BlockPos blockPos = this.chunk.getBlockEntitiesPos().stream().findFirst().get();
+				handler = LocksComponents.LOCKABLE_HANDLER.get(Objects.requireNonNull(Objects.requireNonNull(this.chunk.getBlockEntity(blockPos)).getLevel()).getChunkAt(blockPos));
+			}else {
+				return;
+			}
 		}
 		Int2ObjectMap<Lockable> lkbs = handler.getLoaded();
 		for(int a = 0; a < lockables.size(); ++a)

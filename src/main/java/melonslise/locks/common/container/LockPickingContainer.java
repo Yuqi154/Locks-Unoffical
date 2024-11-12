@@ -5,6 +5,7 @@ import melonslise.locks.Locks;
 import melonslise.locks.client.gui.LockPickingScreen;
 import melonslise.locks.common.init.*;
 import melonslise.locks.common.item.LockPickItem;
+import melonslise.locks.common.network.toclient.AddLockablePacket;
 import melonslise.locks.common.network.toclient.TryPinResultPacket;
 import melonslise.locks.common.util.Lockable;
 import net.fabricmc.api.EnvType;
@@ -19,6 +20,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -209,7 +212,14 @@ public class LockPickingContainer extends AbstractContainerMenu
 		this.player.level().playSound(player, this.pos.x, this.pos.y, this.pos.z, LocksSoundEvents.LOCK_OPEN, SoundSource.BLOCKS, 1f, 1f);
 	}
 
-	public record LockPickingRecord(int hand, int id) {}
+	public record LockPickingRecord(int hand, int id) implements CustomPacketPayload {
+		public static final Type<LockPickingRecord> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Locks.ID, "lock_picking"));
+
+		@Override
+		public Type<? extends CustomPacketPayload> type() {
+			return TYPE;
+		}
+	}
 
 	public static StreamCodec<ByteBuf,LockPickingRecord> STREAM_CODEC = StreamCodec.composite(
 			ByteBufCodecs.INT,LockPickingRecord::hand,
