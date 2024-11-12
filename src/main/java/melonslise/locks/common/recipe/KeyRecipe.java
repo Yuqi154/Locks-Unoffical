@@ -3,21 +3,25 @@ package melonslise.locks.common.recipe;
 import melonslise.locks.common.init.LocksItems;
 import melonslise.locks.common.init.LocksRecipeSerializers;
 import melonslise.locks.common.item.LockingItem;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class KeyRecipe extends CustomRecipe
 {
-	public KeyRecipe(ResourceLocation id, CraftingBookCategory pCategory)
+	public KeyRecipe(CraftingBookCategory pCategory)
 	{
-		super(id, pCategory);
+		super(pCategory);
 	}
 
 	@Override
@@ -27,17 +31,16 @@ public class KeyRecipe extends CustomRecipe
 	}
 
 	@Override
-	public boolean matches(CraftingContainer inv, Level world)
-	{
+	public boolean matches(CraftingInput recipeInput, Level level) {
 		boolean hasLocking = false;
 		int blanks = 0;
 
-		for(int a = 0; a < inv.getContainerSize(); ++a)
+		for(int a = 0; a < recipeInput.ingredientCount(); ++a)
 		{
-			ItemStack stack = inv.getItem(a);
+			ItemStack stack = recipeInput.getItem(a);
 			if(stack.isEmpty())
 				continue;
-			if(stack.hasTag() && stack.getTag().contains(LockingItem.KEY_ID))
+			if(stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().contains(LockingItem.KEY_ID))
 			{
 				if(hasLocking)
 					return false;
@@ -50,19 +53,17 @@ public class KeyRecipe extends CustomRecipe
 		}
 		return hasLocking && blanks >= 1;
 	}
-
 	@Override
-	public ItemStack assemble(CraftingContainer inv, RegistryAccess pRegistryAccess)
-	{
+	public ItemStack assemble(CraftingInput recipeInput, HolderLookup.Provider provider) {
 		ItemStack locking = ItemStack.EMPTY;
 		int blanks = 0;
 
-		for (int a = 0; a < inv.getContainerSize(); ++a)
+		for (int a = 0; a < recipeInput.ingredientCount(); ++a)
 		{
-			ItemStack stack = inv.getItem(a);
+			ItemStack stack = recipeInput.getItem(a);
 			if (stack.isEmpty())
 				continue;
-			if (stack.hasTag() && stack.getTag().contains(LockingItem.KEY_ID))
+			if (stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().contains(LockingItem.KEY_ID))
 			{
 				if (!locking.isEmpty())
 					return ItemStack.EMPTY;
@@ -80,14 +81,14 @@ public class KeyRecipe extends CustomRecipe
 	}
 
 	@Override
-	public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv)
+	public NonNullList<ItemStack> getRemainingItems(CraftingInput inv)
 	{
-		NonNullList<ItemStack> list = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
+		NonNullList<ItemStack> list = NonNullList.withSize(inv.ingredientCount(), ItemStack.EMPTY);
 
 		for (int a = 0; a < list.size(); ++a)
 		{
 			ItemStack stack = inv.getItem(a);
-			if(!stack.hasTag() || !stack.getTag().contains(LockingItem.KEY_ID))
+			if(!stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().contains(LockingItem.KEY_ID))
 				continue;
 			list.set(a, stack.copy());
 			break;
@@ -95,6 +96,8 @@ public class KeyRecipe extends CustomRecipe
 
 		return list;
 	}
+
+
 
 	@Override
 	public boolean canCraftInDimensions(int x, int y)

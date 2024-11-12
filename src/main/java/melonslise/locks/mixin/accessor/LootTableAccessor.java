@@ -5,12 +5,14 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
+import java.util.List;
+
 @Mixin(LootTable.class)
 public interface LootTableAccessor
 {
 	@Accessor("pools")
-	LootPool[] getPools();
+	List<LootPool> getPools();
 
 	@Accessor("pools")
-	void setPools(LootPool[] pools);
+	void setPools(List<LootPool> pools);
 }

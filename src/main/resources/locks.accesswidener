@@ -20,3 +20,4 @@ accessible method net/minecraft/client/multiplayer/ClientChunkCache$Storage inRa
 accessible method net/minecraft/client/multiplayer/ClientChunkCache$Storage getChunk (I)Lnet/minecraft/world/level/chunk/LevelChunk;
 accessible field net/minecraft/server/players/PlayerList players Ljava/util/List;
 accessible method net/minecraft/world/level/block/entity/BaseContainerBlockEntity getItems ()Lnet/minecraft/core/NonNullList;
+accessible field net/minecraft/server/level/ChunkMap playerMap Lnet/minecraft/server/level/PlayerMap;

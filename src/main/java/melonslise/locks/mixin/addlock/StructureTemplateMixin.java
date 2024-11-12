@@ -62,8 +62,8 @@ public class StructureTemplateMixin {
         }
         ILockableHandler handler = LocksComponents.LOCKABLE_HANDLER.get(level);
         for (LockableInfo lkb : this.lockableInfos) {
-            BlockPos pos1 = LocksUtil.transform(lkb.bb.x1, lkb.bb.y1, lkb.bb.z1, settings);
-            BlockPos pos2 = LocksUtil.transform(lkb.bb.x2, lkb.bb.y2, lkb.bb.z2, settings);
+            BlockPos pos1 = LocksUtil.transform(lkb.bb.x1(), lkb.bb.y1(), lkb.bb.z1(), settings);
+            BlockPos pos2 = LocksUtil.transform(lkb.bb.x2(), lkb.bb.y2(), lkb.bb.z2(), settings);
             Cuboid6i bb = new Cuboid6i(pos1.getX() + start.getX(), pos1.getY() + start.getY(), pos1.getZ() + start.getZ(), pos2.getX() + start.getX(), pos2.getY() + start.getY(), pos2.getZ() + start.getZ());
             ItemStack stack = LocksConfig.RANDOMIZE_LOADED_LOCKS.get() ? LocksConfig.getRandomLock(rng) : lkb.stack;
             Lock lock = LocksConfig.RANDOMIZE_LOADED_LOCKS.get() ? Lock.from(stack) : lkb.lock;
@@ -78,8 +78,8 @@ public class StructureTemplateMixin {
     @Inject(at = @At("HEAD"), method = "save")
     private void save(CompoundTag nbt, CallbackInfoReturnable<CompoundTag> cir) {
         ListTag list = new ListTag();
-        for (LockableInfo lkb : this.lockableInfos)
-            list.add(LockableInfo.toNbt(lkb));
+//        for (LockableInfo lkb : this.lockableInfos)
+//            list.add(LockableInfo.toNbt(lkb));
         nbt.put(KEY_LOCKABLES, list);
     }
 
@@ -87,7 +87,7 @@ public class StructureTemplateMixin {
     private void read(HolderGetter<Block> pBlockGetter, CompoundTag nbt, CallbackInfo ci) {
         this.lockableInfos.clear();
         ListTag list = nbt.getList(KEY_LOCKABLES, Tag.TAG_COMPOUND);
-        for (int a = 0, b = list.size(); a < b; ++a)
-            this.lockableInfos.add(LockableInfo.fromNbt(list.getCompound(a)));
+//        for (int a = 0, b = list.size(); a < b; ++a)
+//            this.lockableInfos.add(LockableInfo.fromNbt(list.getCompound(a)));
     }
 }

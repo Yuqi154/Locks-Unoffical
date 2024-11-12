@@ -38,13 +38,17 @@ public record ItemHandler(List<ItemStack> items) implements IItemHandler {
         this.items.clear();
         int i = compoundTag.getInt("size");
         this.items.addAll(NonNullList.withSize(i, ItemStack.EMPTY));
-        ContainerHelper.loadAllItems(compoundTag, this.items,provider);
+        NonNullList<ItemStack> list = NonNullList.create();
+        list.addAll(this.items);
+        ContainerHelper.loadAllItems(compoundTag, list,provider);
     }
 
     @Override
     public void writeToNbt(CompoundTag compoundTag, HolderLookup.Provider provider) {
         compoundTag.putInt("size", this.items.size());
-        ContainerHelper.saveAllItems(compoundTag, this.items,provider);
+        NonNullList<ItemStack> list = NonNullList.create();
+        list.addAll(this.items);
+        ContainerHelper.saveAllItems(compoundTag, list,provider);
     }
 
     @Override
@@ -102,7 +106,8 @@ public record ItemHandler(List<ItemStack> items) implements IItemHandler {
 
     @Override
     public void setItems(List<ItemStack> items) {
-        this.items = NonNullList.withSize(items.size(), ItemStack.EMPTY);
+        this.items.clear();
+        this.items.addAll(NonNullList.withSize(items.size(), ItemStack.EMPTY));
         Iterator<ItemStack> iterator = items.iterator();
         for (int i = 0; i < items.size(); i++) {
             this.items.set(i, iterator.next());

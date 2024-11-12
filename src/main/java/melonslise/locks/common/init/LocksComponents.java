@@ -36,7 +36,7 @@ public class LocksComponents implements EntityComponentInitializer, WorldCompone
             ComponentRegistry.getOrCreate(ResourceLocation.fromNamespaceAndPath(Locks.ID,"selection"), ISelection.class);
 
     public static final DataComponentType<ItemHandler> ITEM_HANDLER =
-            DataComponentType.<ItemHandler>builder().persistent(ItemHandler.CODEC).networkSynchronized().build();
+            DataComponentType.<ItemHandler>builder().persistent(ItemHandler.CODEC).networkSynchronized(ItemHandler.STREAM_CODEC).build();
 
     @Override
     public void registerChunkComponentFactories(ChunkComponentFactoryRegistry chunkComponentFactoryRegistry) {

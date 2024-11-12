@@ -125,15 +125,15 @@ public final class LocksUtil {
 
     // Only merges entries, not conditions and functions
     public static LootTable mergeEntries(LootTable table, LootTable inject) {
-        List<LootPool> list = Arrays.asList(((LootTableAccessor) table).getPools());
+        List<LootPool> list = ((LootTableAccessor) table).getPools();
         for (LootPool injectPool : ((LootTableAccessor) inject).getPools()) {
             if (list.contains(injectPool)) {
-                ((LootPoolAccessor) injectPool).getEntries().addAll(((LootPoolAccessor) injectPool).getEntries());
+                ((LootPoolAccessor) injectPool).getEntries().addAll(((LootPoolAccessor) injectPool).getEntries().build());
             } else {
                 list.add(injectPool);
             }
         }
-        ((LootTableAccessor) inject).setPools(list.toArray(new LootPool[0]));
+        ((LootTableAccessor) inject).setPools(list);
         return table;
     }
 

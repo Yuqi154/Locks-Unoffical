@@ -1,6 +1,7 @@
 package melonslise.locks.client.init;
 
 import melonslise.locks.Locks;
+import melonslise.locks.common.components.ItemHandler;
 import melonslise.locks.common.components.interfaces.IItemHandler;
 import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.init.LocksItems;
@@ -20,7 +21,7 @@ public final class LocksItemModelsProperties
 	{
 		ItemProperties.register(LocksItems.KEY_RING, ResourceLocation.fromNamespaceAndPath(Locks.ID, "keys"), (stack, world, entity, speed) ->
 		{
-			IItemHandler inv = LocksComponents.ITEM_HANDLER.get(stack);
+			ItemHandler inv = stack.get(LocksComponents.ITEM_HANDLER);
 				if(inv!=null){
 					int keys = 0;
 					for(int a = 0; a < inv.getSlots(); ++a)

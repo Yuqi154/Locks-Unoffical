@@ -1,6 +1,6 @@
 package melonslise.locks;
 
-import fuzs.forgeconfigapiport.fabric.api.forge.v4.ForgeConfigRegistry;
+import fuzs.forgeconfigapiport.fabric.api.neoforge.v4.NeoForgeConfigRegistry;
 import melonslise.locks.common.config.LocksConfig;
 import melonslise.locks.common.config.LocksServerConfig;
 import melonslise.locks.common.event.LocksEvents;
@@ -31,7 +31,7 @@ public final class Locks implements ModInitializer
 		LocksEvents.register();
 		LocksNetwork.register();
 		LocksFeatures.register();
-		ForgeConfigRegistry.INSTANCE.register(ID, ModConfig.Type.COMMON, LocksConfig.SPEC);
-		ForgeConfigRegistry.INSTANCE.register(ID, ModConfig.Type.SERVER, LocksServerConfig.SPEC);
+		NeoForgeConfigRegistry.INSTANCE.register(ID, ModConfig.Type.COMMON, LocksConfig.SPEC);
+		NeoForgeConfigRegistry.INSTANCE.register(ID, ModConfig.Type.SERVER, LocksServerConfig.SPEC);
 	}
 }

@@ -58,7 +58,7 @@ public class KeyRingContainer extends AbstractContainerMenu
 	{
 		super(LocksContainerTypes.KEY_RING, id);
 		this.stack = stack;
-		this.inv = LocksComponents.ITEM_HANDLER.get(stack);
+		this.inv = stack.get(LocksComponents.ITEM_HANDLER);
 
 		this.rows = inv.getSlots() / 9;
 		for(int row = 0; row < rows; ++row)

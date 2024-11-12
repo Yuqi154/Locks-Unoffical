@@ -2,6 +2,7 @@ package melonslise.locks.mixin;
 
 import melonslise.locks.common.util.LocksUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
@@ -13,10 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(HopperBlockEntity.class)
 public class HopperTileEntityMixin
 {
-	@Inject(at = @At("HEAD"), method = "getContainerAt(Lnet/minecraft/world/level/Level;DDD)Lnet/minecraft/world/Container;", cancellable = true)
-	private static void getContainerAt(Level world, double x, double y, double z, CallbackInfoReturnable<Inventory> cir)
+	@Inject(at = @At("HEAD"), method = "getAttachedContainer(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/HopperBlockEntity;)Lnet/minecraft/world/Container;", cancellable = true)
+	private static void getContainerAt(Level level, BlockPos blockPos, HopperBlockEntity hopperBlockEntity, CallbackInfoReturnable<Container> cir)
 	{
-		if(LocksUtil.locked(world, new BlockPos((int) x, (int) y, (int) z)))
+		if(LocksUtil.locked(level,blockPos))
 			cir.setReturnValue(null);
 	}
 }

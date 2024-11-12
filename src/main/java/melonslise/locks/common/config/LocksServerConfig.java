@@ -5,25 +5,25 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class LocksServerConfig {
-    public static final ForgeConfigSpec SPEC;
+    public static final ModConfigSpec SPEC;
 
-    public static final ForgeConfigSpec.IntValue MAX_LOCKABLE_VOLUME;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> LOCKABLE_BLOCKS;
-    public static final ForgeConfigSpec.BooleanValue ALLOW_REMOVING_LOCKS;
-    public static final ForgeConfigSpec.BooleanValue PROTECT_LOCKABLES;
-    public static final ForgeConfigSpec.BooleanValue EASY_LOCK;
-    public static final ForgeConfigSpec.BooleanValue STRONG_PREVENTION;
+    public static final ModConfigSpec.IntValue MAX_LOCKABLE_VOLUME;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> LOCKABLE_BLOCKS;
+    public static final ModConfigSpec.BooleanValue ALLOW_REMOVING_LOCKS;
+    public static final ModConfigSpec.BooleanValue PROTECT_LOCKABLES;
+    public static final ModConfigSpec.BooleanValue EASY_LOCK;
+    public static final ModConfigSpec.BooleanValue STRONG_PREVENTION;
 
     public static Pattern[] lockableBlocks;
 
     static {
-        ForgeConfigSpec.Builder cfg = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder cfg = new ModConfigSpec.Builder();
 
         MAX_LOCKABLE_VOLUME = cfg
                 .comment("Maximum amount of blocks that can be locked at once")

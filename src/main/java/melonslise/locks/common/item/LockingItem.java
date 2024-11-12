@@ -4,12 +4,15 @@ import melonslise.locks.Locks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,13 +30,13 @@ public class LockingItem extends Item
 
 	public static ItemStack copyId(ItemStack from, ItemStack to)
 	{
-		to.getOrCreateTag().putInt(KEY_ID, getOrSetId(from));
+		to.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).getUnsafe().putInt(KEY_ID, getOrSetId(from));
 		return to;
 	}
 
 	public static int getOrSetId(ItemStack stack)
 	{
-		CompoundTag nbt = stack.getOrCreateTag();
+		CompoundTag nbt = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).getUnsafe();
 		if(!nbt.contains(KEY_ID))
 			nbt.putInt(KEY_ID, ThreadLocalRandom.current().nextInt());
 		return nbt.getInt(KEY_ID);
@@ -48,9 +51,10 @@ public class LockingItem extends Item
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> lines, TooltipFlag flag)
+	public void appendHoverText(ItemStack stack, TooltipContext tooltipContext, List<Component> lines, TooltipFlag flag)
 	{
-		if(stack.hasTag() && stack.getTag().contains(KEY_ID))
-			lines.add(Component.translatable(Locks.ID + ".tooltip.id", ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(getOrSetId(stack))).withStyle(ChatFormatting.DARK_GREEN));
+		CompoundTag compoundTag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+		if(compoundTag.contains(KEY_ID))
+			lines.add(Component.translatable(Locks.ID + ".tooltip.id", getOrSetId(stack)).withStyle(ChatFormatting.DARK_GREEN));
 	}
 }

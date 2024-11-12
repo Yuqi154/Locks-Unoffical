@@ -4,6 +4,7 @@ package melonslise.locks.mixin;
 import melonslise.locks.common.components.interfaces.ILockableHandler;
 import melonslise.locks.common.init.LocksComponents;
 import net.minecraft.client.multiplayer.ClientChunkCache;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,8 +18,10 @@ public class ChunkCacheMixin {
     @Shadow
     volatile ClientChunkCache.Storage storage;
 
-    @Inject(method = "drop(II)V",at = @At(value = "TAIL"))
-    private void drop(int i, int j, CallbackInfo ci) {
+    @Inject(method = "drop(Lnet/minecraft/world/level/ChunkPos;)V",at = @At(value = "TAIL"))
+    private void drop(ChunkPos chunkPos, CallbackInfo ci) {
+        int i = chunkPos.x;
+        int j = chunkPos.z;
         if (storage.inRange(i, j)) {
             int k = this.storage.getIndex(i, j);
             LevelChunk levelChunk = this.storage.getChunk(k);

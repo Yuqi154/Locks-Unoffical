@@ -1,5 +1,6 @@
 package melonslise.locks.mixin.accessor;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,5 +12,5 @@ import java.util.List;
 public interface LootPoolAccessor
 {
 	@Accessor
-	List<LootPoolEntryContainer> getEntries();
+	ImmutableList.Builder<LootPoolEntryContainer> getEntries();
 }

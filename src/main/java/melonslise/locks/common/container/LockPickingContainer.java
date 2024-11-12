@@ -161,7 +161,7 @@ public class LockPickingContainer extends AbstractContainerMenu
 
 		if (!pickStack.is(LocksItemTags.LOCK_PICKS) || player.level().random.nextFloat() < ex + ch)
 			return false;
-		this.player.broadcastBreakEvent(this.hand);
+		//this.player.broadcastBreakEvent(this.hand);
 		pickStack.shrink(1);
 		if (pickStack.isEmpty())
 			for (int a = 0; a < player.getInventory().getContainerSize(); ++a)

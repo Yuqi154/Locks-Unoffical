@@ -15,6 +15,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
@@ -24,6 +25,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.ChestBlock;
@@ -53,12 +55,12 @@ public class LockItem extends LockingItem
 
 	public static boolean isOpen(ItemStack stack)
 	{
-		return stack.getOrCreateTag().getBoolean(KEY_OPEN);
+		return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getBoolean(KEY_OPEN);
 	}
 
 	public static void setOpen(ItemStack stack, boolean open)
 	{
-		stack.getOrCreateTag().putBoolean(KEY_OPEN, open);
+		stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).getUnsafe().putBoolean(KEY_OPEN, open);
 	}
 
 	public static final String KEY_LENGTH = "Length";
@@ -66,7 +68,7 @@ public class LockItem extends LockingItem
 	// WARNING: EXPECTS LOCKITEM STACK
 	public static byte getOrSetLength(ItemStack stack)
 	{
-		CompoundTag nbt = stack.getOrCreateTag();
+		CompoundTag nbt = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 		if(!nbt.contains(KEY_LENGTH))
 			nbt.putByte(KEY_LENGTH, (byte) ((LockItem) stack.getItem()).length);
 		return nbt.getByte(KEY_LENGTH);
@@ -179,9 +181,10 @@ public class LockItem extends LockingItem
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag flag)
+	public void appendHoverText(ItemStack stack, TooltipContext tooltipContext, List<Component> lines, TooltipFlag flag)
 	{
-		super.appendHoverText(stack, world, lines, flag);
-		lines.add(Component.translatable(Locks.ID + ".tooltip.length", ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(stack.hasTag() && stack.getTag().contains(KEY_LENGTH) ? stack.getTag().getByte(KEY_LENGTH) : this.length)).withStyle(ChatFormatting.DARK_GREEN));
+		super.appendHoverText(stack, tooltipContext, lines, flag);
+		CompoundTag compoundTag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+		lines.add(Component.translatable(Locks.ID + ".tooltip.length", compoundTag.contains(KEY_LENGTH) ? compoundTag.getFloat(KEY_LENGTH) : this.length).withStyle(ChatFormatting.DARK_GREEN));
 	}
 }

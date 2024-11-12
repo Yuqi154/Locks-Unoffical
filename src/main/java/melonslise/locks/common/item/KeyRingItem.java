@@ -1,5 +1,6 @@
 package melonslise.locks.common.item;
 
+import melonslise.locks.common.components.ItemHandler;
 import melonslise.locks.common.components.interfaces.IItemHandler;
 import melonslise.locks.common.container.KeyRingContainer;
 import melonslise.locks.common.init.LocksComponents;
@@ -33,7 +34,7 @@ public class KeyRingItem extends Item
 
 	public static boolean containsId(ItemStack stack, int id)
 	{
-		IItemHandler inv = LocksComponents.ITEM_HANDLER.get(stack);
+		ItemHandler inv = stack.get(LocksComponents.ITEM_HANDLER);
 		for(int a = 0; a < inv.getSlots(); ++a)
 			if(LockingItem.getOrSetId(inv.getStackInSlot(a)) == id)
 				return true;
@@ -56,14 +57,14 @@ public class KeyRingItem extends Item
 	{
 		Level world = ctx.getLevel();
 		BlockPos pos = ctx.getClickedPos();
-		IItemHandler inv = LocksComponents.ITEM_HANDLER.get(ctx.getItemInHand());
+		ItemHandler inv = ctx.getItemInHand().get(LocksComponents.ITEM_HANDLER);
 		List<Lockable> intersect = LocksUtil.intersecting(world, pos).collect(Collectors.toList());
 		if(intersect.isEmpty())
 			return InteractionResult.PASS;
 		for(int a = 0; a < inv.getSlots(); ++a)
 		{
 			int id = LockingItem.getOrSetId(inv.getStackInSlot(a));
-			List<Lockable> match = intersect.stream().filter(lkb -> lkb.lock.id == id).collect(Collectors.toList());
+			List<Lockable> match = intersect.stream().filter(lkb -> lkb.lock.lockRecord.id() == id).collect(Collectors.toList());
 			if(match.isEmpty())
 				continue;
 			world.playSound(ctx.getPlayer(), pos, LocksSoundEvents.LOCK_OPEN, SoundSource.BLOCKS, 1f, 1f);

@@ -26,7 +26,7 @@ public class KeyItem extends LockingItem
 		Level world = ctx.getLevel();
 		BlockPos pos = ctx.getClickedPos();
 		int id = getOrSetId(ctx.getItemInHand());
-		List<Lockable> match = LocksUtil.intersecting(world, pos).filter(lkb -> lkb.lock.id == id).collect(Collectors.toList());
+		List<Lockable> match = LocksUtil.intersecting(world, pos).filter(lkb -> lkb.lock.lockRecord.id() == id).collect(Collectors.toList());
 		if(match.isEmpty())
 			return InteractionResult.PASS;
 		world.playSound(ctx.getPlayer(), pos, LocksSoundEvents.LOCK_OPEN, SoundSource.BLOCKS, 1f, 1f);

@@ -2,6 +2,7 @@ package melonslise.locks.common.init;
 
 import melonslise.locks.Locks;
 import melonslise.locks.common.item.*;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -37,6 +38,15 @@ public final class LocksItems {
             STEEL_LOCK_PICK = add("steel_lock_pick", () -> new LockPickItem(0.7f, new Item.Properties())),
             GOLD_LOCK_PICK = add("gold_lock_pick", () -> new LockPickItem(0.25f, new Item.Properties())),
             DIAMOND_LOCK_PICK = add("diamond_lock_pick", () -> new LockPickItem(0.85f, new Item.Properties()));
+
+    public static final List<Holder<Item>> HOLDERS = List.of(
+            Holder.direct(KEY_BLANK),
+            Holder.direct(WOOD_LOCK),
+            Holder.direct(IRON_LOCK),
+            Holder.direct(STEEL_LOCK),
+            Holder.direct(GOLD_LOCK),
+            Holder.direct(DIAMOND_LOCK));
+
 
     public static void register() {
     }
