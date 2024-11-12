@@ -17,6 +17,7 @@ import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -33,6 +34,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class LockPickingContainer extends AbstractContainerMenu
@@ -212,23 +214,9 @@ public class LockPickingContainer extends AbstractContainerMenu
 		this.player.level().playSound(player, this.pos.x, this.pos.y, this.pos.z, LocksSoundEvents.LOCK_OPEN, SoundSource.BLOCKS, 1f, 1f);
 	}
 
-	public record LockPickingRecord(int hand, int id) implements CustomPacketPayload {
-		public static final Type<LockPickingRecord> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Locks.ID, "lock_picking"));
-
-		@Override
-		public Type<? extends CustomPacketPayload> type() {
-			return TYPE;
-		}
-	}
-
-	public static StreamCodec<ByteBuf,LockPickingRecord> STREAM_CODEC = StreamCodec.composite(
-			ByteBufCodecs.INT,LockPickingRecord::hand,
-			ByteBufCodecs.INT,LockPickingRecord::id,
-			LockPickingRecord::new
-	);
-	public static final ExtendedScreenHandlerType.ExtendedFactory<LockPickingContainer,LockPickingRecord> FACTORY = (id, inv, buf) ->
+	public static final ExtendedScreenHandlerType.ExtendedFactory<LockPickingContainer, List<Integer>> FACTORY = (id, inv, buf) ->
 	{
-		return new LockPickingContainer(id, inv.player, InteractionHand.values()[buf.hand], LocksComponents.LOCKABLE_HANDLER.get(inv.player.level()).getLoaded().get(buf.id));
+		return new LockPickingContainer(id, inv.player, InteractionHand.values()[buf.getFirst()], LocksComponents.LOCKABLE_HANDLER.get(inv.player.level()).getLoaded().get(buf.getLast()));
 	};
 
 
@@ -252,7 +240,7 @@ public class LockPickingContainer extends AbstractContainerMenu
 		}
 	}
 
-	public static class Provider implements ExtendedScreenHandlerFactory<FriendlyByteBuf>
+	public static class Provider implements ExtendedScreenHandlerFactory<List<Integer>>
 	{
 		public final InteractionHand hand;
 		public final Lockable lockable;
@@ -276,10 +264,8 @@ public class LockPickingContainer extends AbstractContainerMenu
 		}
 
 		@Override
-		public FriendlyByteBuf getScreenOpeningData(ServerPlayer serverPlayer) {
-			FriendlyByteBuf friendlyByteBuf = PacketByteBufs.create();
-			new Writer(this.hand, this.lockable).accept(friendlyByteBuf);
-			return friendlyByteBuf;
+		public List<Integer> getScreenOpeningData(ServerPlayer serverPlayer) {
+			return List.of(this.hand.ordinal(), this.lockable.id);
 		}
 	}
 }

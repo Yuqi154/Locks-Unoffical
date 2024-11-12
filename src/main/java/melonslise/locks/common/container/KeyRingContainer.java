@@ -108,7 +108,7 @@ public class KeyRingContainer extends AbstractContainerMenu
 		return new KeyRingContainer(id, inv.player, inv.player.getItemInHand(InteractionHand.values()[i]));
 	};
 
-	public static class Provider implements ExtendedScreenHandlerFactory<FriendlyByteBuf>
+	public static class Provider implements ExtendedScreenHandlerFactory<Integer>
 	{
 		public final ItemStack stack;
 
@@ -131,10 +131,8 @@ public class KeyRingContainer extends AbstractContainerMenu
 
 
 		@Override
-		public FriendlyByteBuf getScreenOpeningData(ServerPlayer serverPlayer) {
-			FriendlyByteBuf friendlyByteBuf = PacketByteBufs.create();
-			friendlyByteBuf.writeEnum(InteractionHand.MAIN_HAND);
-			return friendlyByteBuf;
+		public Integer getScreenOpeningData(ServerPlayer serverPlayer) {
+			return InteractionHand.MAIN_HAND.ordinal();
 		}
 	}
 

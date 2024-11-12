@@ -192,7 +192,7 @@ public class LockPickingScreen extends AbstractContainerScreen<LockPickingContai
     public boolean keyPressed(int key, int scan, int modifier) {
         if (this.frozen)
             return super.keyPressed(key, scan, modifier);
-        ;
+
         if (key == this.minecraft.options.keyLeft.key.getValue())
             this.lockPick.speedX = -4;
         else if (key == this.minecraft.options.keyRight.key.getValue())

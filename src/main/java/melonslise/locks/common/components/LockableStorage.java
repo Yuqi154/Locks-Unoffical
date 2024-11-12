@@ -7,6 +7,7 @@ import melonslise.locks.common.components.interfaces.ILockableHandler;
 import melonslise.locks.common.components.interfaces.ILockableStorage;
 import melonslise.locks.common.init.LocksComponents;
 import melonslise.locks.common.util.Lockable;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -62,12 +63,7 @@ public class LockableStorage implements ILockableStorage
 		if(this.chunk instanceof LevelChunk levelChunk){
 			handler =LocksComponents.LOCKABLE_HANDLER.get(levelChunk.getLevel());
 		}else {
-			if (this.chunk.getBlockEntitiesPos().stream().findFirst().isPresent()){
-				BlockPos blockPos = this.chunk.getBlockEntitiesPos().stream().findFirst().get();
-				handler = LocksComponents.LOCKABLE_HANDLER.get(Objects.requireNonNull(Objects.requireNonNull(this.chunk.getBlockEntity(blockPos)).getLevel()).getChunkAt(blockPos));
-			}else {
-				return;
-			}
+			handler =LocksComponents.LOCKABLE_HANDLER.get(Minecraft.getInstance().level);
 		}
 		Int2ObjectMap<Lockable> lkbs = handler.getLoaded();
 		for(int a = 0; a < lockables.size(); ++a)

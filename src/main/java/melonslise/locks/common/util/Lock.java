@@ -55,6 +55,10 @@ public class Lock extends Observable
 		this.lockRecord = new LockRecord(id, this.shuffle(length), locked);
 	}
 
+	public static Lock gen(ItemStack stack)
+	{
+		return new Lock(LockingItem.getOrSetId(stack), LockItem.getOrSetLength(stack), true);
+	}
 	public static Lock from(ItemStack stack)
 	{
 		return new Lock(LockingItem.getOrSetId(stack), LockItem.getOrSetLength(stack), !LockItem.isOpen(stack));
@@ -74,18 +78,6 @@ public class Lock extends Observable
 		nbt.putByte(KEY_LENGTH, (byte) lock.lockRecord.combo.size());
 		nbt.putBoolean(KEY_LOCKED, lock.lockRecord.locked);
 		return nbt;
-	}
-
-	public static Lock fromBuf(FriendlyByteBuf buf)
-	{
-		return new Lock(buf.readInt(), (int) buf.readByte(), buf.readBoolean());
-	}
-
-	public static void toBuf(FriendlyByteBuf buf, Lock lock)
-	{
-		buf.writeInt(lock.lockRecord.id);
-		buf.writeByte((int) lock.getLength());
-		buf.writeBoolean(lock.isLocked());
 	}
 
 	public List<Byte> shuffle(int length)

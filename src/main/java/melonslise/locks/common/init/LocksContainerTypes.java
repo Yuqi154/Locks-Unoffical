@@ -15,12 +15,14 @@ import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 
+import java.util.List;
+
 public final class LocksContainerTypes
 {
 
 
-	public static final ExtendedScreenHandlerType<LockPickingContainer, LockPickingContainer.LockPickingRecord>
-			LOCK_PICKING = new ExtendedScreenHandlerType<>(LockPickingContainer.FACTORY,LockPickingContainer.STREAM_CODEC);
+	public static final ExtendedScreenHandlerType<LockPickingContainer, List<Integer>>
+			LOCK_PICKING = new ExtendedScreenHandlerType<>(LockPickingContainer.FACTORY,ByteBufCodecs.fromCodec(Codec.list(Codec.INT)));
 
 	public static final ExtendedScreenHandlerType<KeyRingContainer, Integer>
 			KEY_RING = new ExtendedScreenHandlerType<>(KeyRingContainer.FACTORY, ByteBufCodecs.INT);
