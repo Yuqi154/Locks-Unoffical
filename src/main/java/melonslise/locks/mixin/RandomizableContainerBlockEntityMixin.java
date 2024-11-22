@@ -21,7 +21,7 @@ public class RandomizableContainerBlockEntityMixin {
     private void lockRandomizableContainerBlockEntity(int slot, CallbackInfoReturnable<ItemStack> cir) {
         BlockPos pos = ((BaseContainerBlockEntity) (Object) this).getBlockPos();
         Level level = ((BaseContainerBlockEntity) (Object) this).getLevel();
-        if (level.isClientSide) return;
+        if (level == null || level.isClientSide) return;
         if (LocksUtil.locked(level, pos)){
             cir.setReturnValue(Items.AIR.getDefaultInstance());
         }
