@@ -1,16 +1,16 @@
 package melonslise.locks.common.util;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.core.Vec3i;
-import net.minecraft.world.level.Level;
 
 public class Cuboid6i
 {

@@ -22,7 +22,6 @@
     "accessor.ForgeHooksAccessor",
     "accessor.LootPoolAccessor",
     "accessor.LootTableAccessor",
-    "addlock.StructurePieceMixin",
     "addlock.StructureTemplateMixin",
     "addlock.WorldGenRegionMixin",
     "compact.LootrMixin"

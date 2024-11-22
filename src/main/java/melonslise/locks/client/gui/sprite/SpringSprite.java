@@ -1,6 +1,5 @@
 package melonslise.locks.client.gui.sprite;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import melonslise.locks.client.util.LocksClientUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;

@@ -61,9 +61,9 @@ dependencies {
 	}
 	forge "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
 	modCompileOnly("curse.maven:lootr-361276:5636598")
-//	modCompileOnly("curse.maven:dungeon-crawl-324973:4612224")
+	modCompileOnly("curse.maven:dungeon-crawl-324973:4612224")
 //	modCompileOnly("curse.maven:beans-backpacks-946775:5368249")
-//	modRuntimeOnly("curse.maven:lootr-361276:5636598")
+	modRuntimeOnly("curse.maven:lootr-361276:5636598")
 //	modRuntimeOnly("curse.maven:quark-243121:5594847")
 //	modRuntimeOnly("curse.maven:zeta-968868:5597406")
 }

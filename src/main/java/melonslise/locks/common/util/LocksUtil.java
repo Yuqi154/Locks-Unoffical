@@ -2,8 +2,7 @@ package melonslise.locks.common.util;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
-import melonslise.locks.common.capability.ILockableHandler;
-import melonslise.locks.common.config.LocksConfig;
+import melonslise.locks.common.config.LocksCommonConfig;
 import melonslise.locks.common.init.LocksCapabilities;
 import melonslise.locks.mixin.accessor.ForgeHooksAccessor;
 import melonslise.locks.mixin.accessor.LootPoolAccessor;
@@ -19,13 +18,11 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.DoorBlock;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.storage.loot.LootDataType;
@@ -45,8 +42,8 @@ import java.util.Random;
 import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.*;
-import static net.minecraft.world.level.block.state.properties.DoorHingeSide.*;
-import static net.minecraft.world.level.block.state.properties.DoubleBlockHalf.*;
+import static net.minecraft.world.level.block.state.properties.DoorHingeSide.LEFT;
+import static net.minecraft.world.level.block.state.properties.DoubleBlockHalf.LOWER;
 
 public final class LocksUtil {
     public static ResourceManager resourceManager;
@@ -176,7 +173,7 @@ public final class LocksUtil {
     public static Lockable lockWhenGen(LevelAccessor levelAccessor, ServerLevel level, BlockPos blockPos, RandomSource randomSource) {
         BlockState state = levelAccessor.getBlockState(blockPos);
         Block block = state.getBlock();
-        if (!LocksConfig.canGen(randomSource, block)) return null;
+        if (!LocksCommonConfig.canGen(randomSource, block)) return null;
         BlockPos pos1 = blockPos;
         Direction dir;
         if (state.hasProperty(FACING)) {
@@ -212,7 +209,7 @@ public final class LocksUtil {
             }
         }
         Cuboid6i bb = new Cuboid6i(blockPos, pos1);
-        ItemStack stack = LocksConfig.getRandomLock(randomSource);
+        ItemStack stack = LocksCommonConfig.getRandomLock(randomSource);
         Lock lock = Lock.from(stack);
         Transform tr = Transform.fromDirection(dir, dir);
         if (tr == null) tr = Transform.NORTH_UP;

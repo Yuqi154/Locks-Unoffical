@@ -1,17 +1,17 @@
 package melonslise.locks.common.item;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import melonslise.locks.common.init.LocksSoundEvents;
 import melonslise.locks.common.util.Lockable;
 import melonslise.locks.common.util.LocksUtil;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MasterKeyItem extends Item
 {

@@ -1,11 +1,10 @@
 package melonslise.locks.mixin.accessor;
 
-import java.util.Deque;
-
+import net.minecraftforge.common.ForgeHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-import net.minecraftforge.common.ForgeHooks;
+import java.util.Deque;
 
 @Mixin(ForgeHooks.class)
 public interface ForgeHooksAccessor

@@ -1,27 +1,13 @@
 package melonslise.locks.common.worldgen.feature;
 
 import com.mojang.serialization.Codec;
-import melonslise.locks.common.config.LocksConfig;
-import melonslise.locks.common.util.*;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ChestBlock;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.*;
-import static net.minecraft.world.level.block.state.properties.DoorHingeSide.LEFT;
-import static net.minecraft.world.level.block.state.properties.DoubleBlockHalf.LOWER;
-
-    public class LocksFeature extends Feature<NoneFeatureConfiguration> {
+public class LocksFeature extends Feature<NoneFeatureConfiguration> {
     public LocksFeature(Codec<NoneFeatureConfiguration> pCodec) {
         super(pCodec);
     }

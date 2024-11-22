@@ -3,15 +3,14 @@ package melonslise.locks.common.recipe;
 import melonslise.locks.common.init.LocksItems;
 import melonslise.locks.common.init.LocksRecipeSerializers;
 import melonslise.locks.common.item.LockingItem;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.WrittenBookItem;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class KeyRecipe extends CustomRecipe

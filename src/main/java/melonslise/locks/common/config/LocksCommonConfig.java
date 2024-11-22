@@ -2,20 +2,14 @@ package melonslise.locks.common.config;
 
 import com.google.common.collect.Lists;
 import melonslise.locks.common.util.LocksUtil;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
@@ -23,7 +17,7 @@ import java.util.NavigableMap;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-public final class LocksConfig {
+public final class LocksCommonConfig {
     public static final ForgeConfigSpec SPEC;
 
     public static final ForgeConfigSpec.DoubleValue GENERATION_CHANCE;
@@ -70,7 +64,7 @@ public final class LocksConfig {
         SPEC = cfg.build();
     }
 
-    private LocksConfig() {
+    private LocksCommonConfig() {
     }
 
     // https://gist.github.com/raws/1667807

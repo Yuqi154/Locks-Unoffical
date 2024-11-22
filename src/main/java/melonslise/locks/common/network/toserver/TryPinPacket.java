@@ -2,8 +2,8 @@ package melonslise.locks.common.network.toserver;
 
 import melonslise.locks.common.container.LockPickingContainer;
 import melonslise.locks.common.init.LocksContainerTypes;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;

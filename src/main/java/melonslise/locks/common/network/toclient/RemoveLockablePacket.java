@@ -1,11 +1,11 @@
 package melonslise.locks.common.network.toclient;
 
-import java.util.function.Supplier;
-
 import melonslise.locks.common.init.LocksCapabilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 public class RemoveLockablePacket
 {

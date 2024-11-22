@@ -1,7 +1,5 @@
 package melonslise.locks.common.network.toclient;
 
-import java.util.function.Supplier;
-
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import melonslise.locks.common.capability.ILockableHandler;
 import melonslise.locks.common.capability.ILockableStorage;
@@ -12,6 +10,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 public class AddLockableToChunkPacket
 {

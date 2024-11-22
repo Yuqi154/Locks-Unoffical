@@ -1,26 +1,16 @@
 package melonslise.locks.common.init;
 
 import melonslise.locks.Locks;
-import melonslise.locks.common.item.KeyItem;
-import melonslise.locks.common.item.KeyRingItem;
-import melonslise.locks.common.item.LockItem;
-import melonslise.locks.common.item.LockPickItem;
-import melonslise.locks.common.item.MasterKeyItem;
-import net.minecraft.core.registries.BuiltInRegistries;
+import melonslise.locks.common.item.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 

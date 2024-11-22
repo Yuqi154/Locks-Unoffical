@@ -1,7 +1,7 @@
 package melonslise.locks.mixin;
 
 import melonslise.locks.common.capability.ILockableHandler;
-import melonslise.locks.common.config.LocksConfig;
+import melonslise.locks.common.config.LocksCommonConfig;
 import melonslise.locks.common.init.LocksCapabilities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ServerWorldMixin {
     @Inject(at = @At("HEAD"), method = "sendBlockUpdated")
     private void sendBlockUpdated(BlockPos pos, BlockState oldState, BlockState newState, int flag, CallbackInfo ci) {
-        if (LocksConfig.matchString(oldState.getBlock()) && LocksConfig.matchString(newState.getBlock())) return;
+        if (LocksCommonConfig.matchString(oldState.getBlock()) && LocksCommonConfig.matchString(newState.getBlock())) return;
         ServerLevel world = (ServerLevel) (Object) this;
         ILockableHandler handler = world.getCapability(LocksCapabilities.LOCKABLE_HANDLER).orElse(null);
         // create buffer list because otherwise we will be deleting elements while iterating (BAD!!)

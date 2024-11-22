@@ -1,9 +1,5 @@
 package melonslise.locks.common.capability;
 
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.Tag;
-import net.minecraftforge.common.capabilities.Capability;
-
 public class EmptyCapabilityStorage<A>
 {
 	/*
