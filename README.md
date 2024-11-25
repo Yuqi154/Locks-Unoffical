@@ -6,3 +6,7 @@ The source code for Locks, a small, but unique Minecraft mod that introduces fle
 ## Links
 CurseForge: https://www.curseforge.com/minecraft/mc-mods/locks-unoffical  
 
+# Note  
+I have stoped maintianing locks-unofficial because of its license prevent me from get benefits from curseforge.  
+In future I will work on an origin mod named locks-next with new code and new assets in neoforge1.21+.  
+Wish you a good day.
